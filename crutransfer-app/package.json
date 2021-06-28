@@ -21,6 +21,9 @@
     "@angular/router": "~11.2.14",
     "@crustio/type-definitions": "^0.0.10",
     "@polkadot/api": "^4.16.2",
+    "ipfs-core": "^0.8.0",
+    "ipfs-core-types": "^0.5.2",
+    "long": "^4.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
@@ -30,6 +33,7 @@
     "@angular/cli": "~11.2.14",
     "@angular/compiler-cli": "~11.2.14",
     "@types/jasmine": "~3.6.0",
+    "@types/long": "^4.0.1",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.6.0",
