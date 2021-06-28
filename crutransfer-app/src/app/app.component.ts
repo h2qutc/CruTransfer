@@ -23,25 +23,25 @@ export class AppComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     ApiRx.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot }).subscribe((api => {
       this.api = api;
       console.log('api', this.api.genesisHash.toHex());
     }));
 
+    this.ipfs = await IPFS.create();
 
   }
 
   async onFileSelected(event) {
 
-    const ipfs = await IPFS.create();
 
     const fileContent: File = event.target.files[0];
 
     if (fileContent) {
       console.log('file', fileContent);
       // Add file into ipfs
-      const fileInfo = await this.addFile(ipfs, fileContent)
+      const fileInfo = await this.addFile(this.ipfs, fileContent)
       console.log("File info: " + JSON.stringify(fileInfo));
 
     }
