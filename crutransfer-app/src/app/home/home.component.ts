@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IFileInfo, IpfsService } from '@cru-transfer/core';
 
 @Component({
@@ -7,6 +7,8 @@ import { IFileInfo, IpfsService } from '@cru-transfer/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
+  @ViewChild('inputFile') inputFileRef: ElementRef<any>;
 
   cid: string;
   infos: IFileInfo;
@@ -26,11 +28,12 @@ export class HomeComponent implements OnInit {
       console.log('selected file', fileContent);
       this.infos = await this.ipfsService.addFileToIpfsAndSendTx(fileContent);
     }
+    this.inputFileRef.nativeElement.value = '';
   }
 
 
   async loadFile() {
-    console.log('load file')
+    console.log('load file');
   }
 
 

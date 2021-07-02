@@ -2,7 +2,7 @@
   home works!
 </p>
 
-<input type="file" (change)="onFileSelected($event)" #fileInput>
+<input #inputFile type="file" (change)="onFileSelected($event)" #fileInput>
 
 <button (click)="fileInput.click()">Add</button>
 <button (click)="loadFile()">Load</button>

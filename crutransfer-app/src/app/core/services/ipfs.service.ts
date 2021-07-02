@@ -32,6 +32,8 @@ export class IpfsService {
     this.api = await ApiPromise.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot });
     this.ipfs = await IPFS.create();
 
+    console.log('IPFS and Crust Network is ready');
+
     // krp will be used in sending transaction
     // const krp = kr.addFromUri(seeds);
   }
@@ -63,7 +65,7 @@ export class IpfsService {
     // Send storage order transaction
     const poRes = await this.placeOrder(this.api, krp, fileInfo.cid, fileInfo.size, 0)
     if (!poRes) {
-      console.error("Place storage order failed");
+      console.error("Place storage order failed", poRes);
       return;
     }
     else {
