@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { IFileInfo, IpfsService } from '@cru-transfer/core';
+import { ApiService, IFileInfo, IpfsService } from '@cru-transfer/core';
 
 @Component({
   selector: 'app-home',
@@ -13,11 +13,13 @@ export class HomeComponent implements OnInit {
   cid: string;
   infos: IFileInfo;
 
-  constructor(private ipfsService: IpfsService) { }
+  constructor(private ipfsService: IpfsService, private apiService: ApiService) { }
 
 
   ngOnInit() {
-
+    this.apiService.getUsers().subscribe(data => {
+      console.log('users', data);
+    })
   }
 
   async onFileSelected(event) {

@@ -1,10 +1,21 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { User } from '../models';
+
 
 @Injectable()
 export class ApiService {
 
-  baseUrl = ''
+  baseUrl = environment.baseUrl;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
+
+  getUsers(): Observable<User[]> {
+    const url = `${this.baseUrl}/users`;
+    return this.http.get<User[]>(url).pipe(map(resp => resp));
+  }
 
 }
