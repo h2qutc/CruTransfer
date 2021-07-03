@@ -1,18 +1,20 @@
 Order = require('../models/orderModel');
 
+sendError = (res, message) => {
+    res.status(500, {
+        error: true,
+        message: message
+    })
+}
+
 exports.index = (req, res) => {
     Order.get((err, orders) => {
         if (err) {
-            res.json({
-                status: 'error',
-                message: err
-            });
+            sendError(res, err);
         }
 
-        res.json({
-            status: 'success',
-            message: 'Orders retrieved successfully',
-            data: orders
+        res.status(200).json({
+            payload: orders
         })
     })
 }
@@ -29,12 +31,12 @@ exports.new = (req, res) => {
 
     order.save((err) => {
         if (err) {
-            res.json(err);
+            sendError(res, err);
         }
 
         res.status(200).json({
             message: 'New order created',
-            data: order
+            payload: order
         })
     })
 }
@@ -44,8 +46,8 @@ exports.view = (req, res) => {
     Order.findById(req.params.order_id, (err, order) => {
         if (err) res.send(err);
         res.json({
-            message: 'Order loading...',
-            data: order
+            message: `Order loaded`,
+            payload: order
         })
     })
 }
@@ -64,11 +66,11 @@ exports.update = (req, res) => {
 
         order.save((err) => {
             if (err) {
-                res.json(res);
+                sendError(res, err);
             }
             res.json({
                 message: 'Order updated',
-                data: order
+                payload: order
             })
         })
     })
@@ -79,9 +81,10 @@ exports.delete = (req, res) => {
     Order.remove({
         id: req.params.order_id
     }, (err, order) => {
-        if (err) res.send(err);
+        if (err) {
+            sendError(res, err);
+        }
         res.json({
-            status: 'success',
             message: 'Order deleted'
         })
     })

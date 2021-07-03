@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService, IFileInfo, IOrder, IpfsService } from '@cru-transfer/core';
+import { ApiService, IFileInfo, IOrder, IpfsService, IResponse } from '@cru-transfer/core';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +14,8 @@ export class HomeComponent implements OnInit {
   fileInfos: IFileInfo;
 
   form: FormGroup = new FormGroup({});
+
+  orderId: string;
 
 
   constructor(private ipfsService: IpfsService, private apiService: ApiService,
@@ -56,7 +58,7 @@ export class HomeComponent implements OnInit {
         ...this.form.value,
         fileInfos: fileInfos
       };
-
+      delete (<any>order).fileSrc;
       this.saveOrder(order);
     }
   }
@@ -64,6 +66,12 @@ export class HomeComponent implements OnInit {
 
   saveOrder(order: IOrder) {
     console.log('save order', order);
+    this.apiService.addOrder(order).subscribe((resp: IResponse) => {
+      console.log('add user ok', resp);
+      this.orderId = resp.payload._id;
+    }, err => {
+      console.error('error', err);
+    })
   }
 
 

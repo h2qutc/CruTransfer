@@ -7,11 +7,11 @@ const routes: Routes = [
     loadChildren: () => import('../app/home').then(m => m.HomeModule),
   },
   {
-    path: 'download',
+    path: 'download/:id',
     loadChildren: () => import('../app/download').then(m => m.DownloadModule),
   },
   {
-    path: '', pathMatch: 'full', redirectTo: 'home'
+    path: '**', pathMatch: 'full', redirectTo: 'home'
   }
 ];
 
