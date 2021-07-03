@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { User } from '../models';
+import { IUser } from '../models';
 
 
 @Injectable()
@@ -13,9 +13,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(): Observable<User[]> {
+  getUsers(): Observable<IUser[]> {
     const url = `${this.baseUrl}/users`;
-    return this.http.get<User[]>(url).pipe(map(resp => resp));
+    return this.http.get<IUser[]>(url).pipe(map(resp => resp));
   }
 
 }

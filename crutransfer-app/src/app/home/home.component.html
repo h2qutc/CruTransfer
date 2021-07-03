@@ -1,11 +1,45 @@
-<p>
-  home works!
-</p>
 
-<input #inputFile type="file" (change)="onFileSelected($event)" #fileInput>
+HOME
 
-<button (click)="fileInput.click()">Add</button>
-<button (click)="loadFile()">Load</button>
+<div class="container">
+
+  <form [formGroup]="form">
+
+    <input #inputFile type="file" (change)="onFileSelected($event)" #fileInput>
 
 
-cid: {{infos?.cid}}
+    <div class="form-group">
+      <label>Your email</label>
+      <input class="form-control" formControlName="sender" type="text">
+    </div>
+
+    <div class="form-group">
+      <label>Message</label>
+      <input class="form-control" formControlName="message" type="text">
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input class="form-control" formControlName="password" type="text">
+    </div>
+
+
+    <!-- <div class="alerts" *ngIf="(form.touched && form.invalid)">
+
+      <div *ngIf="form.controls.password.hasError('required')" class="alert alert-warning" role="alert">
+        Le mot de passe ne peut &ecirc;tre vide.
+      </div>
+
+      <div *ngIf="form.hasError('SamePasswordValidation')" class="alert alert-warning" role="alert">
+        Les mots de passes doivent correspondrent.
+      </div>
+
+    </div> -->
+
+    <button [disabled]="form.invalid" type="submit" (click)="transfer()">Transfer</button>
+
+
+  </form>
+
+</div>
+
