@@ -65,8 +65,17 @@ export class ApiService {
     return this.http.delete<IResponse>(url).pipe(map(resp => resp));
   }
 
-  login(email: string, password: string): Observable<IResponse> {
-    const url = `${this.baseUrl}/login`;
+  signup(username: string, email: string, password: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/signup`;
+    return this.http.post<IResponse>(url, {
+      email: email,
+      password: password,
+      username: username
+    }).pipe(map(resp => resp));
+  }
+
+  signin(email: string, password: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/signin`;
     return this.http.post<IResponse>(url, {
       email: email,
       password: password

@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const userController = require('./controllers/userController');
 const orderController = require('./controllers/orderController');
+const loginController = require('./controllers/loginController');
+
+const { checkDuplicateUsernameOrEmail } = require("./middlewares/verifySignup");
 
 router.get('/', (req, res) => {
     res.json({
@@ -8,6 +11,15 @@ router.get('/', (req, res) => {
         message: 'Welcome CruTransfer API'
     })
 });
+
+// LOGIN routes
+router.route('/signup')
+    .post(
+        [checkDuplicateUsernameOrEmail],
+        loginController.signup);
+
+router.route('/signin')
+    .post(loginController.signin);
 
 
 // USER routes

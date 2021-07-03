@@ -10,6 +10,14 @@ app.use(bodyParser.json());
 
 app.use(cors({ origin: '*' }));
 
+app.use(function (req, res, next) {
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+});
+
 
 // Connect to Mongoose and set connection variable
 mongoose.connect('mongodb://localhost/CruTransferDb', { useNewUrlParser: true });

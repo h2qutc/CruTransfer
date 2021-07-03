@@ -1,7 +1,6 @@
 /* eslint-disable node/no-extraneous-import */
-import {Keyring} from '@polkadot/keyring';
-import {KeyringPair} from '@polkadot/keyring/types';
-import {SubmittableExtrinsic} from '@polkadot/api/promise/types';
+import { Keyring } from '@polkadot/keyring';
+import { KeyringPair } from '@polkadot/keyring/types';
 // import logger from './log';
 
 
@@ -19,5 +18,5 @@ export function loadKeyringPair(seeds: string): KeyringPair {
 }
 
 export async function delay(ms: number) {
-  return new Promise( resolve => setTimeout(resolve, ms) );
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

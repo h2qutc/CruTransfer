@@ -1,18 +1,21 @@
 User = require('../models/userModel');
 
+sendError = (res, message) => {
+    res.status(500, {
+        error: true,
+        message: message
+    })
+}
+
 exports.index = (req, res) => {
     User.get((err, users) => {
         if (err) {
-            res.json({
-                status: 'error',
-                message: err
-            });
+            sendError(res, err);
         }
 
         res.json({
-            status: 'success',
             message: 'Users retrieved successfully',
-            data: users
+            payload: users
         })
     })
 }
@@ -20,18 +23,19 @@ exports.index = (req, res) => {
 
 exports.new = (req, res) => {
     const user = new User();
-    user.name = req.body.name || user.name;
+
+    user.username = req.body.username || user.username;
     user.email = req.body.email;
     user.password = req.body.password;
 
     user.save((err) => {
         if (err) {
-            res.json(err);
+            sendError(res, err);
         }
 
         res.status(200).json({
             message: 'New user created',
-            data: user
+            payload: user
         })
     })
 }
@@ -39,10 +43,12 @@ exports.new = (req, res) => {
 
 exports.view = (req, res) => {
     User.findById(req.params.user_id, (err, user) => {
-        if (err) res.send(err);
+        if (err) {
+            sendError(res, err);
+        }
         res.json({
             message: 'User loading...',
-            data: user
+            payload: user
         })
     })
 }
@@ -50,18 +56,21 @@ exports.view = (req, res) => {
 
 exports.update = (req, res) => {
     User.findById(req.params.user_id, (err, user) => {
-        if (err) res.send(err);
-        user.name = req.body.name || user.name;
+        if (err) {
+            sendError(res, err);
+        }
+
+        user.username = req.body.username || user.username;
         user.email = req.body.email;
         user.password = req.body.password;
 
         user.save((err) => {
             if (err) {
-                res.json(res);
+                sendError(res, err);
             }
             res.json({
                 message: 'User updated',
-                data: user
+                payload: user
             })
         })
     })
@@ -72,9 +81,10 @@ exports.delete = (req, res) => {
     User.remove({
         id: req.params.user_id
     }, (err, user) => {
-        if (err) res.send(err);
+        if (err) {
+            sendError(res, err);
+        }
         res.json({
-            status: 'success',
             message: 'User deleted'
         })
     })

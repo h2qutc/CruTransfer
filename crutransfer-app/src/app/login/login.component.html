@@ -12,7 +12,33 @@
     <input class="form-control" formControlName="password" type="text">
   </div>
 
-  <button [disabled]="form.invalid" type="submit" (click)="login()">Login</button>
+  <button [disabled]="form.invalid" type="submit" (click)="signin()">Signin</button>
+
+
+</form>
+
+Signup
+
+<form [formGroup]="form">
+
+  <div class="form-group">
+    <label>Username</label>
+    <input class="form-control" formControlName="username" type="text">
+  </div>
+
+
+  <div class="form-group">
+    <label>Email</label>
+    <input class="form-control" formControlName="email" type="text">
+  </div>
+
+
+  <div class="form-group">
+    <label>Password</label>
+    <input class="form-control" formControlName="password" type="text">
+  </div>
+
+  <button [disabled]="form.invalid" type="submit" (click)="signup()">Signup</button>
 
 
 </form>

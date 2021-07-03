@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { ApiService, IpfsService } from './services';
+import { AuthService } from './services/auth.service';
 
 const services = [
   ApiService,
-  IpfsService
+  IpfsService,
+  AuthService
 ];
 const guards = [];
 const interceptors = [];
