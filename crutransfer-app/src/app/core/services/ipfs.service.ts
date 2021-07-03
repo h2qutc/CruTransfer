@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { typesBundleForPolkadot } from '@crustio/type-definitions';
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
-import { IFileInfo } from '../models';
-import { delay, loadKeyringPair, sendTx } from './utils';
+import { Observable, Subject } from 'rxjs';
+import { IFileInfo, IMessageInfo } from '../models';
+import { delay, loadKeyringPair } from './utils';
+import { KeyringPair } from '@polkadot/keyring/types';
+import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
+
 const IPFS = require('ipfs-core');
 
 // WS address of Crust chain
@@ -12,6 +16,8 @@ const wsProvider = new WsProvider(chain_ws_url);
 
 // Seeds of account
 const seeds = "dad argue unknown alpha audit vault thing amount beauty matter breeze tragic";
+
+// const seeds = 'body pencil basic thunder liquid quiz retreat visual uncle crash file cinnamon';
 
 const kr = new Keyring({
   type: 'sr25519',
@@ -25,17 +31,15 @@ export class IpfsService {
   ipfs: any;
   krp: any;
 
+  private _progressSubject: Subject<any> = new Subject<any>();
+  progress$: Observable<any> = this._progressSubject.asObservable();
+
   constructor() { }
 
   async init() {
     // Connect to chain
     this.api = await ApiPromise.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot });
     this.ipfs = await IPFS.create();
-
-    console.log('IPFS and Crust Network is ready');
-
-    // krp will be used in sending transaction
-    // const krp = kr.addFromUri(seeds);
   }
 
   async addFileToIpfsAndSendTx(fileContent: File): Promise<IFileInfo> {
@@ -66,10 +70,12 @@ export class IpfsService {
     const poRes = await this.placeOrder(this.api, krp, fileInfo.cid, fileInfo.size, 0)
     if (!poRes) {
       console.error("Place storage order failed", poRes);
-      return;
+      this.notify(<IMessageInfo>{ complete: true, hasError: true, message: 'Place storage order failed' });
+      return null;
     }
     else {
       console.info("Place storage order success");
+      this.notify(<IMessageInfo>{ complete: true, hasError: false, message: 'Place storage order success' });
       return fileInfo;
     }
 
@@ -95,7 +101,8 @@ export class IpfsService {
     // Generate transaction
     const pso = api.tx.market.placeStorageOrder(fileCID, fileSize, tip);
     // Send transaction
-    const txRes = JSON.parse(JSON.stringify((await sendTx(krp, pso))));
+    const txRes = await this.sendTx(krp, pso);
+
     return JSON.parse(JSON.stringify(txRes));
   }
 
@@ -154,8 +161,62 @@ export class IpfsService {
     return res;
   }
 
+
+  /**
+   * Send tx to crust network
+   * @param krp On-chain identity
+   * @param tx substrate-style tx
+   * @returns tx already been sent
+   */
+  async sendTx(krp: KeyringPair, tx: SubmittableExtrinsic) {
+    return new Promise((resolve, reject) => {
+      tx.signAndSend(krp, ({ events = [], status }) => {
+        let message = `  ↪ 💸 [tx]: Transaction status: ${status.type}, nonce: ${tx.nonce}`;
+        console.info(message);
+
+        this.notify(<IMessageInfo>{ complete: false, hasError: false, message: message })
+
+        if (
+          status.isInvalid ||
+          status.isDropped ||
+          status.isUsurped ||
+          status.isRetracted
+        ) {
+          reject(<IMessageInfo>{ complete: true, hasError: true, message: 'Invalid transaction.' })
+          // reject(new Error('Invalid transaction.'));
+        } else {
+          // Pass it
+        }
+
+        if (status.isInBlock) {
+          events.forEach(({ event: { method, section } }) => {
+            if (section === 'system' && method === 'ExtrinsicFailed') {
+              message = `  ↪ 💸 ❌ [tx]: Send transaction(${tx.type}) failed.`;
+              console.info(message);
+              resolve(<IMessageInfo>{ complete: true, hasError: true, message: message });
+
+            } else if (method === 'ExtrinsicSuccess') {
+
+              message = `  ↪ 💸 ✅ [tx]: Send transaction(${tx.type}) success.`;
+              console.info(message);
+              resolve(<IMessageInfo>{ complete: true, hasError: false, message: message });
+            }
+          });
+        } else {
+          // Pass it
+        }
+      }).catch(e => {
+        reject(<IMessageInfo>{ complete: true, hasError: true, message: e });
+      });
+    });
+  }
+
   async loadFile(cid: string) {
     await this.ipfs.get(cid);
+  }
+
+  private notify(infos: any) {
+    this._progressSubject.next(infos);
   }
 
 

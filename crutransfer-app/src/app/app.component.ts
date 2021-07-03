@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { from, Observable } from "rxjs";
 import { IpfsService } from "./core";
 
 
@@ -10,12 +11,19 @@ import { IpfsService } from "./core";
 export class AppComponent implements OnInit {
   title = 'crutransfer-app';
 
+  loading = false;
+
   constructor(private ipfsService: IpfsService) {
 
   }
 
-  async ngOnInit() {
-    await this.ipfsService.init();
+  ngOnInit() {
+    const ipfsReady$ = from(this.ipfsService.init());
+    ipfsReady$.subscribe(() => {
+      console.log('IPFS and Crust Network is ready');
+      this.loading = true;
+    })
+
   }
 
 

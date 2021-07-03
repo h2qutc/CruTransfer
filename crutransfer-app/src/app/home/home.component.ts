@@ -29,6 +29,10 @@ export class HomeComponent implements OnInit {
       option: [0, Validators.required],
       password: [null, Validators.required],
     });
+
+    this.ipfsService.progress$.subscribe((data) => {
+      console.log('progress', data);
+    })
   }
 
   async onFileSelected(event) {
