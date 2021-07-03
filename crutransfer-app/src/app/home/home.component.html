@@ -1,4 +1,3 @@
-
 HOME
 
 <div class="container">
@@ -41,7 +40,9 @@ HOME
 
   </form>
 
-  <a *ngIf="orderId" href="/download/{{orderId}}">Go to file</a>
+
+  <a [routerLink]="['/download', orderId]">Go to file {{orderId}}</a>
+
+  <a [routerLink]="['/dashboard']">Go to dashboard</a>
 
 </div>
-
