@@ -56,70 +56,98 @@
           <p class="text-white h1">CruTransfer</p>
           <p class="text-white h2">The simplest way to share your files</p>
         </div>
-    </div>
-    <div class="form-side">
-      <!-- <a class="c-pointer">
+      </div>
+      <div class="form-side">
+        <!-- <a class="c-pointer">
           <span class="logo-single"></span>
         </a> -->
-      <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+        <form [formGroup]="form" novalidate>
 
-        <label class="form-group has-float-label">
-          <span>Your files</span>
-          <dropzone [config]="config" (change)="onFileSelected($event)" message="Click or drag images here to upload">
-          </dropzone>
-        </label>
+          <label class="form-group has-float-label">
+            <span>Your files(*)</span>
+            <dropzone [config]="config" (success)="onFileSelected($event)"
+              message="Click or drag images here to upload">
+            </dropzone>
+          </label>
 
+          <ng-container *ngIf="form.controls.action.value == 1">
+            <label class="form-group has-float-label">
+              <input class="form-control" formControlName="sender" />
+              <span>Your email(*)</span>
+              <small *ngIf="submitted && form.controls.sender.invalid" class="invalid">Email is required!</small>
+            </label>
 
-        <!-- <label class="form-group has-float-label">
-            <input class="form-control" #inputFile type="file" (change)="onFileSelected($event)" />
-            <span>Your file</span>
-          </label> -->
+            <label class="form-group has-float-label">
+              <input class="form-control" formControlName="recipient" />
+              <span>Email to(*)</span>
+              <small *ngIf="submitted && form.controls.recipient.invalid" class="invalid">Email is required!</small>
+            </label>
+          </ng-container>
 
-        <label class="form-group has-float-label">
-          <input class="form-control" formControlName="sender" />
-          <span>Your email</span>
-          <!-- <div class="invalid-tooltip">Email is required!</div> -->
-        </label>
+          <label class="form-group has-float-label">
+            <textarea rows="2" class="form-control" formControlName="message"></textarea>
+            <span>Message</span>
+          </label>
 
-        <label class="form-group has-float-label">
-          <input class="form-control" formControlName="message" />
-          <span>Message</span>
-          <!-- <div class="invalid-tooltip">Email is required!</div> -->
-        </label>
-
-        <label class="form-group has-float-label">
+          <!-- <label class="form-group has-float-label">
           <input class="form-control" type="password" placeholder="" />
           <span>{{ 'user.password' | translate }}</span>
-          <!-- <div class="invalid-tooltip">Password is required!</div> -->
-        </label>
+        </label> -->
 
-        <label class="form-group">
-          <div class="custom-control custom-radio"><input type="radio" value="cake" name="radio"
-              formcontrolname="option" id="reactiveRadios1" class="custom-control-input "><label for="reactiveRadios1"
-              class="custom-control-label"> Send email transfer </label>
+          <label class="form-group">
+            <div class="custom-control custom-radio"><input type="radio" [value]="sendActionsEnums.SendEmail"
+                name="action" formControlName="action" id="reactiveRadios1" class="custom-control-input " checked><label
+                for="reactiveRadios1" class="custom-control-label"> Send email transfer </label>
+            </div>
+            <div class="custom-control custom-radio"><input type="radio" [value]="sendActionsEnums.CopyLink"
+                name="action" formControlName="action" id="reactiveRadios2" class="custom-control-input "><label
+                for="reactiveRadios2" class="custom-control-label"> Get transfer link </label>
+            </div>
+          </label>
+
+
+
+          <div class="d-flex justify-content-end align-items-center">
+            <button type="button" class="btn btn-outline-primary mr-2" (click)="reset()">Reset</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-shadow" [disabled]="!form.valid" 
+            (click)="openModal()">
+              Transfer</button>
           </div>
-          <div class="custom-control custom-radio"><input type="radio" value="cupcake" name="radio"
-              formcontrolname="option" id="reactiveRadios2" class="custom-control-input "><label for="reactiveRadios2"
-              class="custom-control-label"> Get transfer link </label>
-          </div>
-        </label>
 
 
+        </form>
 
-        <div class="d-flex justify-content-end align-items-center">
-          <button type="button" class="btn btn-outline-primary mr-2">Reset</button>
-          <app-state-button [btnClass]="'btn btn-primary btn-lg btn-shadow'" [currentState]="buttonState"
-            [isDisabled]="buttonDisabled" click="transfer()">
-            Transfer
-          </app-state-button>
-        </div>
-
-
-
-
-      </form>
-
+      </div>
     </div>
   </div>
 </div>
-</div>
+
+<!-- <ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Sending your files</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <app-radial-process-card [title]="progressMessage" [percent]="progress" [isSortable]="true">
+        </app-radial-process-card>
+      </div>
+    </div>
+
+    <h3 style="color:#303030; font-size:18px; line-height: 1.6; font-weight:500;">You're done!</h3>
+    <p style="color:#8f8f8f; font-size: 14px; padding-bottom: 20px; line-height: 1.4;">
+      The download email has been sent – your transfer is now available.
+    </p>
+    <h3 style="color:#303030; font-size:18px; line-height: 1.6; font-weight:500;">Verification Code</h3>
+    <p
+      style="background-color:#f1f1f1; padding: 8px 15px; border-radius: 50px; display: inline-block; margin-bottom:20px; font-size: 14px;  line-height: 1.4; font-family: Courier New, Courier, monospace; margin-top:0">
+      148 544 174</p>
+
+    <a href="#" title="START NOW" target="_blank"
+      style="font-size: 14px; line-height: 1.5; font-weight: 700; letter-spacing: 1px; padding: 15px 40px; text-align:center; text-decoration:none; color:#FFFFFF; border-radius: 50px; background-color:#00365a;">START
+      NOW</a>
+  </div>
+</ng-template> -->

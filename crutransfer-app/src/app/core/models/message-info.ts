@@ -1,5 +1,5 @@
 export interface IMessageInfo {
-    complete: boolean;
+    isFinalized: boolean;
     hasError: boolean;
     message: any;
 }

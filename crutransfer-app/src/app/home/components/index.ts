@@ -1,0 +1,1 @@
+export * from './modal-upload-file/modal-upload-file.component';

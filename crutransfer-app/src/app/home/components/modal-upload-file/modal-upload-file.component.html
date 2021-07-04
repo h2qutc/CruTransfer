@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Your transfer details</h4>
+  <button [disabled]="!isFinalized" type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <app-radial-process-card [title]="progressMessage" [percent]="progress" [isSortable]="true">
+      </app-radial-process-card>
+    </div>
+  </div>
+
+  <ng-container *ngIf="isFinalized">
+    <div class="row">
+      <div class="col-12">
+        <h3>You're done!</h3>
+        <p class="infos">
+          The download email has been sent – your transfer is now available.
+        </p>
+        <h3>Verification Code</h3>
+        <div class="link"> {{link}}</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <button class="btn btn-primary btn-lg btn-shadow" (click)="transferAnother()">
+          Transfer another?</button>
+      </div>
+    </div>
+  </ng-container>
+
+</div>

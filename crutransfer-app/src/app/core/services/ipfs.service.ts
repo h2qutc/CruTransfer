@@ -32,7 +32,7 @@ export class IpfsService {
   krp: any;
 
   private _progressSubject: Subject<any> = new Subject<any>();
-  progress$: Observable<any> = this._progressSubject.asObservable();
+  progress$: Observable<IMessageInfo> = this._progressSubject.asObservable();
 
   constructor() { }
 
@@ -69,13 +69,13 @@ export class IpfsService {
     // Send storage order transaction
     const poRes = await this.placeOrder(this.api, krp, fileInfo.cid, fileInfo.size, 0)
     if (!poRes) {
-      console.error("Place storage order failed", poRes);
-      this.notify(<IMessageInfo>{ complete: true, hasError: true, message: 'Place storage order failed' });
+      // console.error("Place storage order failed", poRes);
+      // this.notify(<IMessageInfo>{ hasError: true, message: 'Place storage order failed' });
       return null;
     }
     else {
-      console.info("Place storage order success");
-      this.notify(<IMessageInfo>{ complete: true, hasError: false, message: 'Place storage order success' });
+      // console.info("Place storage order success");
+      // this.notify(<IMessageInfo>{ hasError: false, message: 'Place storage order success' });
       return fileInfo;
     }
 
@@ -171,10 +171,8 @@ export class IpfsService {
   async sendTx(krp: KeyringPair, tx: SubmittableExtrinsic) {
     return new Promise((resolve, reject) => {
       tx.signAndSend(krp, ({ events = [], status }) => {
-        let message = `  ↪ 💸 [tx]: Transaction status: ${status.type}, nonce: ${tx.nonce}`;
-        console.info(message);
-
-        this.notify(<IMessageInfo>{ complete: false, hasError: false, message: message })
+        let message = `Transaction status: ${status.type}`;
+        this.notify(<IMessageInfo>{ isFinalized: status.isFinalized, hasError: false, message: message });
 
         if (
           status.isInvalid ||
@@ -182,8 +180,7 @@ export class IpfsService {
           status.isUsurped ||
           status.isRetracted
         ) {
-          reject(<IMessageInfo>{ complete: true, hasError: true, message: 'Invalid transaction.' })
-          // reject(new Error('Invalid transaction.'));
+          reject(<IMessageInfo>{ hasError: true, message: 'Invalid transaction.' })
         } else {
           // Pass it
         }
@@ -191,22 +188,19 @@ export class IpfsService {
         if (status.isInBlock) {
           events.forEach(({ event: { method, section } }) => {
             if (section === 'system' && method === 'ExtrinsicFailed') {
-              message = `  ↪ 💸 ❌ [tx]: Send transaction(${tx.type}) failed.`;
-              console.info(message);
-              resolve(<IMessageInfo>{ complete: true, hasError: true, message: message });
+              message = `❌ [tx]: Send transaction(${tx.type}) failed.`;
+              resolve(<IMessageInfo>{ hasError: true, message: message });
 
             } else if (method === 'ExtrinsicSuccess') {
-
-              message = `  ↪ 💸 ✅ [tx]: Send transaction(${tx.type}) success.`;
-              console.info(message);
-              resolve(<IMessageInfo>{ complete: true, hasError: false, message: message });
+              message = `✅ [tx]: Send transaction(${tx.type}) success.`;
+              resolve(<IMessageInfo>{ hasError: false, message: message });
             }
           });
         } else {
           // Pass it
         }
       }).catch(e => {
-        reject(<IMessageInfo>{ complete: true, hasError: true, message: e });
+        reject(<IMessageInfo>{ hasError: true, message: e });
       });
     });
   }

@@ -4,8 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@cru-transfer/shared';
 import { TranslateModule } from '@ngx-translate/core';
-import { HomeComponent } from './home.component';
+import { RoundprogressModule } from 'angular-svg-round-progressbar';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
+import { ModalUploadFileComponent } from './components';
+import { HomeComponent } from './home.component';
 
 const routes: Routes = [
   {
@@ -22,8 +25,12 @@ const routes: Routes = [
     TranslateModule,
     SharedModule,
     DropzoneModule,
+    RoundprogressModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent]
+  declarations: [HomeComponent, ModalUploadFileComponent],
+  providers: [
+    BsModalService
+  ]
 })
 export class HomeModule { }

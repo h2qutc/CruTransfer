@@ -24,6 +24,7 @@
     "@ng-select/ng-select": "^6.1.0",
     "@ngx-translate/core": "^13.0.0",
     "@polkadot/api": "^4.16.2",
+    "angular-svg-round-progressbar": "^7.0.0",
     "ipfs-core": "^0.8.0",
     "ipfs-core-types": "^0.5.2",
     "long": "^4.0.0",

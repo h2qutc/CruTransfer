@@ -9,7 +9,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
   ],
   imports: [
     CommonModule,
-    PopoverModule.forRoot()
+    PopoverModule
   ],
   providers: [],
   exports: [
