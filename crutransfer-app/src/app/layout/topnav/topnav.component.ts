@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService, AuthService, LangService, Language } from '@cru-transfer/core';
+import { ApiService, AuthService, IUser, LangService, Language } from '@cru-transfer/core';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -11,16 +11,18 @@ import { environment } from 'src/environments/environment';
 export class TopnavComponent implements OnInit, OnDestroy {
   adminRoot = environment.adminRoot;
   subscription: Subscription;
-  displayName = 'Sarah Cortney';
   languages: Language[];
   currentLanguage: string;
   isSingleLang;
+
+  user: IUser;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private apiService: ApiService,
-    private langService: LangService
+    private langService: LangService,
+    private cd: ChangeDetectorRef
   ) {
     this.languages = this.langService.supportedLanguages;
     this.currentLanguage = this.langService.languageShorthand;
@@ -34,10 +36,10 @@ export class TopnavComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const currentUser = this.authService.getUser();
-    if (currentUser) {
-      this.displayName = currentUser.username;
-    }
+    this.authService.user$.subscribe((data) => {
+      this.user = data;
+      this.cd.detectChanges();
+    })
   }
 
   ngOnDestroy(): void {

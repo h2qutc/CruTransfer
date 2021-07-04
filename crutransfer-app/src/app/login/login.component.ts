@@ -31,25 +31,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  signin() {
-    const { email, password } = this.form.value;
-    this.apiService.signIn(email, password).subscribe((resp) => {
-      console.log('login', resp);
-      this.authService.accessToken = resp.payload.accessToken;
-
-      this.authService.user = resp.payload;;
-      this.router.navigate(['home']);
-    })
-  }
-
-  signup() {
-    const { username, email, password } = this.form.value;
-    this.apiService.signUp(username, email, password).subscribe((resp) => {
-      console.log('signup', resp);
-      this.router.navigate(['login']);
-    })
-  }
-
   onSubmit(): void {
     if (this.form.valid) {
       this.submitted = true;
@@ -62,6 +43,8 @@ export class LoginComponent implements OnInit {
         this.buttonState = 'show-spinner';
         this.apiService.signIn(email, password).subscribe((resp) => {
           this.authService.accessToken = resp.payload.accessToken;
+          this.authService.user = resp.payload;
+
           this.router.navigate(['home']);
         }, (error) => {
           this.buttonDisabled = false;
