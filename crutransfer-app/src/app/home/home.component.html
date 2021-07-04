@@ -65,7 +65,7 @@
 
           <label class="form-group has-float-label">
             <span>Your files(*)</span>
-            <dropzone [config]="config" (success)="onFileSelected($event)"
+            <dropzone #dropzone (addedFiles)="onFileSelected($event)" (removedFile)="onRemovedfile($event)"
               message="Click or drag images here to upload">
             </dropzone>
           </label>
@@ -109,8 +109,8 @@
 
           <div class="d-flex justify-content-end align-items-center">
             <button type="button" class="btn btn-outline-primary mr-2" (click)="reset()">Reset</button>
-            <button type="submit" class="btn btn-primary btn-lg btn-shadow" [disabled]="!form.valid" 
-            (click)="openModal()">
+            <button type="submit" class="btn btn-primary btn-lg btn-shadow" [disabled]="!form.valid"
+              (click)="openModal()">
               Transfer</button>
           </div>
 

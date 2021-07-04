@@ -75,7 +75,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   }
 
   transferAnother() {
-
+    this.modalRef.hide();
   }
 
 
