@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IOrder, IResponse, IUser } from '../models';
@@ -65,7 +65,7 @@ export class ApiService {
     return this.http.delete<IResponse>(url).pipe(map(resp => resp));
   }
 
-  signup(username: string, email: string, password: string): Observable<IResponse> {
+  signUp(username: string, email: string, password: string): Observable<IResponse> {
     const url = `${this.baseUrl}/signup`;
     return this.http.post<IResponse>(url, {
       email: email,
@@ -74,12 +74,16 @@ export class ApiService {
     }).pipe(map(resp => resp));
   }
 
-  signin(email: string, password: string): Observable<IResponse> {
+  signIn(email: string, password: string): Observable<IResponse> {
     const url = `${this.baseUrl}/signin`;
     return this.http.post<IResponse>(url, {
       email: email,
       password: password
     }).pipe(map(resp => resp));
+  }
+
+  signOut(): Observable<any> {
+    return of({});
   }
 
 

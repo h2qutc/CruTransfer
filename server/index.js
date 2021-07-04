@@ -37,6 +37,8 @@ app.get('/', (req, res) => res.send('Hello World!'));
 const apiRoutes = require('./api-routes');
 app.use('/api', apiRoutes);
 
+
+// Command: nodemon index
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })

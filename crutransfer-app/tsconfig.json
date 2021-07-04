@@ -8,6 +8,7 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "importHelpers": true,
@@ -26,9 +27,14 @@
       ],
       "@cru-transfer/core": [
         "src/app/core"
+      ],
+      "@cru-transfer/shared": [
+        "src/app/shared"
       ]
     },
-    "types": ["long"]
+    "types": [
+      "long"
+    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false

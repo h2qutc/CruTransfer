@@ -1,4 +1,4 @@
-HOME
+<!-- HOME
 
 <div class="container">
 
@@ -23,7 +23,7 @@ HOME
     </div>
 
 
-    <!-- <div class="alerts" *ngIf="(form.touched && form.invalid)">
+    <div class="alerts" *ngIf="(form.touched && form.invalid)">
 
       <div *ngIf="form.controls.password.hasError('required')" class="alert alert-warning" role="alert">
         Le mot de passe ne peut &ecirc;tre vide.
@@ -33,7 +33,7 @@ HOME
         Les mots de passes doivent correspondrent.
       </div>
 
-    </div> -->
+    </div>
 
     <button [disabled]="form.invalid" type="submit" (click)="transfer()">Transfer</button>
 
@@ -45,4 +45,81 @@ HOME
 
   <a [routerLink]="['/dashboard']">Go to dashboard</a>
 
+</div> -->
+
+<div class="row">
+  <div class="col-12 mb-4">
+
+    <div class="card auth-card">
+      <div class="position-relative image-side d-flex align-items-center">
+        <div class="card-body justify-content-end d-flex flex-column">
+          <p class="text-white h1">CruTransfer</p>
+          <p class="text-white h2">The simplest way to share your files</p>
+        </div>
+    </div>
+    <div class="form-side">
+      <!-- <a class="c-pointer">
+          <span class="logo-single"></span>
+        </a> -->
+      <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+
+        <label class="form-group has-float-label">
+          <span>Your files</span>
+          <dropzone [config]="config" (change)="onFileSelected($event)" message="Click or drag images here to upload">
+          </dropzone>
+        </label>
+
+
+        <!-- <label class="form-group has-float-label">
+            <input class="form-control" #inputFile type="file" (change)="onFileSelected($event)" />
+            <span>Your file</span>
+          </label> -->
+
+        <label class="form-group has-float-label">
+          <input class="form-control" formControlName="sender" />
+          <span>Your email</span>
+          <!-- <div class="invalid-tooltip">Email is required!</div> -->
+        </label>
+
+        <label class="form-group has-float-label">
+          <input class="form-control" formControlName="message" />
+          <span>Message</span>
+          <!-- <div class="invalid-tooltip">Email is required!</div> -->
+        </label>
+
+        <label class="form-group has-float-label">
+          <input class="form-control" type="password" placeholder="" />
+          <span>{{ 'user.password' | translate }}</span>
+          <!-- <div class="invalid-tooltip">Password is required!</div> -->
+        </label>
+
+        <label class="form-group">
+          <div class="custom-control custom-radio"><input type="radio" value="cake" name="radio"
+              formcontrolname="option" id="reactiveRadios1" class="custom-control-input "><label for="reactiveRadios1"
+              class="custom-control-label"> Send email transfer </label>
+          </div>
+          <div class="custom-control custom-radio"><input type="radio" value="cupcake" name="radio"
+              formcontrolname="option" id="reactiveRadios2" class="custom-control-input "><label for="reactiveRadios2"
+              class="custom-control-label"> Get transfer link </label>
+          </div>
+        </label>
+
+
+
+        <div class="d-flex justify-content-end align-items-center">
+          <button type="button" class="btn btn-outline-primary mr-2">Reset</button>
+          <app-state-button [btnClass]="'btn btn-primary btn-lg btn-shadow'" [currentState]="buttonState"
+            [isDisabled]="buttonDisabled" click="transfer()">
+            Transfer
+          </app-state-button>
+        </div>
+
+
+
+
+      </form>
+
+    </div>
+  </div>
+</div>
 </div>
