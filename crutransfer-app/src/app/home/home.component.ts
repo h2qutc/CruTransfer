@@ -7,6 +7,8 @@ import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { takeUntil } from 'rxjs/operators';
 import { ModalUploadFileComponent } from './components';
 
+const listValidatorsEmail = [Validators.required, Validators.email];
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -21,9 +23,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   form: FormGroup = new FormGroup({});
 
   orderId: string;
-
-  buttonDisabled = false;
-  buttonState = '';
 
   submitted = false;
 
@@ -50,8 +49,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.form = this.formBuilder.group({
       fileSrc: [null, Validators.required],
-      sender: [null, Validators.required],
-      recipient: [null, Validators.required],
+      sender: [null, listValidatorsEmail],
+      recipient: [null, listValidatorsEmail],
       message: [null],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
@@ -108,7 +107,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private onActionChanged(action: SendActions) {
-    const validatorsEmail = [Validators.required];
     if (action === SendActions.CopyLink) {
       this.form.controls.sender.setErrors(null);
       this.form.controls.recipient.setErrors(null);
@@ -116,8 +114,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.form.controls.sender.clearValidators();
       this.form.controls.recipient.clearValidators();
     } else {
-      this.form.controls.sender.setValidators(validatorsEmail);
-      this.form.controls.recipient.setValidators(validatorsEmail);
+      this.form.controls.sender.setValidators(listValidatorsEmail);
+      this.form.controls.recipient.setValidators(listValidatorsEmail);
     }
 
     this.form.controls.recipient.updateValueAndValidity({ onlySelf: false });

@@ -1,3 +1,9 @@
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
 h3 {
     color: #303030;
     font-size: 18px;
@@ -12,18 +18,23 @@ p.infos {
     line-height: 1.4;
 }
 
-div.link {
-    background-color: #f1f1f1;
-    padding: 8px 15px;
-    border-radius: 50px;
-    display: inline-block;
-    margin-bottom: 20px;
-    font-size: 14px;
-    line-height: 1.4;
-    font-family: Courier New, Courier, monospace;
-    margin-top: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    width: 100%;
-    overflow: hidden;
+.link-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    div.link {
+        flex: 1;
+        background-color: #f1f1f1;
+        padding: 8px 15px;
+        border-radius: 50px;
+        display: inline-block;
+        font-size: 14px;
+        line-height: 1.4;
+        font-family: Courier New, Courier, monospace;
+        margin-top: 0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        overflow: hidden;
+    }
 }

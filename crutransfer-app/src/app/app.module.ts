@@ -8,6 +8,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core';
 import { LayoutContainersModule } from './layout';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { LayoutContainersModule } from './layout';
     RoundprogressModule,
     PopoverModule.forRoot(),
     TranslateModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
+    SimpleNotificationsModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

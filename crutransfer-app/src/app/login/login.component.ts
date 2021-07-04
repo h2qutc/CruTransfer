@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService, AuthService } from '@cru-transfer/core';
+import { NotificationsService, NotificationType } from 'angular2-notifications';
 
 @Component({
   selector: 'app-login',
@@ -15,17 +16,17 @@ export class LoginComponent implements OnInit {
   buttonDisabled = false;
   buttonState = '';
 
-  emailModel = 'demo@vien.com';
-  passwordModel = 'demovien1122';
+  submitted = false;
 
   constructor(private apiService: ApiService,
     private router: Router,
+    private notifications: NotificationsService,
     private authService: AuthService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      username: [null, Validators.required],
+      username: [null],
       email: [null, Validators.required],
       password: [null, Validators.required],
     });
@@ -52,10 +53,11 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
+      this.submitted = true;
 
       const { email, password } = this.form.value;
 
-      if (this.buttonDisabled) {
+      if (!this.buttonDisabled) {
 
         this.buttonDisabled = true;
         this.buttonState = 'show-spinner';
@@ -65,11 +67,11 @@ export class LoginComponent implements OnInit {
         }, (error) => {
           this.buttonDisabled = false;
           this.buttonState = '';
-          // this.notifications.create('Error', error.message, NotificationType.Bare, {
-          //   theClass: 'outline primary',
-          //   timeOut: 6000,
-          //   showProgressBar: false
-          // });
+          this.notifications.error('Error', error.error.message, NotificationType.Error, {
+            theClass: 'primary',
+            timeOut: 3000,
+            showProgressBar: false
+          });
         });
       }
     }

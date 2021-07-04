@@ -25,7 +25,7 @@ exports.new = (req, res) => {
     order.sender = req.body.sender;
     order.fileInfos = req.body.fileInfos;
     order.password = req.body.password;
-    order.option = req.body.option;
+    order.action = req.body.action;
     order.message = req.body.message;
     order.recipients = req.body.recipients;
 
@@ -60,7 +60,7 @@ exports.update = (req, res) => {
         order.sender = req.body.sender;
         order.fileInfos = req.body.fileInfos;
         order.password = req.body.password;
-        order.option = req.body.option;
+        order.action = req.body.action;
         order.message = req.body.message;
         order.recipients = req.body.recipients;
 

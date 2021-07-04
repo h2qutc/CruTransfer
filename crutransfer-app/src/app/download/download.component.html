@@ -1,3 +1,42 @@
-download
+<div class="row">
+    <div class="col-12 mb-4">
 
-<button (click)="download()">Download</button>
+        <div class="card auth-card">
+            <div class="position-relative image-side d-flex align-items-center">
+                <div class="card-body justify-content-end d-flex flex-column">
+                    <p class="text-white h1">CruTransfer</p>
+                    <p class="text-white h2">The simplest way to share your files</p>
+                </div>
+            </div>
+            <div class="form-side download-info-side">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="sender"><strong>{{order?.sender}}</strong> sent you some files</h3>
+                        <p class="infos">
+                            Ready to get your files ?
+                        </p>
+
+                        <p class="message" *ngIf="order?.message">
+                            {{order?.message}}
+                        </p>
+
+                        <h3>Verification Code</h3>
+
+                        <div class="link-wrapper">
+                            <div class="link">1 item, 115 KB in total</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <button class="btn btn-primary btn-lg btn-shadow" (click)="download()">
+                            Download files</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
