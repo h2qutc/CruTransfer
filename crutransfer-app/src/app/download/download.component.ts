@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService, IOrder } from '@cru-transfer/core';
+import { ApiService, FileService, IFileInfo, IOrder, IpfsService } from '@cru-transfer/core';
 import { repeat } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-download',
@@ -15,11 +16,12 @@ export class DownloadComponent implements OnInit {
   order: IOrder;
 
   constructor(private route: ActivatedRoute,
+    private ipfsService: IpfsService,
+    private fileService: FileService,
     private apiService: ApiService) { }
 
   ngOnInit() {
     this.orderId = this.route.snapshot.paramMap.get('id');
-    console.log('download id', this.orderId);
     this.getOrder(this.orderId);
   }
 
@@ -30,8 +32,18 @@ export class DownloadComponent implements OnInit {
     })
   }
 
-  download() {
-    console.log('download')
+  async download() {
+    const fileInfo: IFileInfo = this.order.fileInfos;
+    const cid = fileInfo.cid;
+
+    console.log('download order', this.order);
+
+    const content = await this.ipfsService.loadFile(cid);
+    console.log('content', content)
+
+    this.fileService.createAndDownloadBlobFile(content[0], 'testName');
+
+
   }
 
 }

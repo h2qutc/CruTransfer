@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { AuthGuard } from './guards';
-import { ApiService, AuthService, IpfsService, LangService } from './services';
+import { ApiService, AuthService, FileService, IpfsService, LangService } from './services';
 
 const services = [
   ApiService,
   IpfsService,
   AuthService,
-  LangService
+  LangService,
+  FileService
 ];
 const guards = [
   AuthGuard
