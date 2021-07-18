@@ -1,13 +1,21 @@
-var mongoose = require('mongoose');
+import { model, Schema, Document } from 'mongoose';
 
 const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-const validateEmail = (email) => {
-    return regEmail.test(email)
-};
+const validateEmail = (email: string) => regEmail.test(email);
+
+interface IOrder extends Document {
+    sender: string;
+    recipients: Array<string>;
+    fileInfos: any;
+    action: any;
+    password: string;
+    message: string;
+    created: Date
+}
 
 // Setup schema
-var orderSchema = mongoose.Schema({
+const schema = new Schema<IOrder>({
     sender: {
         type: String,
         required: true,
@@ -20,10 +28,10 @@ var orderSchema = mongoose.Schema({
         required: false
     },
     fileInfos: {
-        type: mongoose.Schema.Types.Mixed,
+        type: Schema.Types.Mixed,
         required: true
     },
-    option: {
+    action: {
         type: Number,
         required: true
     },
@@ -40,8 +48,11 @@ var orderSchema = mongoose.Schema({
         default: Date.now
     }
 });
+
+export const Order = model<IOrder>('Order', schema);
+
 // Export Order model
-var Order = module.exports = mongoose.model('order', orderSchema);
-module.exports.get = function (callback, limit) {
-    Order.find(callback).limit(limit);
-}
+// var Order = module.exports = mongoose.model('order', orderSchema);
+// module.exports.get = function (callback, limit) {
+//     Order.find(callback).limit(limit);
+// }

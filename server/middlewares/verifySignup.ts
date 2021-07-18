@@ -1,10 +1,11 @@
-const User = require('../models/userModel');
+import express from "express";
+import { User } from "../models";
 
-checkDuplicateUsernameOrEmail = (req, res, next) => {
+export const checkDuplicateUsernameOrEmail = (req: express.Request, res: express.Response, next: any) => {
     // Username
     User.findOne({
         username: req.body.username
-    }).exec((err, user) => {
+    }).exec((err: any, user: any) => {
         if (err) {
             res.status(500).send({ error: true, message: err });
             return;
@@ -41,6 +42,6 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     });
 };
 
-module.exports = {
-    checkDuplicateUsernameOrEmail
-};
+// module.exports = {
+//     checkDuplicateUsernameOrEmail
+// };
