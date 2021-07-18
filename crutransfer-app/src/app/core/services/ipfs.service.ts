@@ -6,8 +6,9 @@ import { IFileInfo, IMessageInfo } from '../models';
 import { delay, loadKeyringPair } from './utils';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
+import { IPFS } from 'ipfs-core-types';
 
-const IPFS = require('ipfs-core');
+const importedIPFS = require('ipfs-core');
 
 // WS address of Crust chain
 // const chain_ws_url = "ws://127.0.0.1:9933";
@@ -28,7 +29,7 @@ const kr = new Keyring({
 export class IpfsService {
 
   api: ApiPromise;
-  ipfs: any;
+  ipfs: IPFS;
   krp: any;
 
   private _progressSubject: Subject<any> = new Subject<any>();
@@ -39,7 +40,7 @@ export class IpfsService {
   async init() {
     // Connect to chain
     this.api = await ApiPromise.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot });
-    this.ipfs = await IPFS.create();
+    this.ipfs = await importedIPFS.create();
   }
 
   async addFileToIpfsAndSendTx(fileContent: File): Promise<IFileInfo> {
@@ -205,8 +206,13 @@ export class IpfsService {
     });
   }
 
-  async loadFile(cid: string) {
-    await this.ipfs.get(cid);
+  async loadFile(cid: string): Promise<Uint8Array[]> {
+    this.ipfs.cat(cid);
+    const content: Uint8Array[] = [];
+    for await (const chunk of this.ipfs.cat(cid)) {
+      content.push(chunk);
+    }
+    return content;
   }
 
   private notify(infos: any) {
