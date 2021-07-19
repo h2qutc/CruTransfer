@@ -50,9 +50,3 @@ const schema = new Schema<IOrder>({
 });
 
 export const Order = model<IOrder>('Order', schema);
-
-// Export Order model
-// var Order = module.exports = mongoose.model('order', orderSchema);
-// module.exports.get = function (callback, limit) {
-//     Order.find(callback).limit(limit);
-// }

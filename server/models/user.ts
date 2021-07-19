@@ -7,8 +7,6 @@ interface IUser extends Document {
     created: Date;
 }
 
-
-// Setup schema
 const schema = new Schema<IUser>({
     username: {
         type: String,
@@ -29,9 +27,3 @@ const schema = new Schema<IUser>({
 });
 
 export const User = model<IUser>('User', schema);
-
-// Export User model
-// var User = module.exports = mongoose.model('user', userSchema);
-// module.exports.get = function (callback, limit) {
-//     User.find(callback).limit(limit);
-// }

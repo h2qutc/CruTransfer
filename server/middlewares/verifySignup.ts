@@ -2,7 +2,6 @@ import express from "express";
 import { User } from "../models";
 
 export const checkDuplicateUsernameOrEmail = (req: express.Request, res: express.Response, next: any) => {
-    // Username
     User.findOne({
         username: req.body.username
     }).exec((err: any, user: any) => {
@@ -41,7 +40,3 @@ export const checkDuplicateUsernameOrEmail = (req: express.Request, res: express
         });
     });
 };
-
-// module.exports = {
-//     checkDuplicateUsernameOrEmail
-// };
