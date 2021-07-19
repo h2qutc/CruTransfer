@@ -1,7 +1,13 @@
-var mongoose = require('mongoose');
+import { model, Schema, Document } from 'mongoose';
 
-// Setup schema
-var userSchema = mongoose.Schema({
+interface IUser extends Document {
+    username: string;
+    email: string;
+    password: string;
+    created: Date;
+}
+
+const schema = new Schema<IUser>({
     username: {
         type: String,
         required: true
@@ -19,8 +25,5 @@ var userSchema = mongoose.Schema({
         default: Date.now
     }
 });
-// Export User model
-var User = module.exports = mongoose.model('user', userSchema);
-module.exports.get = function (callback, limit) {
-    User.find(callback).limit(limit);
-}
+
+export const User = model<IUser>('User', schema);

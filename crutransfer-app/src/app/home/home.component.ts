@@ -9,6 +9,8 @@ import { ModalUploadFileComponent } from './components';
 
 const listValidatorsEmail = [Validators.required, Validators.email];
 
+const defaultEmail = 'hqho@gmail.com';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -49,8 +51,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.form = this.formBuilder.group({
       fileSrc: [null, Validators.required],
-      sender: [null, listValidatorsEmail],
-      recipient: [null, listValidatorsEmail],
+      sender: [defaultEmail, listValidatorsEmail],
+      recipient: [defaultEmail, listValidatorsEmail],
       message: [null],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],

@@ -6,7 +6,6 @@ import { IFileInfo, IMessageInfo } from '../models';
 import { delay, loadKeyringPair } from './utils';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
-import { IPFS } from 'ipfs-core-types';
 
 const importedIPFS = require('ipfs-core');
 
@@ -29,7 +28,7 @@ const kr = new Keyring({
 export class IpfsService {
 
   api: ApiPromise;
-  ipfs: IPFS;
+  ipfs: any;
   krp: any;
 
   private _progressSubject: Subject<any> = new Subject<any>();
