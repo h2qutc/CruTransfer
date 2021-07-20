@@ -56,9 +56,6 @@ export class App {
     public listen() {
         this.app.listen(this.port, () => {
             console.log(`App listening on the port ${this.port}`);
-
-            // const emailService = new EmailService();
-            // emailService.sendMail('hohongquan.bk@gmail.com', 'demo email', 'content email');
         });
     }
 }
