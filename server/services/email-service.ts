@@ -1,4 +1,7 @@
 import * as nodemailer from 'nodemailer';
+var inlineCss = require('inline-css');
+var fs = require('fs');
+var hogan = require('hogan.js');
 
 
 export class EmailService {
@@ -21,13 +24,23 @@ export class EmailService {
   }
 
 
-  sendMail(to: string, subject: string, content: string) {
+  async sendMail(to: string, subject: string, content: string) {
+
+    //Load the template file
+    const templateFile = fs.readFileSync("services/template/templateEmail.html");
+    //Load and inline the style
+    const templateStyled = await inlineCss(templateFile.toString(), { url: "file://" + __dirname + "/template/" });
+    //Inject the data in the template and compile the html
+    const templateCompiled = hogan.compile(templateStyled);
+    const templateRendered = templateCompiled.render({ text: "HelloWorld" });
+
 
     const options = {
       from: 'noreply@cru-transfer.com',
       to: to,
       subject: subject,
-      text: content
+      text: content,
+      html: templateRendered
     }
 
     this._transporter.sendMail(options, (err, info) => {
@@ -40,6 +53,8 @@ export class EmailService {
       // Preview only available when sending through an Ethereal account
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     });
+
+
 
 
   }

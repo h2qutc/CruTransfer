@@ -117,9 +117,9 @@ export class OrderController {
 	}
 
 
-	sendEmail = (req: express.Request, res: express.Response) => {
+	async sendEmail(req: express.Request, res: express.Response) {
 		const emailService = new EmailService();
-		emailService.sendMail('recipient@gmail.com', 'demo email', 'content email');
+		await emailService.sendMail('recipient@gmail.com', 'demo email', 'content email');
 		res.json({
 			message: 'Email sent'
 		})
