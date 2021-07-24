@@ -60,10 +60,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.form = this.formBuilder.group({
-      fileSrc: [null, Validators.required],
-      sender: [null, listValidatorsEmail],
+      fileSrc: [null],
+      sender: [defaultEmail, listValidatorsEmail],
       recipients: [[defaultEmail], listValidatorsEmail],
-      message: [null],
+      message: ['Feel free to check it out'],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
     });
@@ -82,6 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onFileSelected(event) {
     if (event[0] != null) {
+      console.log('event[0]', event[0]);
       this.form.patchValue({
         fileSrc: event[0]
       })
@@ -141,33 +142,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
 
-  onValidationError(event: any) {
-    console.log('onEmailToValidationError', event);
-  }
-
   sendEmail() {
     this.api.sendEmail().subscribe(data => {
       console.log('send email ok', data);
     });
-  }
-
-  onAdd(event: any) {
-    console.log('onAdd', event, this.recipientsCtrl, this.tagInputRef);
-
-  }
-
-  onRemove(event: any) {
-    console.log('onRemove', event, this.recipientsCtrl.value);
-  }
-
-  onFocus(event: any) {
-    console.log('onFocus', event, this.recipientsCtrl.value);
-    this.focused = true;
-  }
-
-  onBlur(event: any) {
-    console.log('onBlur', event, this.recipientsCtrl.value);
-    this.focused = false;
   }
 
 
