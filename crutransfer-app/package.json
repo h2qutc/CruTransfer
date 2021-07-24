@@ -30,6 +30,7 @@
     "ipfs-core-types": "^0.5.2",
     "long": "^4.0.0",
     "ngx-bootstrap": "^6.2.0",
+    "ngx-chips": "^2.2.2",
     "ngx-dropzone-wrapper": "^10.0.1",
     "node-fetch": "^2.6.1",
     "nouislider": "^15.2.0",

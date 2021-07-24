@@ -28,12 +28,22 @@
               <small *ngIf="submitted && form.controls.sender.invalid" class="invalid">Email is required!</small>
             </label>
 
-            <label class="form-group has-float-label">
+            <!-- <label class="form-group has-float-label">
               <input class="form-control" formControlName="recipient" />
               <span>Email to(*)</span>
               <small *ngIf="submitted && form.controls.recipient.invalid" class="invalid">Email is required!</small>
-            </label>
+            </label> -->
+
           </ng-container>
+
+          <label class="form-group has-float-label">
+            <tag-input class="form-control" formControlName="recipients" [validators]="form.controls.recipients.validator"
+              (onValidationError)="onValidationError($event)" 
+              (onAdd)="onAdd($event)"
+              (onRemove)="onRemove($event)">
+            </tag-input>
+            <span>Email to(*)</span>
+          </label>
 
           <label class="form-group has-float-label">
             <textarea rows="2" class="form-control" formControlName="message"></textarea>
@@ -73,4 +83,6 @@
   </div>
 </div>
 
-<button (click)="sendEmail()">Test email</button> 
+
+
+<button (click)="sendEmail()">Test email</button>

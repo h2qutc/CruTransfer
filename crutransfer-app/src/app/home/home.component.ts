@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService, IFileInfo, SendActions } from '@cru-transfer/core';
 import { Subject } from '@polkadot/x-rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -10,6 +10,7 @@ import { ModalUploadFileComponent } from './components';
 const listValidatorsEmail = [Validators.required, Validators.email];
 
 const defaultEmail = 'hqho@gmail.com';
+
 
 @Component({
   selector: 'app-home',
@@ -41,6 +42,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     return (<any>this.dropzoneRef).directiveRef.dropzone().files;
   }
 
+  get recipientsCtrl(): AbstractControl {
+    return this.form.controls.recipients;
+  }
+
   private _destroyed: Subject<any> = new Subject<any>();
 
   constructor(
@@ -53,7 +58,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       fileSrc: [null, Validators.required],
       sender: [defaultEmail, listValidatorsEmail],
-      recipient: [defaultEmail, listValidatorsEmail],
+      recipients: [[], listValidatorsEmail],
       message: [null],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
@@ -91,6 +96,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     const data = this.form.value;
 
+    console.log('data', data);
+
     this.modalRef = this.modalService.show(ModalUploadFileComponent, <ModalOptions<any>>
       {
         backdrop: true,
@@ -112,15 +119,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   private onActionChanged(action: SendActions) {
     if (action === SendActions.CopyLink) {
       this.form.controls.sender.setErrors(null);
-      this.form.controls.recipient.setErrors(null);
+      this.form.controls.recipients.setErrors(null);
 
       this.form.controls.sender.clearValidators();
-      this.form.controls.recipient.clearValidators();
+      this.form.controls.recipients.clearValidators();
     } else {
       this.form.controls.sender.setValidators(listValidatorsEmail);
-      this.form.controls.recipient.setValidators(listValidatorsEmail);
+      this.form.controls.recipients.setValidators(listValidatorsEmail);
     }
-    this.form.controls.recipient.updateValueAndValidity({ onlySelf: false });
+    this.form.controls.recipients.updateValueAndValidity({ onlySelf: false });
     this.form.controls.sender.updateValueAndValidity({ onlySelf: false });
   }
 
@@ -129,10 +136,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  sendEmail(){
-    this.api.sendEmail().subscribe(data =>{
+
+  onValidationError(event: any) {
+    console.log('onEmailToValidationError', event);
+  }
+
+  sendEmail() {
+    this.api.sendEmail().subscribe(data => {
       console.log('send email ok', data);
     });
+  }
+
+  onAdd(event: any) {
+    console.log('onAdd', event, this.recipientsCtrl.value);
+
+  }
+
+  onRemove(event: any) {
+    console.log('onRemove', event,this.recipientsCtrl.value);
   }
 
 
