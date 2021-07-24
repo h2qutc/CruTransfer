@@ -23,27 +23,17 @@ export class CruTagInputComponent implements OnInit {
   }
 
   onValidationError(event: any) {
-    console.log('onEmailToValidationError', event);
+    this.control.updateValueAndValidity();
   }
 
 
   onAdd(event: any) {
-    console.log('onAdd', event, this.control.value);
-
+    this.control.updateValueAndValidity();
   }
 
   onRemove(event: any) {
-    console.log('onRemove', event);
+    this.control.updateValueAndValidity();
   }
 
-  onFocus(event: any) {
-    console.log('onFocus', event);
-    this.focused = true;
-  }
-
-  onBlur(event: any) {
-    console.log('onBlur', event);
-    this.focused = false;
-  }
 
 }

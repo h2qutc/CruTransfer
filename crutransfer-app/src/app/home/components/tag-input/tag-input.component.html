@@ -1,7 +1,14 @@
 <label class="form-group has-float-label recipients" [class.focused]="focused">
-  <tag-input #tagInput class="form-control" [formControl]="control"
-    [validators]="listValidatorsEmail" (onValidationError)="onValidationError($event)"
-    (onAdd)="onAdd($event)" (onRemove)="onRemove($event)" (onFocus)="onFocus($event)" (onBlur)="onBlur($event)">
+  <tag-input #tagInput class="form-control" [formControl]="control" [validators]="listValidatorsEmail"
+    (onValidationError)="onValidationError($event)" (onAdd)="onAdd($event)" (onRemove)="onRemove($event)"
+    (onFocus)="focused = true;" (onBlur)="focused = false" [ripple]="false" [modelAsStrings]="true"
+    secondaryPlaceholder ="Add a new recipient" placeholder="+ Recipient" maxItems="5">
+    <!-- <ng-template let-item="item" let-index="index">
+      <span class="mr-1" (click)="$event.preventDefault();$event.stopPropagation();">{{item}}</span>
+      <button type="button" class="close" aria-label="Close" (click)="tagInput.removeItem(item, index)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </ng-template> -->
   </tag-input>
   <span>Email to(*)</span>
 </label>

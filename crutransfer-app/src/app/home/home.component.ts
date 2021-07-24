@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       fileSrc: [null, Validators.required],
       sender: [defaultEmail, listValidatorsEmail],
-      recipients: [[], listValidatorsEmail],
+      recipients: [[defaultEmail], listValidatorsEmail],
       message: [null],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],

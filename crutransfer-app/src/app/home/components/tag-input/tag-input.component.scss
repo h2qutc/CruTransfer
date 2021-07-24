@@ -1,10 +1,47 @@
-.form-group {
-  &.recipients {
-    &.focused {
-      .form-control {
-        border-color: rgba(20, 83, 136, 0.6);
-        background: white;
-        color: #3a3a3a;
+:host {
+  .form-group {
+    &.recipients {
+      &.focused {
+        .form-control {
+          border-color: rgba(20, 83, 136, 0.6);
+          background: white;
+          color: #3a3a3a;
+        }
+      }
+    }
+  }
+
+  ::ng-deep tag-input .ng2-tag-input {
+    border: none !important;
+    input {
+      padding-left: 0 !important;
+    }
+
+    tag {
+      background: unset;
+      border: 1px solid #145388;
+      color: #145388;
+      padding: 0 2px 0 10px;
+
+      &:hover,
+      &:active {
+        background: unset !important;
+        color: #145388 !important;
+        box-shadow: none !important;
+      }
+
+      div:first-child {
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        delete-icon {
+          display: flex;
+          align-items: center;
+          &:hover {
+            transform: scale(1.1) !important;
+          }
+        }
       }
     }
   }
