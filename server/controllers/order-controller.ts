@@ -1,5 +1,6 @@
 import express from "express";
 import { Order } from "../models";
+import { EmailService } from "../services";
 
 const sendError = (res: any, message: any) => {
 	res.status(500, {
@@ -26,6 +27,9 @@ export class OrderController {
 			.patch(this.update)
 			.put(this.update)
 			.delete(this.delete);
+
+		//TOREMOVE
+		this.router.route('/email').get(this.sendEmail);
 	}
 
 
@@ -109,6 +113,15 @@ export class OrderController {
 			res.json({
 				message: 'Order deleted'
 			})
+		})
+	}
+
+
+	async sendEmail(req: express.Request, res: express.Response) {
+		const emailService = new EmailService();
+		await emailService.sendMail('recipient@gmail.com', 'demo email', 'content email');
+		res.json({
+			message: 'Email sent'
 		})
 	}
 }

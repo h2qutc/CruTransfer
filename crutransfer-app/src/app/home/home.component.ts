@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IFileInfo, SendActions } from '@cru-transfer/core';
+import { ApiService, IFileInfo, SendActions } from '@cru-transfer/core';
 import { Subject } from '@polkadot/x-rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private _destroyed: Subject<any> = new Subject<any>();
 
   constructor(
+    private api: ApiService,
     private formBuilder: FormBuilder, private modalService: BsModalService,
     private cd: ChangeDetectorRef) { }
 
@@ -119,7 +120,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.form.controls.sender.setValidators(listValidatorsEmail);
       this.form.controls.recipient.setValidators(listValidatorsEmail);
     }
-
     this.form.controls.recipient.updateValueAndValidity({ onlySelf: false });
     this.form.controls.sender.updateValueAndValidity({ onlySelf: false });
   }
@@ -127,6 +127,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._destroyed.next();
     this._destroyed.complete();
+  }
+
+  sendEmail(){
+    this.api.sendEmail().subscribe(data =>{
+      console.log('send email ok', data);
+    });
   }
 
 

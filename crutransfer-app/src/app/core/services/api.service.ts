@@ -86,5 +86,11 @@ export class ApiService {
     return of({});
   }
 
+  sendEmail(): Observable<IResponse> {
+    const url = `${this.baseUrl}/email`;
+    return this.http.get<IResponse>(url);
+  }
+
+
 
 }

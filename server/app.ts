@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
 import express from "express";
 import { connect, connection } from 'mongoose';
+import { EmailService } from "./services";
 const cors = require('cors');
 
 
