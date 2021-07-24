@@ -9,9 +9,9 @@
   <ng-container *ngIf="isFinalized; else progressbar">
     <div class="row">
       <div class="col-12">
-        <h2>You're done!</h2>
+        <h1>You're done!</h1>
         <p class="infos" *ngIf="data.action == SendActionsEnum.SendEmail">
-          The download email has been sent – your transfer is now available.
+          The download email has been sent – your transfer is now available for {{maxAvailableDays}} days.
         </p>
 
         <p class="infos" *ngIf="data.action == SendActionsEnum.CopyLink">
@@ -29,7 +29,8 @@
             <span>{{!isCopied ? 'Copy' : 'Copied'}}</span>
           </button>
         </div>
-        <small [style.visibility]="isCopied ? 'visible' : 'hidden'">This link has been copied to your clipboard !</small>
+        <small [style.visibility]="isCopied ? 'visible' : 'hidden'">This link has been copied to your clipboard
+          !</small>
 
 
       </div>
@@ -51,6 +52,6 @@
       </div>
     </div>
   </ng-template>
-  
+
 
 </div>
