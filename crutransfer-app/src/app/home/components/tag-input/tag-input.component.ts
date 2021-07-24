@@ -16,6 +16,7 @@ export class CruTagInputComponent implements OnInit {
   @Input() control: FormControl;
 
   focused = false;
+  maxItems = 5;
 
   constructor() { }
 
