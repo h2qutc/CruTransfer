@@ -6,4 +6,5 @@
   </tag-input>
   <span>Email to(*)</span>
   <small>Max {{maxItems}} recipients</small>
+  <div *ngIf="control.touched && control.errors?.required" class="invalid-tooltip">Recipient is required!</div>
 </label>
