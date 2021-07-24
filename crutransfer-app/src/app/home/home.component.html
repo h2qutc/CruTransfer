@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row home-page">
   <div class="col-12 mb-4">
 
     <div class="card auth-card">
@@ -9,9 +9,9 @@
         </div>
       </div>
       <div class="form-side">
-        <!-- <a class="c-pointer">
+        <a class="c-pointer">
           <span class="logo-single"></span>
-        </a> -->
+        </a>
         <form [formGroup]="form" novalidate>
 
           <label class="form-group has-float-label">
@@ -28,22 +28,10 @@
               <small *ngIf="submitted && form.controls.sender.invalid" class="invalid">Email is required!</small>
             </label>
 
-            <!-- <label class="form-group has-float-label">
-              <input class="form-control" formControlName="recipient" />
-              <span>Email to(*)</span>
-              <small *ngIf="submitted && form.controls.recipient.invalid" class="invalid">Email is required!</small>
-            </label> -->
+            <cru-tag-input [control]="form.controls.recipients"></cru-tag-input>
 
           </ng-container>
 
-          <label class="form-group has-float-label">
-            <tag-input class="form-control" formControlName="recipients" [validators]="form.controls.recipients.validator"
-              (onValidationError)="onValidationError($event)" 
-              (onAdd)="onAdd($event)"
-              (onRemove)="onRemove($event)">
-            </tag-input>
-            <span>Email to(*)</span>
-          </label>
 
           <label class="form-group has-float-label">
             <textarea rows="2" class="form-control" formControlName="message"></textarea>

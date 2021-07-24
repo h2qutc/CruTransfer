@@ -1,0 +1,11 @@
+.form-group {
+  &.recipients {
+    &.focused {
+      .form-control {
+        border-color: rgba(20, 83, 136, 0.6);
+        background: white;
+        color: #3a3a3a;
+      }
+    }
+  }
+}

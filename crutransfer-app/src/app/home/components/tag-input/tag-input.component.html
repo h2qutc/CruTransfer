@@ -1,0 +1,7 @@
+<label class="form-group has-float-label recipients" [class.focused]="focused">
+  <tag-input #tagInput class="form-control" [formControl]="control"
+    [validators]="listValidatorsEmail" (onValidationError)="onValidationError($event)"
+    (onAdd)="onAdd($event)" (onRemove)="onRemove($event)" (onFocus)="onFocus($event)" (onBlur)="onBlur($event)">
+  </tag-input>
+  <span>Email to(*)</span>
+</label>
