@@ -65,6 +65,10 @@
             <button type="submit" class="btn btn-primary btn-lg btn-shadow" [disabled]="!form.valid"
               (click)="openModal()">
               Transfer</button>
+
+            <button type="button" class="btn btn-warning btn-lg btn-shadow" 
+              (click)="sendEmail()">
+              Test email</button>
           </div>
 
 
@@ -75,6 +79,3 @@
   </div>
 </div>
 
-
-
-<button (click)="sendEmail()">Test email</button>

@@ -1,4 +1,5 @@
 import * as nodemailer from 'nodemailer';
+import { EmailConfig } from '../config';
 var inlineCss = require('inline-css');
 var fs = require('fs');
 var hogan = require('hogan.js');
@@ -7,8 +8,12 @@ var hogan = require('hogan.js');
 export class EmailService {
   private _transporter!: nodemailer.Transporter;
 
+  private _templateFile: any;
+
 
   constructor() {
+
+    this._templateFile = fs.readFileSync("services/template/templateEmail.html");
 
     const config = {
       host: 'smtp.ethereal.email',
@@ -24,22 +29,20 @@ export class EmailService {
   }
 
 
-  async sendMail(to: string, subject: string, content: string) {
+  async sendMail(to: string, data: any ) {
 
-    //Load the template file
-    const templateFile = fs.readFileSync("services/template/templateEmail.html");
-    //Load and inline the style
-    const templateStyled = await inlineCss(templateFile.toString(), { url: "file://" + __dirname + "/template/" });
-    //Inject the data in the template and compile the html
+    const subject = `${data.sender} sent you some files via CruTransfer`;
+
+    const templateStyled = await inlineCss(this._templateFile.toString(), { url: "file://" + __dirname + "/template/" });
+
     const templateCompiled = hogan.compile(templateStyled);
-    const templateRendered = templateCompiled.render({ text: "HelloWorld" });
+    const templateRendered = templateCompiled.render(data);
 
 
     const options = {
-      from: 'noreply@cru-transfer.com',
+      from: EmailConfig.from,
       to: to,
       subject: subject,
-      text: content,
       html: templateRendered
     }
 
