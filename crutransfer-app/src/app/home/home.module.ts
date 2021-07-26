@@ -6,8 +6,9 @@ import { SharedModule } from '@cru-transfer/shared';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoundprogressModule } from 'angular-svg-round-progressbar';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { TagInputModule } from 'ngx-chips';
 import { DropzoneConfigInterface, DropzoneModule, DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
-import { ModalUploadFileComponent } from './components';
+import { CruTagInputComponent, ModalUploadFileComponent } from './components';
 import { HomeComponent } from './home.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -34,9 +35,10 @@ const routes: Routes = [
     SharedModule,
     DropzoneModule,
     RoundprogressModule,
+    TagInputModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent, ModalUploadFileComponent],
+  declarations: [HomeComponent, ModalUploadFileComponent, CruTagInputComponent],
   providers: [
     BsModalService,
     {

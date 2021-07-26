@@ -4,7 +4,7 @@ const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const validateEmail = (email: string) => regEmail.test(email);
 
-interface IOrder extends Document {
+export interface IOrder extends Document {
     sender: string;
     recipients: Array<string>;
     fileInfos: any;

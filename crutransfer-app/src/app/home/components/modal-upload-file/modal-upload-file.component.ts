@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ApiService, IOrder, IpfsService, IResponse } from '@cru-transfer/core';
+import { ApiService, IOrder, IpfsService, IResponse, SendActions } from '@cru-transfer/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { ClipboardService } from 'ngx-clipboard'
 
 @Component({
   selector: 'app-modal-upload-file',
@@ -11,18 +12,25 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./modal-upload-file.component.scss']
 })
 export class ModalUploadFileComponent implements OnInit, OnDestroy {
+  
+  maxAvailableDays = 7;
 
   private _destroyed: Subject<any> = new Subject<any>();
 
   progress: number = 10;
   isFinalized = false;
-  progressMessage: string = 'Sending';
+  progressMessage: string = 'Transferring...';
+
+  SendActionsEnum = SendActions;
 
   data: any;
 
-  link: string;
+  link: string = "";
+
+  isCopied = false;
 
   constructor(private ipfsService: IpfsService, public modalRef: BsModalRef,
+    private _clipboardService: ClipboardService,
     private cd: ChangeDetectorRef, private apiService: ApiService) {
 
   }
@@ -40,7 +48,6 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
       this.cd.detectChanges();
     });
 
-
     this.addFileToIpfsAndSaveOrder();
 
   }
@@ -55,10 +62,12 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
     console.log('selected file', this.data.fileSrc);
     const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.fileSrc);
 
+    fileInfos.name = this.data.fileSrc.name;
+    fileInfos.type = this.data.fileSrc.type;
+
     const order = <IOrder>{
       ...this.data,
-      fileInfos: fileInfos,
-      recipients: [this.data.recipient]
+      fileInfos: fileInfos
     };
     delete (<any>order).fileSrc;
     this.saveOrder(order);
@@ -73,6 +82,11 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
     }, err => {
       console.error('error', err);
     })
+  }
+
+  copyLink() {
+    this._clipboardService.copy(this.link);
+    this.isCopied = true;
   }
 
   transferAnother() {

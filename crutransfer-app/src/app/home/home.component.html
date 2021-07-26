@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row home-page">
   <div class="col-12 mb-4">
 
     <div class="card auth-card">
@@ -9,9 +9,9 @@
         </div>
       </div>
       <div class="form-side">
-        <!-- <a class="c-pointer">
+        <a class="c-pointer">
           <span class="logo-single"></span>
-        </a> -->
+        </a>
         <form [formGroup]="form" novalidate>
 
           <label class="form-group has-float-label">
@@ -25,18 +25,20 @@
             <label class="form-group has-float-label">
               <input class="form-control" formControlName="sender" />
               <span>Your email(*)</span>
-              <small *ngIf="submitted && form.controls.sender.invalid" class="invalid">Email is required!</small>
+              <small>Email must match and be a valid address</small>
+              <div *ngIf="form.controls.sender.touched && form.controls.sender.errors?.email" class="invalid-tooltip">
+                Email is not valid!</div>
+              <div *ngIf="form.controls.sender.touched && form.controls.sender.errors?.required"
+                class="invalid-tooltip">Email is required!</div>
             </label>
 
-            <label class="form-group has-float-label">
-              <input class="form-control" formControlName="recipient" />
-              <span>Email to(*)</span>
-              <small *ngIf="submitted && form.controls.recipient.invalid" class="invalid">Email is required!</small>
-            </label>
+            <cru-tag-input [control]="form.controls.recipients"></cru-tag-input>
+
           </ng-container>
 
+
           <label class="form-group has-float-label">
-            <textarea rows="2" class="form-control" formControlName="message"></textarea>
+            <textarea rows="3" class="form-control" formControlName="message"></textarea>
             <span>Message</span>
           </label>
 
@@ -63,6 +65,10 @@
             <button type="submit" class="btn btn-primary btn-lg btn-shadow" [disabled]="!form.valid"
               (click)="openModal()">
               Transfer</button>
+
+            <button type="button" class="btn btn-warning btn-lg btn-shadow" 
+              (click)="sendEmail()">
+              Test email</button>
           </div>
 
 
@@ -73,4 +79,3 @@
   </div>
 </div>
 
-<button (click)="sendEmail()">Test email</button> 

@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService, IFileInfo, SendActions } from '@cru-transfer/core';
 import { Subject } from '@polkadot/x-rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { TagInputComponent } from 'ngx-chips';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { takeUntil } from 'rxjs/operators';
 import { ModalUploadFileComponent } from './components';
@@ -10,6 +11,7 @@ import { ModalUploadFileComponent } from './components';
 const listValidatorsEmail = [Validators.required, Validators.email];
 
 const defaultEmail = 'hqho@gmail.com';
+
 
 @Component({
   selector: 'app-home',
@@ -19,6 +21,7 @@ const defaultEmail = 'hqho@gmail.com';
 export class HomeComponent implements OnInit, OnDestroy {
 
   @ViewChild('dropzone') dropzoneRef: ElementRef<any>;
+  @ViewChild('tagInput') tagInputRef: ElementRef<TagInputComponent>;
 
   fileInfos: IFileInfo;
 
@@ -36,9 +39,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   progress: number = 10;
   progressMessage: string = 'Sending';
 
+  focused = false;
+
 
   get fileList(): FileList {
     return (<any>this.dropzoneRef).directiveRef.dropzone().files;
+  }
+
+  get recipientsCtrl(): AbstractControl {
+    return this.form.controls.recipients;
   }
 
   private _destroyed: Subject<any> = new Subject<any>();
@@ -51,10 +60,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.form = this.formBuilder.group({
-      fileSrc: [null, Validators.required],
+      fileSrc: [null],
       sender: [defaultEmail, listValidatorsEmail],
-      recipient: [defaultEmail, listValidatorsEmail],
-      message: [null],
+      recipients: [[defaultEmail], listValidatorsEmail],
+      message: ['Feel free to check it out'],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
     });
@@ -73,6 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onFileSelected(event) {
     if (event[0] != null) {
+      console.log('event[0]', event[0]);
       this.form.patchValue({
         fileSrc: event[0]
       })
@@ -90,6 +100,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.submitted = true;
 
     const data = this.form.value;
+
+    console.log('data', data);
 
     this.modalRef = this.modalService.show(ModalUploadFileComponent, <ModalOptions<any>>
       {
@@ -112,15 +124,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   private onActionChanged(action: SendActions) {
     if (action === SendActions.CopyLink) {
       this.form.controls.sender.setErrors(null);
-      this.form.controls.recipient.setErrors(null);
+      this.form.controls.recipients.setErrors(null);
 
       this.form.controls.sender.clearValidators();
-      this.form.controls.recipient.clearValidators();
+      this.form.controls.recipients.clearValidators();
     } else {
       this.form.controls.sender.setValidators(listValidatorsEmail);
-      this.form.controls.recipient.setValidators(listValidatorsEmail);
+      this.form.controls.recipients.setValidators(listValidatorsEmail);
     }
-    this.form.controls.recipient.updateValueAndValidity({ onlySelf: false });
+    this.form.controls.recipients.updateValueAndValidity({ onlySelf: false });
     this.form.controls.sender.updateValueAndValidity({ onlySelf: false });
   }
 
@@ -129,8 +141,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  sendEmail(){
-    this.api.sendEmail().subscribe(data =>{
+
+  sendEmail() {
+    // const payload: any = {"sender":"hqho@gmail.com","recipients":["hqho@gmail.com"],"message":"Feel free to check it out","action":1,"password":null,"fileInfos":{"cid":"QmdgH9ySvweQnjMm9JhYFJdKqSGQeCs4ygUADAo5jLVCeE","size":8694,"name":"demo"}}
+
+    // this.api.addOrder(payload).subscribe(data => {
+    //   console.log('send email ok', data);
+    // });
+
+    this.api.sendEmail().subscribe(data => {
       console.log('send email ok', data);
     });
   }

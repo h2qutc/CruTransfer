@@ -1,5 +1,5 @@
 import express from "express";
-import { Order } from "../models";
+import { IOrder, Order } from "../models";
 import { EmailService } from "../services";
 
 const sendError = (res: any, message: any) => {
@@ -117,11 +117,27 @@ export class OrderController {
 	}
 
 
-	async sendEmail(req: express.Request, res: express.Response) {
+	 sendEmail = async (req: express.Request, res: express.Response) => {
 		const emailService = new EmailService();
-		await emailService.sendMail('recipient@gmail.com', 'demo email', 'content email');
+
+		const data = this.getDataEmailFromOrder();
+
+		await emailService.sendMail('recipient@gmail.com', data);
 		res.json({
 			message: 'Email sent'
 		})
+	}
+
+
+	private getDataEmailFromOrder(order?: any): any {
+		return {
+			sender: 'ho@fd',
+			detail: 'detail',
+			message: 'message',
+			fileName: 'demp.txt',
+			fileSize: '10mb',
+			fileExpiredTime: 'expired time',
+			link: 'link'
+		}
 	}
 }

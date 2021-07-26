@@ -5,36 +5,53 @@
   </button>
 </div>
 <div class="modal-body">
-  <div class="row">
-    <div class="col-12">
-      <app-radial-process-card [title]="progressMessage" [percent]="progress" [isSortable]="true">
-      </app-radial-process-card>
-    </div>
-  </div>
 
-  <ng-container *ngIf="isFinalized">
+  <ng-container *ngIf="isFinalized; else progressbar">
     <div class="row">
       <div class="col-12">
-        <h3>You're done!</h3>
-        <p class="infos">
-          The download email has been sent – your transfer is now available.
+        <h1>You're done!</h1>
+        <p class="infos" *ngIf="data.action == SendActionsEnum.SendEmail">
+          The download email has been sent – your transfer is now available for {{maxAvailableDays}} days.
         </p>
+
+        <p class="infos" *ngIf="data.action == SendActionsEnum.CopyLink">
+          Copy your download link or <a href="{{link}}">see what's inside</a>.
+        </p>
+
         <h3>Download link</h3>
 
-        <div class="link-wrapper">
-          <div class="link"> {{link}}</div>
-          <button class="btn"><i class="glyph-icon iconsminds-file-copy"></i></button>
+        <div class="link-wrapper   position-relative">
+
+          <div class="link">
+            <span [class.copied]="isCopied">{{link}}</span>
+          </div>
+          <button class="btn btn-outline-primary  " (click)="copyLink()">
+            <span>{{!isCopied ? 'Copy' : 'Copied'}}</span>
+          </button>
         </div>
+        <small [style.visibility]="isCopied ? 'visible' : 'hidden'">This link has been copied to your clipboard
+          !</small>
+
 
       </div>
     </div>
 
-    <div class="row">
+    <div class="row action">
       <div class="col-12">
         <button class="btn btn-primary btn-lg btn-shadow" (click)="transferAnother()">
           Transfer another ?</button>
       </div>
     </div>
   </ng-container>
+
+  <ng-template #progressbar>
+    <div class="row">
+      <div class="col-12">
+        <app-radial-process-card [title]="progressMessage" [percent]="progress" [isSortable]="false">
+        </app-radial-process-card>
+      </div>
+    </div>
+  </ng-template>
+
 
 </div>
