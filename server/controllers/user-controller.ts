@@ -1,13 +1,6 @@
 import express from "express";
+import { runAsyncWrapper, sendError, sendOk } from "../helpers";
 import { User } from "../models";
-
-const sendError = (res: any, message: any) => {
-  res.status(500, {
-    error: true,
-    message: message
-  })
-}
-
 
 export class UserController {
 
@@ -29,85 +22,54 @@ export class UserController {
       .delete(this.delete);
   }
 
-  getAll = (req: express.Request, res: express.Response) => {
-    User.find({}, (err: any, users: any) => {
-      if (err) {
-        sendError(res, err);
-      }
-
-      res.json({
-        message: 'Users retrieved successfully',
-        payload: users
-      })
-    })
-  }
+  getAll = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+    const payload = await User.find({}).exec();
+    sendOk(res, payload, 'Users retrieved successfully');
+  })
 
 
-  create = (req: express.Request, res: express.Response) => {
+  create = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
     const user = new User();
 
     user.username = req.body.username || user.username;
     user.email = req.body.email;
     user.password = req.body.password;
 
-    user.save((err: any) => {
-      if (err) {
-        sendError(res, err);
-      }
-
-      res.status(200).json({
-        message: 'New user created',
-        payload: user
-      })
-    })
-  }
+    const payload = await user.save();
+    sendOk(res, payload, 'New user created');
+  })
 
 
-  getById = (req: express.Request, res: express.Response) => {
-    User.findById(req.params.user_id, (err: any, user: any) => {
-      if (err) {
-        sendError(res, err);
-      }
-      res.json({
-        message: 'User loading...',
-        payload: user
-      })
-    })
-  }
+  getById = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+    const payload = await User.findById(req.params.user_id).exec();
+    if (!payload) {
+      sendError(res, 400, 'User not found');
+    }
+    sendOk(res, payload, 'User found');
+  })
 
 
-  update = (req: express.Request, res: express.Response) => {
-    User.findById(req.params.user_id, (err: any, user: any) => {
-      if (err) {
-        sendError(res, err);
-      }
+  update = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+
+    const user = await User.findById(req.params.user_id).exec();
+
+    if (user == null) {
+      sendError(res, 400, 'User not found');
+    }
+
+    if (user != null) {
       user.username = req.body.username || user.username;
       user.email = req.body.email;
       user.password = req.body.password;
+      const saved = await user.save();
+      sendOk(res, saved, 'User updated');
+    }
 
-      user.save((err: any) => {
-        if (err) {
-          sendError(res, err);
-        }
-        res.json({
-          message: 'User updated',
-          payload: user
-        })
-      })
-    })
-  }
+  })
 
 
-  delete = (req: express.Request, res: express.Response) => {
-    User.remove({
-      id: req.params.user_id
-    }, (err: any) => {
-      if (err) {
-        sendError(res, err);
-      }
-      res.json({
-        message: 'User deleted'
-      })
-    })
-  }
+  delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+    const payload = await User.remove({ id: req.params.user_id });
+    sendOk(res, payload, 'User deleted');
+  })
 }
