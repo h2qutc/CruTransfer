@@ -1,13 +1,7 @@
 import express from "express";
-import { IOrder, Order } from "../models";
+import { runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { IOrder, MailOrderData, Order } from "../models";
 import { EmailService } from "../services";
-
-const sendError = (res: any, message: any) => {
-	res.status(500, {
-		error: true,
-		message: message
-	})
-}
 
 export class OrderController {
 
@@ -33,20 +27,14 @@ export class OrderController {
 	}
 
 
-	getAll = (req: express.Request, res: express.Response) => {
-		Order.find({}, (err: any, orders: any) => {
-			if (err) {
-				sendError(res, err);
-			}
-
-			res.status(200).json({
-				payload: orders
-			})
-		})
-	}
+	getAll = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const payload = await Order.find({});
+		sendOk(res, payload);
+	})
 
 
-	create = (req: express.Request, res: express.Response) => {
+	create = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+
 		const order = new Order();
 		order.sender = req.body.sender;
 		order.fileInfos = req.body.fileInfos;
@@ -55,34 +43,28 @@ export class OrderController {
 		order.message = req.body.message;
 		order.recipients = req.body.recipients;
 
-		order.save((err) => {
-			if (err) {
-				sendError(res, err);
-			}
-
-			res.status(200).json({
-				message: 'New order created',
-				payload: order
-			})
-		})
-	}
+		const payload = await order.save();
+		sendOk(res, payload);
+	})
 
 
-	getById = (req: express.Request, res: express.Response) => {
-		Order.findById(req.params.order_id, (err: any, order: any) => {
-			if (err) res.send(err);
-			res.json({
-				message: `Order loaded`,
-				payload: order
-			})
-		})
-	}
+	getById = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const payload = await Order.findById(req.params.order_id);
+		if (!payload) {
+			sendError(res, 404, 'Order not found');
+		}
+		sendOk(res, payload, 'Order found');
+	})
 
 
-	update = (req: express.Request, res: express.Response) => {
-		Order.findById(req.params.order_id, (err: any, order: any) => {
-			if (err) res.send(err);
+	update = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const order = await Order.findById(req.params.order_id);
 
+		if (order == null) {
+			sendError(res, 400, 'Order not found');
+		}
+
+		if (order != null) {
 			order.sender = req.body.sender;
 			order.fileInfos = req.body.fileInfos;
 			order.password = req.body.password;
@@ -90,54 +72,55 @@ export class OrderController {
 			order.message = req.body.message;
 			order.recipients = req.body.recipients;
 
-			order.save((err: any) => {
-				if (err) {
-					sendError(res, err);
-				}
-				res.json({
-					message: 'Order updated',
-					payload: order
-				})
-			})
-		})
-	}
-
-
-	delete = (req: express.Request, res: express.Response) => {
-		Order.remove({
-			id: req.params.order_id
-		}, (err: any) => {
-			if (err) {
-				sendError(res, err);
-			}
-			res.json({
-				message: 'Order deleted'
-			})
-		})
-	}
-
-
-	 sendEmail = async (req: express.Request, res: express.Response) => {
-		const emailService = new EmailService();
-
-		const data = this.getDataEmailFromOrder();
-
-		await emailService.sendMail('recipient@gmail.com', data);
-		res.json({
-			message: 'Email sent'
-		})
-	}
-
-
-	private getDataEmailFromOrder(order?: any): any {
-		return {
-			sender: 'ho@fd',
-			detail: 'detail',
-			message: 'message',
-			fileName: 'demp.txt',
-			fileSize: '10mb',
-			fileExpiredTime: 'expired time',
-			link: 'link'
+			const saved = await order.save();
+			sendOk(res, saved, 'Order updated');
 		}
+
+	})
+
+
+	delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const payload = await Order.deleteOne({ id: req.params.order_id });
+		sendOk(res, payload, 'Order deleted');
+	})
+
+
+	sendEmail = async (req: express.Request, res: express.Response) => {
+
+		const order = <any>{ "_id": { "$oid": "60ff40e2979c4247f8a42821" }, "recipients": ["recipient1@gmail.com", "recipient2@outlook.com"], "created": { "$date": "2021-07-26T23:10:26.782Z" }, "sender": "hqho@gmail.com", "fileInfos": { "cid": "QmPD42ToJwAh9Yc69qz5YUvkv73DmR6gi5dzkkpc9EfyhY", "size": 29400, "name": "DemoPDF.pdf", "type": "application/pdf" }, "password": null, "action": 1, "message": "Feel free to check it out", "__v": 0 }
+
+		const payload = await this.sendEmailToSender(order);
+
+		res.json({
+			message: 'Email sent',
+			payload: payload
+		})
 	}
+
+
+	private sendEmailToRecipients = async (order: IOrder) => {
+
+		const emailService = EmailService.getInstance();
+
+		const data = new MailOrderData(order);
+		const subject = `${data.sender} sent you some files via CruTransfer`;
+
+		const payload = await emailService.sendEmailToRecipients(subject, data);
+
+		console.log('sendEmailToRecipients', payload);
+
+	}
+
+	private sendEmailToSender = async (order: IOrder) => {
+		const emailService = EmailService.getInstance();
+
+		const data = new MailOrderData(order);
+		const subject = `Your files were sent successfully`;
+
+		const payload = await emailService.sendEmailToSenderOnceDownloaded(subject, data);
+
+		console.log('sendEmailToSender', payload);
+	}
+
+
 }

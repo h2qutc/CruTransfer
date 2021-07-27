@@ -43,7 +43,7 @@ export class UserController {
   getById = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
     const payload = await User.findById(req.params.user_id).exec();
     if (!payload) {
-      sendError(res, 400, 'User not found');
+      sendError(res, 404, 'User not found');
     }
     sendOk(res, payload, 'User found');
   })
@@ -69,7 +69,7 @@ export class UserController {
 
 
   delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-    const payload = await User.remove({ id: req.params.user_id });
+    const payload = await User.deleteOne({ id: req.params.user_id });
     sendOk(res, payload, 'User deleted');
   })
 }

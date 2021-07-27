@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer';
-import { EmailConfig } from '../config';
+import { EmailConfig, SMTP_CONFIG } from '../config';
 var inlineCss = require('inline-css');
 var fs = require('fs');
 var hogan = require('hogan.js');
@@ -8,57 +8,57 @@ var hogan = require('hogan.js');
 export class EmailService {
   private _transporter!: nodemailer.Transporter;
 
-  private _templateFile: any;
+  private _templateHtmlRecipients: any;
+  private _templateHtmlSender: any;
+  private _templateHtmlSenderOnceDownloaded: any;
 
+  private static instance: EmailService;
 
-  constructor() {
+  private constructor() {
 
-    this._templateFile = fs.readFileSync("services/template/templateEmail.html");
+    this._templateHtmlRecipients = fs.readFileSync("services/template/templateEmailRecipients.html");
+    this._templateHtmlSender = fs.readFileSync("services/template/templateEmailSender.html");
+    this._templateHtmlSenderOnceDownloaded = fs.readFileSync("services/template/templateEmailSenderOnceDownloaded.html");
 
-    const config = {
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-        user: 'cielo.stark99@ethereal.email',
-        pass: 'ythCxGTyShYRpH8qtQ'
-      }
-    };
+    this._transporter = nodemailer.createTransport(SMTP_CONFIG);
+  }
 
-    this._transporter = nodemailer.createTransport(config);
+  public static getInstance(): EmailService {
+    if(!EmailService.instance){
+      EmailService.instance = new EmailService();
+    }
 
+    return EmailService.instance;
+  }
+
+  public sendEmailToRecipients(subject: string, data: any): Promise<any>{
+    return this.sendMail(subject, data, this._templateHtmlRecipients);
+  }
+
+  public sendEmailToSender(subject: string, data: any): Promise<any>{
+    return this.sendMail(subject, data, this._templateHtmlSender);
+  }
+
+  public sendEmailToSenderOnceDownloaded(subject: string, data: any): Promise<any>{
+    return this.sendMail(subject, data, this._templateHtmlSenderOnceDownloaded);
   }
 
 
-  async sendMail(to: string, data: any ) {
+  private async sendMail(subject: string, data: any, templateHtml: any ): Promise<any> {
 
-    const subject = `${data.sender} sent you some files via CruTransfer`;
-
-    const templateStyled = await inlineCss(this._templateFile.toString(), { url: "file://" + __dirname + "/template/" });
+    const templateStyled = await inlineCss(templateHtml.toString(), { url: "file://" + __dirname + "/template/" });
 
     const templateCompiled = hogan.compile(templateStyled);
     const templateRendered = templateCompiled.render(data);
 
-
     const options = {
       from: EmailConfig.from,
-      to: to,
+      to: data.recipients,
       subject: subject,
       html: templateRendered
     }
 
-    this._transporter.sendMail(options, (err, info) => {
-      if (err) {
-        console.log('Error occurred. ' + err.message);
-        return process.exit(1);
-      }
-
-      console.log('Message sent: %s', info.messageId);
-      // Preview only available when sending through an Ethereal account
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    });
-
-
-
+    return this._transporter.sendMail(options);
 
   }
 }
