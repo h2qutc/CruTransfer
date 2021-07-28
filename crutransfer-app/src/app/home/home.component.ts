@@ -4,7 +4,7 @@ import { ApiService, IFileInfo, SendActions } from '@cru-transfer/core';
 import { Subject } from '@polkadot/x-rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TagInputComponent } from 'ngx-chips';
-import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+import { DropzoneComponent, DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { takeUntil } from 'rxjs/operators';
 import { ModalUploadFileComponent } from './components';
 
@@ -20,7 +20,7 @@ const defaultEmail = 'hqho@gmail.com';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  @ViewChild('dropzone') dropzoneRef: ElementRef<any>;
+  @ViewChild('dropzone') dropzoneCmp: DropzoneComponent;
   @ViewChild('tagInput') tagInputRef: ElementRef<TagInputComponent>;
 
   fileInfos: IFileInfo;
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   get fileList(): FileList {
-    return (<any>this.dropzoneRef).directiveRef.dropzone().files;
+    return this.dropzoneCmp.directiveRef.dropzone().files;
   }
 
   get recipientsCtrl(): AbstractControl {
@@ -92,6 +92,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   reset() {
     this.submitted = false;
     this.form.reset();
+    this.dropzoneCmp.directiveRef.reset();
     this.form.controls.action.setValue(SendActions.SendEmail);
   }
 
@@ -117,6 +118,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.modalRef.onHidden.subscribe((res) => {
       this.reset();
+      this.cd.detectChanges();
     })
 
   }

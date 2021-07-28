@@ -10,4 +10,5 @@ export interface IOrder {
     message: string;
     createdDate: Date;
     expiredDate?: Date;
+    link: string;
 }

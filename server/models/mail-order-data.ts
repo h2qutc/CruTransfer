@@ -8,24 +8,25 @@ export class MailOrderData {
     message: string = '';
     fileName: string = '';
     fileSize: number = 0;
-    fileExpiredTime: string = '';
+    expiredDate: string = '';
+    createdDate: string = '';
     link: string = '';
 
     constructor(order: IOrder) {
 
-        const nbItem = 1;
-        const detail = `${nbItem} item, ${order.fileInfos.size} in total`;
-        const expiredTime = 'expired time';
-
         this.sender = order.sender;
         this.recipients = order?.recipients;
         this.recipientsHtml = this.factoryRecipientsHtml(this.recipients);
-        this.detail = detail;
         this.message = order.message;
         this.fileName = order.fileInfos.name;
-        this.fileSize = order.fileInfos.size;
-        this.fileExpiredTime = expiredTime;
-        this.link = 'http://localhost:4204/download';
+        this.fileSize = order.fileInfos.humanSize;
+        this.createdDate = order.createdDate.toLocaleDateString();
+        this.expiredDate = order.expiredDate.toLocaleDateString();
+
+        const nbItem = 1;
+        this.detail = `${nbItem} item, ${this.fileSize} in total - Expires on ${this.expiredDate}`;
+
+        this.link = order.link;
 
     }
 

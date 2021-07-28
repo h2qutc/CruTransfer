@@ -1,8 +1,10 @@
 import express from "express";
-import { DAYS_BEFORE_EXPIRED } from "../config";
+import { BaseUrlFront, DAYS_BEFORE_EXPIRED } from "../config";
 import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
 import { IOrder, MailOrderData, Order } from "../models";
 import { EmailService } from "../services";
+
+var filesize = require('file-size');
 
 export class OrderController {
 
@@ -38,16 +40,25 @@ export class OrderController {
 
 		const order = new Order();
 		order.sender = req.body.sender;
-		order.fileInfos = req.body.fileInfos;
 		order.password = req.body.password;
 		order.action = req.body.action;
 		order.message = req.body.message;
 		order.recipients = req.body.recipients;
 
+		const fileInfos = req.body.fileInfos;
+		fileInfos.humanSize = filesize(fileInfos.size, { fixed: 1 }).human('si');
+		order.fileInfos = fileInfos;
+
 		order.createdDate = new Date();
 		order.createdDate = addDays(order.createdDate, DAYS_BEFORE_EXPIRED);
 
-		const payload = await order.save();
+		let payload = await order.save();
+		order.link = `${BaseUrlFront}/download/${payload._id}`;
+		payload = await order.save();
+
+		await this.sendEmailToRecipients(order);
+		await this.sendEmailToSender(order);
+
 		sendOk(res, payload);
 	})
 
@@ -91,7 +102,7 @@ export class OrderController {
 
 	sendEmail = async (req: express.Request, res: express.Response) => {
 
-		const order = <any>{ "_id": { "$oid": "60ff40e2979c4247f8a42821" }, "recipients": ["recipient1@gmail.com", "recipient2@outlook.com"], "created": { "$date": "2021-07-26T23:10:26.782Z" }, "sender": "hqho@gmail.com", "fileInfos": { "cid": "QmPD42ToJwAh9Yc69qz5YUvkv73DmR6gi5dzkkpc9EfyhY", "size": 29400, "name": "DemoPDF.pdf", "type": "application/pdf" }, "password": null, "action": 1, "message": "Feel free to check it out", "__v": 0 }
+		const order = <any>{ "_id": { "$oid": "6101ccf619763a4c60b08689" }, "recipients": ["hqho@gmail.com"], "createdDate": { "$date": "2021-08-04T21:32:38.960Z" }, "expiredDate": { "$date": "2021-07-28T21:32:02.450Z" }, "sender": "hqho@gmail.com", "password": null, "action": 1, "message": "Feel free to check it out", "fileInfos": { "cid": "QmPD42ToJwAh9Yc69qz5YUvkv73DmR6gi5dzkkpc9EfyhY", "size": 29400, "name": "DemoPDF.pdf", "type": "application/pdf", "humanSize": "29.4 kB" }, "__v": 0, "link": "http://localhost:4205/6101ccf619763a4c60b08689" };
 
 		const payload = await this.sendEmailToRecipients(order);
 

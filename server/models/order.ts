@@ -13,6 +13,7 @@ export interface IOrder extends Document {
     message: string;
     createdDate: Date;
     expiredDate: Date;
+    link: string;
 }
 
 // Setup schema
@@ -51,6 +52,9 @@ const schema = new Schema<IOrder>({
     expiredDate: {
         type: Date,
         default: new Date()
+    }, 
+    link: {
+        type: String
     }
 });
 
