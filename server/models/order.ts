@@ -1,4 +1,4 @@
-import { model, Schema, Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 
 const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -11,7 +11,8 @@ export interface IOrder extends Document {
     action: any;
     password: string;
     message: string;
-    created: Date
+    createdDate: Date;
+    expiredDate: Date;
 }
 
 // Setup schema
@@ -43,9 +44,13 @@ const schema = new Schema<IOrder>({
         type: String,
         required: false
     },
-    created: {
+    createdDate: {
         type: Date,
-        default: Date.now
+        default: new Date()
+    },
+    expiredDate: {
+        type: Date,
+        default: new Date()
     }
 });
 

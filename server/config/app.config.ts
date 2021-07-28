@@ -1,3 +1,7 @@
+export const AuthConfig = {
+    secret: "crutransfer-secret-key"
+}
+
 export const EmailConfig = {
     from: 'noreply@crutransfer.com'
 }
@@ -10,3 +14,5 @@ export const SMTP_CONFIG = {
         pass: 'ythCxGTyShYRpH8qtQ'
     }
 }
+
+export const DAYS_BEFORE_EXPIRED = 7;

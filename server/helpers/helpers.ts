@@ -18,3 +18,9 @@ export const sendOk = (res: any, payload: any, message?: any) => {
         payload: payload
     })
 }
+
+export const addDays = (date: Date, days: number): Date => {
+    let result = new Date();
+    result.setDate(date.getDate() + days);
+    return result;
+}

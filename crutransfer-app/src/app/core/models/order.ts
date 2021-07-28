@@ -8,5 +8,6 @@ export interface IOrder {
     action: SendActions;
     password: string;
     message: string;
-    created: Date;
+    createdDate: Date;
+    expiredDate?: Date;
 }

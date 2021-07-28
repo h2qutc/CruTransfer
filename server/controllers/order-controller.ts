@@ -1,5 +1,6 @@
 import express from "express";
-import { runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { DAYS_BEFORE_EXPIRED } from "../config";
+import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
 import { IOrder, MailOrderData, Order } from "../models";
 import { EmailService } from "../services";
 
@@ -42,6 +43,9 @@ export class OrderController {
 		order.action = req.body.action;
 		order.message = req.body.message;
 		order.recipients = req.body.recipients;
+
+		order.createdDate = new Date();
+		order.createdDate = addDays(order.createdDate, DAYS_BEFORE_EXPIRED);
 
 		const payload = await order.save();
 		sendOk(res, payload);
@@ -89,7 +93,7 @@ export class OrderController {
 
 		const order = <any>{ "_id": { "$oid": "60ff40e2979c4247f8a42821" }, "recipients": ["recipient1@gmail.com", "recipient2@outlook.com"], "created": { "$date": "2021-07-26T23:10:26.782Z" }, "sender": "hqho@gmail.com", "fileInfos": { "cid": "QmPD42ToJwAh9Yc69qz5YUvkv73DmR6gi5dzkkpc9EfyhY", "size": 29400, "name": "DemoPDF.pdf", "type": "application/pdf" }, "password": null, "action": 1, "message": "Feel free to check it out", "__v": 0 }
 
-		const payload = await this.sendEmailToSender(order);
+		const payload = await this.sendEmailToRecipients(order);
 
 		res.json({
 			message: 'Email sent',
@@ -124,3 +128,4 @@ export class OrderController {
 
 
 }
+
