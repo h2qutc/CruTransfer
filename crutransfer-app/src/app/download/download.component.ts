@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService, FileService, IFileInfo, IOrder, IpfsService } from '@cru-transfer/core';
 import { repeat } from 'rxjs/operators';
 
@@ -16,6 +16,7 @@ export class DownloadComponent implements OnInit {
   order: IOrder;
 
   constructor(private route: ActivatedRoute,
+    private router: Router,
     private ipfsService: IpfsService,
     private fileService: FileService,
     private apiService: ApiService) { }
@@ -29,6 +30,9 @@ export class DownloadComponent implements OnInit {
     this.apiService.getOrder(orderId).subscribe(resp => {
       console.log('get order', resp);
       this.order = resp.payload;
+      this.order.expiredDate = new Date(resp.payload.expiredDate);
+    }, err => {
+      this.order = null;
     })
   }
 
@@ -41,9 +45,14 @@ export class DownloadComponent implements OnInit {
     const content = await this.ipfsService.loadFile(cid);
     console.log('content', content)
 
-    this.fileService.createAndDownloadBlobFile(content[0], 'testName');
+    this.fileService.createAndDownloadBlobFile(content[0], this.order.fileInfos);
 
 
+  }
+
+
+  private goHome(){
+    this.router.navigate(['home']);
   }
 
 }
