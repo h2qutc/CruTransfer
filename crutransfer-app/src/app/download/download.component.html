@@ -10,26 +10,30 @@
             </div>
             <div class="form-side download-info-side">
                 <div class="row">
-                    <div class="col-12">
-                        <h3 class="sender"><strong>{{order?.sender}}</strong> sent you some files</h3>
+                    <a routerLink="/">
+                        <span class="logo-single"></span>
+                    </a>
+                    <div class="col-12" *ngIf="order; else nodata">
+                        <h3 class="sender"><strong>{{order.sender}}</strong> sent you some files</h3>
                         <p class="infos">
                             Ready to get your files ?
                         </p>
 
-                        <p class="message" *ngIf="order?.message">
-                            {{order?.message}}
+                        <p class="message">
+                            1 item, {{order.fileInfos.humanSize}} in total - Expires on
+                            {{order.expiredDate.toLocaleDateString()}}
                         </p>
 
-                        <h3>Download link</h3>
+                        <h3>Message</h3>
 
-                        <div class="link-wrapper">
-                            <div class="link">1 item, 115 KB in total</div>
+                        <div class="link-wrapper" *ngIf="order.message">
+                            <div class="link">{{order.message}}</div>
                         </div>
 
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" *ngIf="order">
                     <div class="col-12">
                         <button class="btn btn-primary btn-lg btn-shadow" (click)="download()">
                             Download files</button>
@@ -40,3 +44,16 @@
 
     </div>
 </div>
+
+<ng-template #nodata>
+    <div class="col-12">
+        <h6 class="mb-4">Ooops... looks like an error occurred!</h6>
+        <p class="mb-0 text-muted text-small mb-0">
+
+        </p>
+        <p class="display-1 font-weight-bold mb-5">404</p>
+        <a [routerLink]="'/home'" class="btn btn-primary btn-lg btn-shadow" type="submit">
+            GO BACK HOME
+        </a>
+    </div>
+</ng-template>

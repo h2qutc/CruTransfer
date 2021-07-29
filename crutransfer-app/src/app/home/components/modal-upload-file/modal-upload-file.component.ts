@@ -12,7 +12,7 @@ import { ClipboardService } from 'ngx-clipboard'
   styleUrls: ['./modal-upload-file.component.scss']
 })
 export class ModalUploadFileComponent implements OnInit, OnDestroy {
-  
+
   maxAvailableDays = 7;
 
   private _destroyed: Subject<any> = new Subject<any>();
@@ -76,7 +76,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   saveOrder(order: IOrder) {
     this.apiService.addOrder(order).subscribe((resp: IResponse) => {
-      this.link = `${environment.baseUrl}/download/${resp.payload._id}`;
+      this.link = resp.payload.link;
       console.log('payload', resp.payload);
       this.cd.detectChanges();
     }, err => {
@@ -87,6 +87,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   copyLink() {
     this._clipboardService.copy(this.link);
     this.isCopied = true;
+    this.cd.detectChanges();
   }
 
   transferAnother() {

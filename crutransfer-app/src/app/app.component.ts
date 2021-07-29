@@ -21,11 +21,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.langService.init();
 
-    // const ipfsReady$ = from(this.ipfsService.init());
-    // ipfsReady$.subscribe(() => {
-    //   console.log('IPFS and Crust Network is ready');
-    //   this.loading = true;
-    // })
+    const ipfsReady$ = from(this.ipfsService.init());
+    ipfsReady$.subscribe(() => {
+      console.log('IPFS and Crust Network is ready');
+      this.loading = true;
+    })
 
   }
 
