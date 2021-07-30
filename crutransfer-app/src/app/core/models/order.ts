@@ -11,4 +11,6 @@ export interface IOrder {
     createdDate: Date;
     expiredDate?: Date;
     link: string;
+
+    status: string;
 }

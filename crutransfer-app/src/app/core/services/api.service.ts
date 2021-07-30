@@ -42,6 +42,12 @@ export class ApiService {
     return this.http.get<IResponse>(url).pipe(resp => resp);
   }
 
+  getOrdersByUser(email: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/orders/getOrdersByUser`;
+    return this.http.post<IResponse>(url, {
+      email: email
+    }).pipe(map(resp => resp));
+  }
 
   getOrder(id: string): Observable<IResponse> {
     const url = `${this.baseUrl}/orders/${id}`;

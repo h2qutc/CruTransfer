@@ -1,0 +1,19 @@
+<div [ngClass]="{'card d-flex flex-row mb-3': true, 'active':false}">
+  <div class="d-flex flex-grow-1 min-width-zero">
+    <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between 
+    min-width-zero align-items-md-center">
+      <a class="list-item-heading mb-0 truncate w-40 w-xs-100" href="javascript:;">
+        {{order.fileInfos.name}}
+      </a>
+      <p class="mb-0 text-muted text-small w-15 w-xs-100">{{order.fileInfos.humanSize}}</p>
+      <p class="mb-0 text-muted text-small w-15 w-xs-100">{{order.createdDate | date: 'short'}}</p>
+      <div class="w-15 w-xs-100">
+        <span [class]="'badge badge-pill badge-primary'">{{order.expiredDate | date: 'short'}}</span>
+      </div>
+    </div>
+    <label class="custom-control custom-checkbox mb-1 align-self-center pr-4">
+      <input type="checkbox" class="custom-control-input" [checked]="true" (change)="onSelect()">
+      <label class="custom-control-label"></label>
+    </label>
+  </div>
+</div>

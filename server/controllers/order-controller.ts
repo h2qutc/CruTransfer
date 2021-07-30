@@ -25,6 +25,8 @@ export class OrderController {
 			.put(this.update)
 			.delete(this.delete);
 
+		this.router.route('/orders/getOrdersByUser').post(this.getOrdersByUser);
+
 		//TOREMOVE
 		this.router.route('/email').get(this.sendEmail);
 	}
@@ -32,6 +34,12 @@ export class OrderController {
 
 	getAll = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const payload = await Order.find({});
+		sendOk(res, payload);
+	})
+
+	getOrdersByUser = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const email = req.body.email;
+		const payload = await Order.find({ sender: email });
 		sendOk(res, payload);
 	})
 
