@@ -2,6 +2,7 @@ import { SendActions } from "../enums";
 import { IFileInfo } from "./file-info";
 
 export interface IOrder {
+    _id: string;
     sender: string;
     recipients: string[];
     fileInfos: IFileInfo;

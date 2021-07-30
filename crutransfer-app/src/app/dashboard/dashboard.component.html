@@ -32,7 +32,7 @@
   </div>
 
   <div class="col-12 list">
-    <cru-card-order [order]="item" *ngFor="let item of data;"></cru-card-order>
+    <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of data;" ></cru-card-order>
   </div>
   <div class="col-12">
   </div>
