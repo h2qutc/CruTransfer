@@ -33,6 +33,7 @@
     "ngx-chips": "^2.2.2",
     "ngx-clipboard": "^14.0.1",
     "ngx-dropzone-wrapper": "^10.0.1",
+    "ngx-perfect-scrollbar": "^10.1.1",
     "node-fetch": "^2.6.1",
     "nouislider": "^15.2.0",
     "rxjs": "~6.6.0",

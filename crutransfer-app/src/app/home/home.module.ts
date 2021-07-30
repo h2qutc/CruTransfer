@@ -36,6 +36,7 @@ const routes: Routes = [
     DropzoneModule,
     RoundprogressModule,
     TagInputModule,
+    
     RouterModule.forChild(routes)
   ],
   declarations: [HomeComponent, ModalUploadFileComponent, CruTagInputComponent],
