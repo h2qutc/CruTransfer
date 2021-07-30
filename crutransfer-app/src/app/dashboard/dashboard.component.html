@@ -1,4 +1,36 @@
 <div class="row">
+
+  <div class="col-12">
+    <h1>Transfer</h1>
+
+    <!-- <app-heading></app-heading> -->
+    <!-- <app-breadcrumb></app-breadcrumb> -->
+    <div class="display-options-container">
+      <div id="displayOptions" [collapse]="displayOptionsCollapsed" class="collapse dont-collapse-sm">
+        <div class="d-block d-md-inline-block">
+          <div class="float-md-left mr-1 mb-1" dropdown>
+            <button id="button-basic" dropdownToggle type="button" class="btn btn-outline-dark btn-xs dropdown-toggle"
+              aria-controls="dropdown-basic">
+              Order By : {{itemOrder}} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+              <li role="menuitem" *ngFor="let item of itemOptionsOrders"><a
+                  [ngClass]="item === itemOrder ? 'dropdown-item active' : 'dropdown-item'"
+                  (click)="itemOrder = item">{{item}}</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="d-inline-block">
+          <div class="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+            <input class="form-control" placeholder="Search">
+            <!-- (keyup)="updateFilter($event)" -->
+          </div>
+        </div>
+      </div>
+      <div class="separator mb-4"></div>
+    </div>
+  </div>
+
   <div class="col-12 list">
     <cru-card-order [order]="item" *ngFor="let item of data;"></cru-card-order>
   </div>

@@ -10,6 +10,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core';
 import { LayoutContainersModule } from './layout';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { LayoutContainersModule } from './layout';
     TranslateModule.forRoot(),
     CoreModule.forRoot(),
     SimpleNotificationsModule.forRoot(),
-    ClipboardModule
+    ClipboardModule,
+    CollapseModule.forRoot(),
+    BsDropdownModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

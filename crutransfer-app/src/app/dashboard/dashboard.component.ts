@@ -12,6 +12,10 @@ export class DashboardComponent implements OnInit {
 
   currentUser: IUser;
 
+  itemOrder = 'Title';
+  itemOptionsOrders = ['Title', 'Category', 'Status', 'Label'];
+  displayOptionsCollapsed = false;
+
   constructor(private api: ApiService, private authService: AuthService) { 
     this.currentUser = this.authService.user;
   }

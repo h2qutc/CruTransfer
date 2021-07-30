@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CardOrderComponent } from './components';
 import { DashboardComponent } from './dashboard.component';
 
@@ -21,7 +23,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
+    CollapseModule,
+    RouterModule.forChild(routes),
+    BsDropdownModule
   ],
   declarations: [
     DashboardComponent,
