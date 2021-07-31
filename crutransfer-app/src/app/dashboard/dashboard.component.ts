@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
 
   goToDetail(order: IOrder) {
     console.log('detail', order);
-    this.router.navigate([`/dashboard/${order._id}`])
+    this.router.navigate([`/dashboard/${order._id}`]);
   }
 
 }

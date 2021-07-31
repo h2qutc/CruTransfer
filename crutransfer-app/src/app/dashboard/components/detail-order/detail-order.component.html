@@ -2,7 +2,9 @@
 
   <div class="col-12">
     <h1>{{order?.fileInfos.name}}</h1>
-    <h5>Detail</h5>
+    <h5>1 file - {{order?.fileInfos.humanSize}} - Sent {{order?.createdDate | date:'short'}} - 
+      <span [class]="'badge badge-pill badge-info'">Expires in {{order?.expiredDate | date: 'short'}}</span>
+    </h5>
   </div>
 
 </div>
@@ -17,9 +19,9 @@
       <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4">
         <a routerLink="./" class="card">
           <div class="card-body text-center">
-            <i class="iconsminds-clock"></i>
-            <p class="card-text font-weight-semibold mb-0">Download</p>
-            <p class="lead text-center">16</p>
+            <i class="simple-icon-cloud-download"></i>
+            <p class="card-text font-weight-semibold mb-0">Total downloads</p>
+            <p class="lead text-center">{{order?.totalDownloads}}</p>
           </div>
         </a>
       </div>
@@ -27,9 +29,9 @@
       <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4">
         <a routerLink="./" class="card">
           <div class="card-body text-center">
-            <i class="iconsminds-basket-coins"></i>
+            <i class="iconsminds-letter-sent"></i>
             <p class="card-text font-weight-semibold mb-0">Recipients</p>
-            <p class="lead text-center">32</p>
+            <p class="lead text-center">{{order?.recipients.length}}</p>
           </div>
         </a>
       </div>
@@ -39,7 +41,7 @@
           <div class="card-body text-center">
             <i class="iconsminds-arrow-refresh"></i>
             <p class="card-text font-weight-semibold mb-0">Size</p>
-            <p class="lead text-center">4</p>
+            <p class="lead text-center">{{order?.fileInfos.humanSize}}</p>
           </div>
         </a>
       </div>
@@ -49,9 +51,9 @@
 
 <div class="row">
   <div class="col-12 ml-2">
-    <div class="link mr-1">dgf</div>
-    <button type="button" class="btn btn-primary c-pointer mr-1 mb-1">
-      <i class="iconsminds-file-copy"></i> Copy link
+    <div class="link mr-1">{{order?.link}}</div>
+    <button (click)="copyLink()" type="button" class="btn btn-primary c-pointer mr-1 mb-1">
+      <i class="iconsminds-file-copy"></i> Copy
     </button>
   </div>
 </div>
@@ -61,20 +63,20 @@
 
 <div class="row mb-4">
   <div class="col-12 ml-2">
-    <button type="button" class="btn btn-primary c-pointer mr-1 mb-1">
+    <button (click)="download()" type="button" class="btn btn-primary c-pointer mr-1 mb-1">
       <i class="simple-icon-cloud-download"></i> Download
     </button>
 
-    <button type="button" class="btn btn-secondary c-pointer  mr-1 mb-1">
+    <button (click)="preview()" type="button" class="btn btn-secondary c-pointer  mr-1 mb-1">
       <i class="iconsminds-preview"></i> Preview
     </button>
 
-    <button type="button" class="btn btn-info c-pointer  mr-1 mb-1">
+    <!-- <button (click)="forward()" type="button" class="btn btn-info c-pointer  mr-1 mb-1">
       <i class="iconsminds-mail-forward"></i> Forward
-    </button>
+    </button> -->
 
-    <button type="button" class="btn btn-danger c-pointer  mr-1 mb-1">
-      <i class="iconsminds-securiy-remove"></i> Delete
+    <button (click)="delete()" type="button" class="btn btn-danger c-pointer  mr-1 mb-1">
+      <i class="simple-icon-trash"></i> Delete
     </button>
 
   </div>

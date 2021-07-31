@@ -14,4 +14,5 @@ export interface IOrder {
     link: string;
 
     status: string;
+    totalDownloads: number;
 }

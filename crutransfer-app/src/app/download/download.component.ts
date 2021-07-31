@@ -40,13 +40,8 @@ export class DownloadComponent implements OnInit {
     const fileInfo: IFileInfo = this.order.fileInfos;
     const cid = fileInfo.cid;
 
-    console.log('download order', this.order);
-
     const content = await this.ipfsService.loadFile(cid);
-    console.log('content', content)
-
     this.fileService.createAndDownloadBlobFile(content[0], this.order.fileInfos);
-
 
   }
 
