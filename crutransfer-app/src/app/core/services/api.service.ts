@@ -101,6 +101,7 @@ export class ApiService {
 
   private mapOrder(dto: any): IOrder {
     dto.expiredDate = new Date(dto.expiredDate);
+    dto.createdDate = new Date(dto.createdDate);
     const diff = calcDiffDate(new Date(), dto.expiredDate);
     dto.status = diff.status;
     dto.timeRemainStr = diff?.toString();

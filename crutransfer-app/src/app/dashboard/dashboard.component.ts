@@ -18,8 +18,8 @@ export class DashboardComponent implements OnInit {
 
   currentUser: IUser;
 
-  itemOrder = 'Title';
-  itemOptionsOrders = ['Title', 'Category', 'Status', 'Label'];
+  itemOrder = 'Date';
+  itemOptionsOrders = ['Date', 'Size', 'Name'];
   displayOptionsCollapsed = false;
 
   private _destroyed: Subject<void> = new Subject<void>();
@@ -55,12 +55,13 @@ export class DashboardComponent implements OnInit {
     } else {
       this.resetFilter();
     }
+    this.orderBy(this.itemOrder);
   }
 
   getOrders() {
     this.api.getOrdersByUser(this.currentUser.email).subscribe(data => {
       this.data = data;
-      this.filteredData = data;
+      this.filteredData = data.sort(this.sortBy);
       console.log('data', data);
     })
   }
@@ -70,8 +71,22 @@ export class DashboardComponent implements OnInit {
     this.router.navigate([`/dashboard/${order._id}`]);
   }
 
+  orderBy(item: string) {
+    this.itemOrder = item;
+    this.filteredData.sort(this.sortBy);
+  }
+
   private resetFilter() {
     this.filteredData = [...this.data];
+  }
+
+  private sortBy = (a: IOrder, b: IOrder): number => {
+    const prop = this.itemOrder.toLowerCase();
+
+    if (prop == 'date') {
+      return a.createdDate.getTime() - b.createdDate.getTime();
+    }
+    return a.fileInfos[prop] - b.fileInfos[prop];
   }
 
 }

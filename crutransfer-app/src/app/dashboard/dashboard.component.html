@@ -13,7 +13,7 @@
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
               <li role="menuitem" *ngFor="let item of itemOptionsOrders"><a
                   [ngClass]="item === itemOrder ? 'dropdown-item active' : 'dropdown-item'"
-                  (click)="itemOrder = item">{{item}}</a></li>
+                  (click)="orderBy(item)">{{item}}</a></li>
             </ul>
           </div>
         </div>
