@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { SharedModule } from '@cru-transfer/shared';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CardOrderComponent, DetailOrderComponent } from './components';
@@ -30,7 +31,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     CollapseModule,
     RouterModule.forChild(routes),
-    BsDropdownModule
+    BsDropdownModule,
+    SharedModule
   ],
   declarations: [
     DashboardComponent,
