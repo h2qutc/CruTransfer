@@ -61,9 +61,14 @@ export class ApiService {
   }
 
 
-  updateOrder(userId: string, payload: IOrder): Observable<IResponse> {
-    const url = `${this.baseUrl}/orders/${userId}`;
+  updateOrder(id: string, payload: IOrder): Observable<IResponse> {
+    const url = `${this.baseUrl}/orders/${id}`;
     return this.http.put<IResponse>(url, payload).pipe(map(resp => resp));
+  }
+
+  updateTotalDownloadForOrder(orderId: string): Observable<any>{
+    const url = `${this.baseUrl}/orders/updateTotalDownloadForOrder/${orderId}`;
+    return this.http.put<any>(url, {}).pipe(map(resp => resp));
   }
 
 

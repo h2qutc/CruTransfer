@@ -27,6 +27,8 @@ export class OrderController {
 
 		this.router.route('/orders/getOrdersByUser').post(this.getOrdersByUser);
 
+		this.router.route('/orders/updateTotalDownloadForOrder/:order_id').put(this.updateTotalDownloadForOrder);
+
 		//TOREMOVE
 		this.router.route('/email').get(this.sendEmail);
 	}
@@ -102,6 +104,19 @@ export class OrderController {
 
 	})
 
+	updateTotalDownloadForOrder = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const order = await Order.findById(req.params.order_id);
+		if (order == null) {
+			sendError(res, 400, 'Order not found');
+		}
+		if (order != null) {
+			order.totalDownloads++;
+			await order.save();
+			await this.sendEmailToSenderOnceDownloaded(order);
+			res.send(true);
+		}
+	})
+
 
 	delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const payload = await Order.deleteOne({ _id: req.params.order_id });
@@ -124,27 +139,27 @@ export class OrderController {
 
 
 	private sendEmailToRecipients = async (order: IOrder) => {
-
 		const emailService = EmailService.getInstance();
-
 		const data = new MailOrderData(order);
 		const subject = `${data.sender} sent you some files via CruTransfer`;
-
 		const payload = await emailService.sendEmailToRecipients(subject, data);
-
 		console.log('sendEmailToRecipients', payload);
-
 	}
 
 	private sendEmailToSender = async (order: IOrder) => {
 		const emailService = EmailService.getInstance();
-
 		const data = new MailOrderData(order);
 		const subject = `Your files were sent successfully`;
-
-		const payload = await emailService.sendEmailToSenderOnceDownloaded(subject, data);
-
+		const payload = await emailService.sendEmailToSender(subject, data);
 		console.log('sendEmailToSender', payload);
+	}
+
+	private sendEmailToSenderOnceDownloaded = async (order: IOrder) => {
+		const emailService = EmailService.getInstance();
+		const data = new MailOrderData(order);
+		const subject = `Your files were sent successfully`;
+		const payload = await emailService.sendEmailToSenderOnceDownloaded(subject, data);
+		console.log('sendEmailToSenderOnceDownloaded', payload);
 	}
 
 
