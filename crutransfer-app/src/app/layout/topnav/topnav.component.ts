@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment';
   templateUrl: './topnav.component.html',
 })
 export class TopnavComponent implements OnInit, OnDestroy {
-  adminRoot = environment.adminRoot;
   subscription: Subscription;
   languages: Language[];
   currentLanguage: string;

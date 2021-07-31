@@ -6,26 +6,35 @@ import { IUser } from '../models';
 export class AuthService {
 
   set accessToken(tkn: string) {
-    this._accessToken = tkn;
     if (tkn != null) {
-      localStorage.setItem('Token', tkn);
+      localStorage.setItem('token', tkn);
     } else {
-      localStorage.removeItem('Token');
+      localStorage.removeItem('token');
     }
+    this._accessTokenSubject.next(tkn);
   }
 
   get accessToken(): string {
-    return this._accessToken;
+    let val = this._accessTokenSubject.value;
+    if (val == null) {
+      const stored = localStorage.getItem('token');
+      if (stored != null) {
+        this._accessTokenSubject.next(stored);
+      }
+      val = stored;
+    }
+    return val;
   }
 
-  private _accessToken: string;
-
   private _userSubject: BehaviorSubject<IUser> = new BehaviorSubject<IUser>(null);
+  private _accessTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   user$: Observable<IUser>;
+  accessToken$: Observable<string>;
 
   constructor() {
     this.user$ = this._userSubject.asObservable();
+    this.accessToken$ = this._accessTokenSubject.asObservable();
   }
 
   get user(): IUser {

@@ -104,7 +104,8 @@ export class OrderController {
 
 
 	delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-		const payload = await Order.deleteOne({ id: req.params.order_id });
+		const payload = await Order.deleteOne({ _id: req.params.order_id });
+		console.log('oder', req.params.order_id)
 		sendOk(res, payload, 'Order deleted');
 	})
 

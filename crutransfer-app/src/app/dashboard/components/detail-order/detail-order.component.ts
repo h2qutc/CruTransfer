@@ -17,7 +17,7 @@ export class DetailOrderComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private api: ApiService,
     private cd: ChangeDetectorRef, private ipfsService: IpfsService,
-    private fileService: FileService,private notifications: NotificationsService,
+    private fileService: FileService, private notifications: NotificationsService,
     private router: Router, private _clipboardService: ClipboardService) { }
 
   ngOnInit() {
@@ -52,7 +52,9 @@ export class DetailOrderComponent implements OnInit {
   }
 
   private goToDashboard() {
-    this.router.navigate(['/dashboard']);
+    this.api.deleteOrder(this.order._id).subscribe(data => {
+      this.router.navigate(['/dashboard']);
+    })
   }
 
 }

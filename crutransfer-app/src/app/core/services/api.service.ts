@@ -67,8 +67,8 @@ export class ApiService {
   }
 
 
-  deleteOrder(userId: string): Observable<IResponse> {
-    const url = `${this.baseUrl}/orders/${userId}`;
+  deleteOrder(id: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/orders/${id}`;
     return this.http.delete<IResponse>(url).pipe(map(resp => resp));
   }
 
@@ -90,7 +90,7 @@ export class ApiService {
   }
 
   signOut(): Observable<any> {
-    
+
     return of({});
   }
 
