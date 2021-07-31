@@ -49,11 +49,7 @@ export class LoginComponent implements OnInit {
         }, (error) => {
           this.buttonDisabled = false;
           this.buttonState = '';
-          this.notifications.error('Error', error.error.message, NotificationType.Error, {
-            theClass: 'primary',
-            timeOut: 3000,
-            showProgressBar: false
-          });
+          this.notifications.error('Error', error.error.message);
         });
       }
     }

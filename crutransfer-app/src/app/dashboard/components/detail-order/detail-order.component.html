@@ -9,8 +9,8 @@
           'badge-warning': order?.status == OrderStatusEnum.Warning,
           'badge-danger': order?.status == OrderStatusEnum.Danger
         }">Expires in {{order?.timeRemainStr}}</span>
-  </h5>
-</div>
+    </h5>
+  </div>
 
 </div>
 
@@ -56,11 +56,13 @@
 
 <div class="row">
   <div class="col-12 ml-2">
-    <div class="link mr-1">{{order?.link}}</div>
+    <div class="link mr-1 mb-4">{{order?.link}}</div>
     <button (click)="copyLink()" type="button" class="btn btn-primary c-pointer mr-1 mb-1">
       <i class="iconsminds-file-copy"></i> Copy
     </button>
   </div>
+  <!-- <small [style.visibility]="isCopied ? 'visible' : 'hidden'">This link has been copied to your clipboard
+    !</small> -->
 </div>
 
 <div class="separator mb-4"></div>
