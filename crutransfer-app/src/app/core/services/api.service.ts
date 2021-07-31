@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IOrder, IResponse, IUser } from '../models';
+import { calcDiffDate } from './utils';
 
 
 @Injectable()
@@ -42,10 +43,16 @@ export class ApiService {
     return this.http.get<IResponse>(url).pipe(resp => resp);
   }
 
+  getOrdersByUser(email: string): Observable<IOrder[]> {
+    const url = `${this.baseUrl}/orders/getOrdersByUser`;
+    return this.http.post<IOrder[]>(url, {
+      email: email
+    }).pipe(map(resp => resp.map(this.mapOrder)));
+  }
 
-  getOrder(id: string): Observable<IResponse> {
+  getOrder(id: string): Observable<IOrder> {
     const url = `${this.baseUrl}/orders/${id}`;
-    return this.http.get<IResponse>(url).pipe(map(resp => resp));
+    return this.http.get<IOrder>(url).pipe(map(resp => this.mapOrder(resp)));
   }
 
   addOrder(payload: IOrder): Observable<IResponse> {
@@ -89,6 +96,16 @@ export class ApiService {
   sendEmail(): Observable<IResponse> {
     const url = `${this.baseUrl}/email`;
     return this.http.get<IResponse>(url);
+  }
+
+
+  private mapOrder(dto: any): IOrder {
+    dto.expiredDate = new Date(dto.expiredDate);
+    dto.createdDate = new Date(dto.createdDate);
+    const diff = calcDiffDate(new Date(), dto.expiredDate);
+    dto.status = diff.status;
+    dto.timeRemainStr = diff?.toString();
+    return dto;
   }
 
 

@@ -29,8 +29,7 @@ export class DownloadComponent implements OnInit {
   getOrder(orderId: string) {
     this.apiService.getOrder(orderId).subscribe(resp => {
       console.log('get order', resp);
-      this.order = resp.payload;
-      this.order.expiredDate = new Date(resp.payload.expiredDate);
+      this.order = resp;
     }, err => {
       this.order = null;
     })
@@ -40,13 +39,8 @@ export class DownloadComponent implements OnInit {
     const fileInfo: IFileInfo = this.order.fileInfos;
     const cid = fileInfo.cid;
 
-    console.log('download order', this.order);
-
     const content = await this.ipfsService.loadFile(cid);
-    console.log('content', content)
-
     this.fileService.createAndDownloadBlobFile(content[0], this.order.fileInfos);
-
 
   }
 

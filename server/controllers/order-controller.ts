@@ -25,6 +25,8 @@ export class OrderController {
 			.put(this.update)
 			.delete(this.delete);
 
+		this.router.route('/orders/getOrdersByUser').post(this.getOrdersByUser);
+
 		//TOREMOVE
 		this.router.route('/email').get(this.sendEmail);
 	}
@@ -33,6 +35,12 @@ export class OrderController {
 	getAll = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const payload = await Order.find({});
 		sendOk(res, payload);
+	})
+
+	getOrdersByUser = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const email = req.body.email;
+		const payload = await Order.find({ sender: email });
+		res.status(200).send(payload);
 	})
 
 
@@ -50,7 +58,8 @@ export class OrderController {
 		order.fileInfos = fileInfos;
 
 		order.createdDate = new Date();
-		order.createdDate = addDays(order.createdDate, DAYS_BEFORE_EXPIRED);
+		order.expiredDate = addDays(order.createdDate, DAYS_BEFORE_EXPIRED);
+		order.totalDownloads = 0;
 
 		let payload = await order.save();
 		order.link = `${BaseUrlFront}/download/${payload._id}`;
@@ -68,7 +77,7 @@ export class OrderController {
 		if (!payload) {
 			sendError(res, 404, 'Order not found');
 		}
-		sendOk(res, payload, 'Order found');
+		res.send(payload);
 	})
 
 

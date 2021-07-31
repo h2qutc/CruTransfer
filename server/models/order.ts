@@ -14,6 +14,7 @@ export interface IOrder extends Document {
     createdDate: Date;
     expiredDate: Date;
     link: string;
+    totalDownloads: number;
 }
 
 // Setup schema
@@ -52,7 +53,7 @@ const schema = new Schema<IOrder>({
     expiredDate: {
         type: Date,
         default: new Date()
-    }, 
+    },
     link: {
         type: String
     }

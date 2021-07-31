@@ -3,4 +3,5 @@ export interface IFileInfo {
     type:string;
     cid: any;
     size: any;
+    humanSize?: string;
 }

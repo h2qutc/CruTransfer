@@ -16,7 +16,8 @@ export class AuthService {
   }
 
   get user(): IUser {
-    return this._userSubject.value;
+    return <any>{email: 'hqho@gmail.com'};
+    // return this._userSubject.value;
   }
 
   set user(val: IUser) {
