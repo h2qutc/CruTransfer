@@ -29,8 +29,7 @@ export class DownloadComponent implements OnInit {
   getOrder(orderId: string) {
     this.apiService.getOrder(orderId).subscribe(resp => {
       console.log('get order', resp);
-      this.order = resp.payload;
-      this.order.expiredDate = new Date(resp.payload.expiredDate);
+      this.order = resp;
     }, err => {
       this.order = null;
     })

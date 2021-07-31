@@ -1,10 +1,7 @@
 <div class="row">
 
   <div class="col-12">
-    <h1>Transfer</h1>
-
-    <!-- <app-heading></app-heading> -->
-    <!-- <app-breadcrumb></app-breadcrumb> -->
+    <h1>Transfers</h1>
     <div class="display-options-container">
       <div id="displayOptions" [collapse]="displayOptionsCollapsed" class="collapse dont-collapse-sm">
         <div class="d-block d-md-inline-block">
@@ -21,9 +18,8 @@
           </div>
         </div>
         <div class="d-inline-block">
-          <div class="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-            <input class="form-control" placeholder="Search">
-            <!-- (keyup)="updateFilter($event)" -->
+          <div class="search-sm d-inline-block float-md-left mr-1 mb-1 align-top" style="min-width: 200px;">
+            <input #inputSearch class="form-control" placeholder="Search by filename or emails">
           </div>
         </div>
       </div>
@@ -32,7 +28,7 @@
   </div>
 
   <div class="col-12 list">
-    <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of data;" ></cru-card-order>
+    <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of filteredData;" ></cru-card-order>
   </div>
   <div class="col-12">
   </div>

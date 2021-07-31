@@ -17,4 +17,4 @@ export const SMTP_CONFIG = {
     }
 }
 
-export const DAYS_BEFORE_EXPIRED = 7;
+export const DAYS_BEFORE_EXPIRED = 8;

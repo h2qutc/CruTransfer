@@ -1,5 +1,6 @@
 import { SendActions } from "../enums";
 import { IFileInfo } from "./file-info";
+import { OrderStatus } from "./status.enum";
 
 export interface IOrder {
     _id: string;
@@ -13,6 +14,8 @@ export interface IOrder {
     expiredDate?: Date;
     link: string;
 
-    status: string;
+    status: OrderStatus;
     totalDownloads: number;
+
+    timeRemainStr: string;
 }

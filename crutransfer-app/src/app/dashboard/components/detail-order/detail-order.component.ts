@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiService, FileService, IFileInfo, IOrder, IpfsService } from '@cru-transfer/core';
+import { ApiService, FileService, IFileInfo, IOrder, IpfsService, OrderStatus } from '@cru-transfer/core';
 import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
@@ -12,6 +12,7 @@ export class DetailOrderComponent implements OnInit {
 
   order: IOrder;
   isCopied = false;
+  public OrderStatusEnum = OrderStatus;
 
   constructor(private route: ActivatedRoute, private api: ApiService,
     private cd: ChangeDetectorRef, private ipfsService: IpfsService,
@@ -22,7 +23,7 @@ export class DetailOrderComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.api.getOrder(id).subscribe(data => {
       console.log('data', data);
-      this.order = data.payload;
+      this.order = data;
     })
   }
 

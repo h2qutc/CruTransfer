@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IOrder } from '@cru-transfer/core';
+import { IOrder, OrderStatus } from '@cru-transfer/core';
 
 @Component({
   selector: 'cru-card-order',
@@ -7,6 +7,8 @@ import { IOrder } from '@cru-transfer/core';
   styleUrls: ['./card-order.component.scss']
 })
 export class CardOrderComponent implements OnInit {
+
+  public OrderStatusEnum = OrderStatus;
 
   @Input() order: IOrder;
 

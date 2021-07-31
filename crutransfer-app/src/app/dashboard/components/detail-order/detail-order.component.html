@@ -2,10 +2,15 @@
 
   <div class="col-12">
     <h1>{{order?.fileInfos.name}}</h1>
-    <h5>1 file - {{order?.fileInfos.humanSize}} - Sent {{order?.createdDate | date:'short'}} - 
-      <span [class]="'badge badge-pill badge-info'">Expires in {{order?.expiredDate | date: 'short'}}</span>
-    </h5>
-  </div>
+    <h5>1 file - {{order?.fileInfos.humanSize}} - Sent {{order?.createdDate | date:'short'}} -
+      <span class="badge badge-pill" [ngClass]="
+        {
+          'badge-primary': order?.status == OrderStatusEnum.Info,
+          'badge-warning': order?.status == OrderStatusEnum.Warning,
+          'badge-danger': order?.status == OrderStatusEnum.Danger
+        }">Expires in {{order?.timeRemainStr}}</span>
+  </h5>
+</div>
 
 </div>
 
