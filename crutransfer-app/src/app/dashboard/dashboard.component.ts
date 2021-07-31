@@ -84,7 +84,7 @@ export class DashboardComponent implements OnInit {
     const prop = this.itemOrder.toLowerCase();
 
     if (prop == 'date') {
-      return a.createdDate.getTime() - b.createdDate.getTime();
+      return b.createdDate.getTime() - a.createdDate.getTime();
     }
     return a.fileInfos[prop] - b.fileInfos[prop];
   }
