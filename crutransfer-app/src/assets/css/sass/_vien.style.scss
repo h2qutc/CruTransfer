@@ -129,7 +129,7 @@ html {
 
 body {
   font-family: "Nunito", sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 400;
   color: $primary-color;
   background: $background-color;
@@ -4102,6 +4102,7 @@ input:-webkit-autofill {
 .has-float-label > span:last-of-type {
   position: absolute;
   cursor: text;
+  font-weight: bold;
   font-size: 90%;
   opacity: 1;
   top: -0.4em;

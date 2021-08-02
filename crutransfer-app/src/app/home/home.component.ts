@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiService, IFileInfo, SendActions } from '@cru-transfer/core';
+import { ApiService, AuthService, IFileInfo, IUser, SendActions } from '@cru-transfer/core';
 import { Subject } from '@polkadot/x-rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TagInputComponent } from 'ngx-chips';
@@ -41,6 +41,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   focused = false;
 
+  currentUser: IUser;
+
 
   get fileList(): FileList {
     return this.dropzoneCmp.directiveRef.dropzone().files;
@@ -53,15 +55,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   private _destroyed: Subject<any> = new Subject<any>();
 
   constructor(
-    private api: ApiService,
+    private api: ApiService, private authService: AuthService,
     private formBuilder: FormBuilder, private modalService: BsModalService,
-    private cd: ChangeDetectorRef) { }
+    private cd: ChangeDetectorRef) {
+    this.currentUser = this.authService.user;
+  }
 
   ngOnInit() {
 
+    const isAnonymous = this.currentUser == null;
+
     this.form = this.formBuilder.group({
       fileSrc: [null, [Validators.required]],
-      sender: [defaultEmail, listValidatorsEmail],
+      sender: [{
+        value: this.currentUser?.email || null,
+        disabled: this.currentUser != null
+      }, listValidatorsEmail],
+      isAnonymous:[isAnonymous],
       recipients: [[defaultEmail], [Validators.required]],
       message: ['Feel free to check it out'],
       action: [SendActions.SendEmail, Validators.required],
@@ -91,18 +101,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   reset() {
     this.submitted = false;
-    this.form.reset();
+    this.form.reset({
+      sender: {
+        value: this.currentUser?.email || null,
+        disabled: this.currentUser != null
+      },
+      action: SendActions.SendEmail
+    });
     this.dropzoneCmp.directiveRef.reset();
-    this.form.controls.action.setValue(SendActions.SendEmail);
   }
 
   openModal(): void {
 
     this.submitted = true;
 
-    const data = this.form.value;
+    const data = this.form.getRawValue();
 
-    console.log('data', data);
+    console.log('openmodal data', data);
 
     this.modalRef = this.modalService.show(ModalUploadFileComponent, <ModalOptions<any>>
       {
@@ -132,7 +147,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.form.controls.recipients.clearValidators();
     } else {
       this.form.controls.sender.setValidators(listValidatorsEmail);
-      this.form.controls.recipients.setValidators(listValidatorsEmail);
+      this.form.controls.recipients.setValidators([Validators.required]);
     }
     this.form.controls.recipients.updateValueAndValidity({ onlySelf: false });
     this.form.controls.sender.updateValueAndValidity({ onlySelf: false });

@@ -14,7 +14,9 @@
                         <span class="logo-single"></span>
                     </a>
                     <div class="col-12" *ngIf="order; else nodata">
-                        <h3 class="sender"><strong>{{order.sender}}</strong> sent you some files</h3>
+
+                        <h3 *ngIf="order.sender" class="sender"><strong>{{order.sender}}</strong> sent you some files
+                        </h3>
                         <p class="infos">
                             Ready to get your files ?
                         </p>

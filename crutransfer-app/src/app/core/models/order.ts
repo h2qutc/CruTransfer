@@ -18,4 +18,5 @@ export interface IOrder {
     totalDownloads: number;
 
     timeRemainStr: string;
+    isAnonymous: boolean;
 }

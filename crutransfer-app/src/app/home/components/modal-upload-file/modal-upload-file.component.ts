@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ApiService, IOrder, IpfsService, IResponse, SendActions } from '@cru-transfer/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { ClipboardService } from 'ngx-clipboard'
 
 @Component({
   selector: 'app-modal-upload-file',
@@ -59,7 +58,10 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   async addFileToIpfsAndSaveOrder() {
 
-    console.log('selected file', this.data.fileSrc);
+    this.cleanDataBeforeSending();
+
+    console.log('send data', this.data);
+
     const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.fileSrc);
 
     fileInfos.name = this.data.fileSrc.name;
@@ -92,6 +94,13 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   transferAnother() {
     this.modalRef.hide();
+  }
+
+  cleanDataBeforeSending() {
+    if (this.data.action == SendActions.CopyLink) {
+      this.data.sender = null;
+      this.data.recipients = [];
+    }
   }
 
 
