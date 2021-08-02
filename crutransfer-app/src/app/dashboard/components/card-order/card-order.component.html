@@ -3,7 +3,8 @@
         {
           'card-primary': order.status == OrderStatusEnum.Info,
           'card-warning': order.status == OrderStatusEnum.Warning,
-          'card-danger': order.status == OrderStatusEnum.Danger
+          'card-danger': order.status == OrderStatusEnum.Danger,
+          'card-light': order.status == OrderStatusEnum.Expired
         }" (click)="onSelect()">
   <div class="d-flex flex-grow-1 min-width-zero">
     <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between 
@@ -18,8 +19,9 @@
         {
           'badge-primary': order.status == OrderStatusEnum.Info,
           'badge-warning': order.status == OrderStatusEnum.Warning,
-          'badge-danger': order.status == OrderStatusEnum.Danger
-        }">Expires in {{order.timeRemainStr}}</span>
+          'badge-danger': order.status == OrderStatusEnum.Danger,
+          'badge-light': order.status == OrderStatusEnum.Expired
+        }">{{order.timeRemainStr}}</span>
       </div>
     </div>
   </div>

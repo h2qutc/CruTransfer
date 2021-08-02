@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IOrder, IResponse, IUser } from '../models';
+import { IOrder, IResponse, IUser, OrderStatus } from '../models';
 import { calcDiffDate } from './utils';
 
 
@@ -109,8 +109,8 @@ export class ApiService {
     dto.expiredDate = new Date(dto.expiredDate);
     dto.createdDate = new Date(dto.createdDate);
     const diff = calcDiffDate(new Date(), dto.expiredDate);
-    dto.status = diff.status;
-    dto.timeRemainStr = diff?.toString();
+    dto.status = diff != null ? diff.status : OrderStatus.Expired;
+    dto.timeRemainStr = diff ? `Expires in ${diff.toString()}` : 'Expired';
     return dto;
   }
 
