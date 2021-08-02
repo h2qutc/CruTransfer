@@ -27,7 +27,10 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     PopoverModule.forRoot(),
     TranslateModule.forRoot(),
     CoreModule.forRoot(),
-    SimpleNotificationsModule.forRoot(),
+    SimpleNotificationsModule.forRoot({
+      timeOut: 2000,
+      showProgressBar: false
+    }),
     ClipboardModule,
     CollapseModule.forRoot(),
     BsDropdownModule.forRoot(),

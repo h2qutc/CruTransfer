@@ -56,6 +56,10 @@ const schema = new Schema<IOrder>({
     },
     link: {
         type: String
+    },
+    totalDownloads: {
+        type: Number,
+        default: 0
     }
 });
 

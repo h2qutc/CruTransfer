@@ -1,4 +1,10 @@
-<div class="card d-flex flex-row mb-3 c-pointer" (click)="onSelect()">
+<div class="card d-flex flex-row mb-3 c-pointer"
+[ngClass]="
+        {
+          'card-primary': order.status == OrderStatusEnum.Info,
+          'card-warning': order.status == OrderStatusEnum.Warning,
+          'card-danger': order.status == OrderStatusEnum.Danger
+        }" (click)="onSelect()">
   <div class="d-flex flex-grow-1 min-width-zero">
     <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between 
     min-width-zero align-items-md-center">

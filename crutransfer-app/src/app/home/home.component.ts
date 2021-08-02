@@ -60,9 +60,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.form = this.formBuilder.group({
-      fileSrc: [null],
+      fileSrc: [null, [Validators.required]],
       sender: [defaultEmail, listValidatorsEmail],
-      recipients: [[defaultEmail], listValidatorsEmail],
+      recipients: [[defaultEmail], [Validators.required]],
       message: ['Feel free to check it out'],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
