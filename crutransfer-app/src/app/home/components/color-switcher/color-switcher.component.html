@@ -1,0 +1,26 @@
+<div class="wrapper {{toggleClass}}" (clickOutside)="onClickOutside()">
+  <div>
+    <h2 class="text-muted mb-2">Your transfers</h2>
+  </div>
+  <div class="cards">
+    <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}">
+      <ng-container *ngFor="let order of data">
+        <div class="card">
+          <div class="card-body">
+            <a class="list-item-heading truncate">
+              {{order.fileInfos.name}}
+            </a>
+            <div class="text-muted text-small">
+              {{order.fileInfos.humanSize}} - Expired in {{order.expiredDate | date: 'M/d/yyyy'}}
+            </div>
+            <button (click)="copyLink(order)" type="button" class="btn btn-primary btn-xs mb-1">Copy link</button>
+          </div>
+        </div>
+      </ng-container>
+    </perfect-scrollbar>
+  </div>
+
+
+  <a (click)="toggleSwitcher($event)" class="c-pointer theme-button" [class.big]="data.length > 0">{{data.length > 0 ?
+    data.length : ''}}<i class="iconsminds-file"></i> </a>
+</div>

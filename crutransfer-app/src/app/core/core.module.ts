@@ -19,7 +19,7 @@ const interceptors = [];
 @NgModule({
   imports: [
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   declarations: []
 })

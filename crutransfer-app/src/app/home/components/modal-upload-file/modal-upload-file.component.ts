@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ApiService, IOrder, IpfsService, IResponse, SendActions } from '@cru-transfer/core';
+import { NotificationsService } from 'angular2-notifications';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { ClipboardService } from 'ngx-clipboard'
+import { HomeViewService } from '../../home-view.service';
 
 @Component({
   selector: 'app-modal-upload-file',
@@ -29,8 +30,12 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   isCopied = false;
 
+  savedData: IOrder;
+
   constructor(private ipfsService: IpfsService, public modalRef: BsModalRef,
     private _clipboardService: ClipboardService,
+    private homeViewService: HomeViewService,
+    private notifications: NotificationsService,
     private cd: ChangeDetectorRef, private apiService: ApiService) {
 
   }
@@ -38,12 +43,9 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.ipfsService.progress$.pipe(takeUntil(this._destroyed)).subscribe((info) => {
-      console.log('progress', info);
-      this.progressMessage = info.message;
       this.progress += 25;
       if (info.isFinalized || this.progress > 100) {
         this.progress = 100;
-        this.isFinalized = true;
       }
       this.cd.detectChanges();
     });
@@ -59,28 +61,37 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   async addFileToIpfsAndSaveOrder() {
 
-    console.log('selected file', this.data.fileSrc);
-    const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.fileSrc);
+    this.cleanDataBeforeSending();
 
-    fileInfos.name = this.data.fileSrc.name;
-    fileInfos.type = this.data.fileSrc.type;
+    try {
+      const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.fileSrc);
 
-    const order = <IOrder>{
-      ...this.data,
-      fileInfos: fileInfos
-    };
-    delete (<any>order).fileSrc;
-    this.saveOrder(order);
+      fileInfos.name = this.data.fileSrc.name;
+      fileInfos.type = this.data.fileSrc.type;
+
+      const order = <IOrder>{
+        ...this.data,
+        fileInfos: fileInfos
+      };
+      delete (<any>order).fileSrc;
+      this.saveOrder(order);
+    } catch (err) {
+      this.isFinalized = true;
+      this.notifications.error('Error', 'An error has occurred');
+    }
   }
 
 
   saveOrder(order: IOrder) {
     this.apiService.addOrder(order).subscribe((resp: IResponse) => {
       this.link = resp.payload.link;
-      console.log('payload', resp.payload);
+      this.savedData = resp.payload;
+      this.isFinalized = true;
+      this.homeViewService.addOrder(resp.payload);
       this.cd.detectChanges();
     }, err => {
-      console.error('error', err);
+      this.isFinalized = true;
+      this.notifications.error('Error', 'An error has occurred');
     })
   }
 
@@ -92,6 +103,13 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   transferAnother() {
     this.modalRef.hide();
+  }
+
+  cleanDataBeforeSending() {
+    if (this.data.action == SendActions.CopyLink) {
+      this.data.sender = null;
+      this.data.recipients = [];
+    }
   }
 
 

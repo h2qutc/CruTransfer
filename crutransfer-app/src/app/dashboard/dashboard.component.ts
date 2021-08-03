@@ -62,12 +62,10 @@ export class DashboardComponent implements OnInit {
     this.api.getOrdersByUser(this.currentUser.email).subscribe(data => {
       this.data = data;
       this.filteredData = data.sort(this.sortBy);
-      console.log('data', data);
     })
   }
 
   goToDetail(order: IOrder) {
-    console.log('detail', order);
     this.router.navigate([`/dashboard/${order._id}`]);
   }
 

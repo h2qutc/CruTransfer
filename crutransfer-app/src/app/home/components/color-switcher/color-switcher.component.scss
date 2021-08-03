@@ -1,0 +1,40 @@
+:host {
+  .wrapper {
+    padding: 15px;
+    height: 500px;
+    padding-right: 0;
+
+    .cards {
+      height: 400px;
+    }
+  }
+  .card {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left: 5px solid;
+    margin-bottom: 15px;
+
+    .card-body {
+      row-gap: 5px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+
+      button {
+        max-width: 100px;
+      }
+    }
+
+    .card-body {
+      row-gap: 5px;
+    }
+  }
+
+  .theme-button {
+    left: -32px;
+    &.big {
+      left: -54px !important;
+    }
+  }
+}

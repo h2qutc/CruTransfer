@@ -9,6 +9,7 @@
         </div>
       </div>
       <div class="form-side">
+
         <a class="c-pointer">
           <span class="logo-single"></span>
         </a>
@@ -17,8 +18,11 @@
           <label class="form-group has-float-label">
             <span>Your files</span>
             <dropzone #dropzone (addedFiles)="onFileSelected($event)" (removedFile)="onRemovedfile($event)"
-              message="Click or drag images here to upload">
+              (error)="onFileError($event)" message="Click or drag images here to upload">
             </dropzone>
+            <small>2.0 GB max</small>
+            <div *ngIf="fileErrorMessage" class="invalid-tooltip">
+              {{fileErrorMessage}}</div>
           </label>
 
           <ng-container *ngIf="form.controls.action.value == 1">
@@ -42,11 +46,6 @@
             <span>Message</span>
           </label>
 
-          <!-- <label class="form-group has-float-label">
-          <input class="form-control" type="password" placeholder="" />
-          <span>{{ 'user.password' | translate }}</span>
-        </label> -->
-
           <label class="form-group">
             <div class="custom-control custom-radio"><input type="radio" [value]="sendActionsEnums.SendEmail"
                 name="action" formControlName="action" id="reactiveRadios1" class="custom-control-input " checked><label
@@ -57,7 +56,6 @@
                 for="reactiveRadios2" class="custom-control-label"> Get transfer link </label>
             </div>
           </label>
-
 
 
           <div class="d-flex justify-content-end align-items-center">
@@ -78,75 +76,4 @@
   </div>
 </div>
 
-<!-- 
-<app-application-menu>
-  <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}">
-    <div class="p-4 h-100">
-      <div class="scroll">
-        <p class="text-muted text-small">{{ 'survey.status' | translate }}</p>
-        <ul class="list-unstyled mb-4">
-          <li class="nav-item">
-            <a href="#">
-              <i class="simple-icon-reload"></i>{{ 'survey.all-surveys' | translate }}
-              <span class="float-right">24</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#">
-              <i class="simple-icon-refresh"></i>{{ 'survey.active-surveys' | translate }}
-              <span class="float-right">20</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#">
-              <i class="simple-icon-check"></i>{{ 'survey.completed-surveys' | translate }}
-              <span class="float-right">4</span>
-            </a>
-          </li>
-        </ul>
-        <p class="text-muted text-small mb-4">
-          {{ 'survey.categories' | translate }}
-        </p>
-        <ul class="list-unstyled mb-5">
-          <li>
-            <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="category1">
-              <label class="custom-control-label" for="category1">Development</label>
-            </div>
-          </li>
-          <li>
-            <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="category2">
-              <label class="custom-control-label" for="category2">Workplace</label>
-            </div>
-          </li>
-          <li>
-            <div class="custom-control custom-checkbox ">
-              <input type="checkbox" class="custom-control-input" id="category3">
-              <label class="custom-control-label" for="category3">Hardware</label>
-            </div>
-          </li>
-        </ul>
-        <p class="text-muted text-small">{{ 'survey.labels' | translate }}</p>
-        <div>
-          <p class="d-sm-inline-block mb-1">
-            <a href="javascript:;">
-              <span class="badge badge-pill badge-outline-primary mb-1 mr-1">NEW FRAMEWORK</span>
-            </a>
-          </p>
-
-          <p class="d-sm-inline-block mb-1">
-            <a href="javascript:;">
-              <span class="badge badge-pill badge-outline-theme-3 mb-1 mr-1">EDUCATION</span>
-            </a>
-          </p>
-          <p class="d-sm-inline-block  mb-1">
-            <a href="javascript:;">
-              <span class="badge badge-pill badge-outline-secondary mb-1 mr-1">PERSONAL</span>
-            </a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </perfect-scrollbar>
-</app-application-menu> -->
+<app-color-switcher></app-color-switcher>

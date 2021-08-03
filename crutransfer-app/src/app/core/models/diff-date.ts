@@ -40,6 +40,5 @@ export class DiffDate {
         } else {
             this.status = OrderStatus.Danger;
         }
-
     }
 }

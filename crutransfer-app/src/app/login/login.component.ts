@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
         this.apiService.signIn(email, password).subscribe((resp) => {
           this.authService.accessToken = resp.payload.accessToken;
           this.authService.user = resp.payload;
-
           this.router.navigate(['home']);
         }, (error) => {
           this.buttonDisabled = false;

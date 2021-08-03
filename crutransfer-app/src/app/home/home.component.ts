@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiService, IFileInfo, SendActions } from '@cru-transfer/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiService, AuthService, IFileInfo, IOrder, IUser, SendActions } from '@cru-transfer/core';
 import { Subject } from '@polkadot/x-rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TagInputComponent } from 'ngx-chips';
-import { DropzoneComponent, DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+import { DropzoneComponent } from 'ngx-dropzone-wrapper';
 import { takeUntil } from 'rxjs/operators';
 import { ModalUploadFileComponent } from './components';
 
@@ -41,6 +41,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   focused = false;
 
+  currentUser: IUser;
+
+  savedData: IOrder[] = [];
+
+  fileErrorMessage: string;
 
   get fileList(): FileList {
     return this.dropzoneCmp.directiveRef.dropzone().files;
@@ -53,15 +58,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   private _destroyed: Subject<any> = new Subject<any>();
 
   constructor(
-    private api: ApiService,
+    private api: ApiService, private authService: AuthService,
     private formBuilder: FormBuilder, private modalService: BsModalService,
-    private cd: ChangeDetectorRef) { }
+    private cd: ChangeDetectorRef) {
+    this.currentUser = this.authService.user;
+  }
 
   ngOnInit() {
 
+    const isAnonymous = this.currentUser == null;
+
     this.form = this.formBuilder.group({
       fileSrc: [null, [Validators.required]],
-      sender: [defaultEmail, listValidatorsEmail],
+      sender: [{
+        value: this.currentUser?.email || null,
+        disabled: this.currentUser != null
+      }, listValidatorsEmail],
+      isAnonymous: [isAnonymous],
       recipients: [[defaultEmail], [Validators.required]],
       message: ['Feel free to check it out'],
       action: [SendActions.SendEmail, Validators.required],
@@ -70,19 +83,20 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.form.controls.action.valueChanges.pipe(takeUntil(this._destroyed)).subscribe(action => {
       this.onActionChanged(action);
-    })
+    });
 
   }
 
   onRemovedfile(event: any) {
+    this.fileErrorMessage = '';
     if (this.fileList.length == 0) {
       this.form.controls.fileSrc.setValue(null);
     }
   }
 
-  onFileSelected(event) {
-    if (event[0] != null) {
-      console.log('event[0]', event[0]);
+  onFileSelected(event: FileList) {
+    if (event[0] != null && (<any>event[0]).status != 'error') {
+      this.fileErrorMessage = '';
       this.form.patchValue({
         fileSrc: event[0]
       })
@@ -91,18 +105,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   reset() {
     this.submitted = false;
-    this.form.reset();
+    this.form.reset({
+      sender: {
+        value: this.currentUser?.email || null,
+        disabled: this.currentUser != null
+      },
+      action: SendActions.SendEmail
+    });
     this.dropzoneCmp.directiveRef.reset();
-    this.form.controls.action.setValue(SendActions.SendEmail);
   }
 
   openModal(): void {
-
+    this.fileErrorMessage = '';
     this.submitted = true;
 
-    const data = this.form.value;
-
-    console.log('data', data);
+    const data = this.form.getRawValue();
 
     this.modalRef = this.modalService.show(ModalUploadFileComponent, <ModalOptions<any>>
       {
@@ -132,10 +149,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.form.controls.recipients.clearValidators();
     } else {
       this.form.controls.sender.setValidators(listValidatorsEmail);
-      this.form.controls.recipients.setValidators(listValidatorsEmail);
+      this.form.controls.recipients.setValidators([Validators.required]);
     }
     this.form.controls.recipients.updateValueAndValidity({ onlySelf: false });
     this.form.controls.sender.updateValueAndValidity({ onlySelf: false });
+  }
+
+  onFileError(event: any) {
+    this.fileErrorMessage = event[1];
   }
 
   ngOnDestroy(): void {

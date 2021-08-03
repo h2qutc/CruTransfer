@@ -1,7 +1,7 @@
 import express from "express";
 import { BaseUrlFront, DAYS_BEFORE_EXPIRED } from "../config";
 import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
-import { IOrder, MailOrderData, Order } from "../models";
+import { IOrder, MailOrderData, Order, SendActions } from "../models";
 import { EmailService } from "../services";
 
 var filesize = require('file-size');
@@ -54,6 +54,13 @@ export class OrderController {
 		order.action = req.body.action;
 		order.message = req.body.message;
 		order.recipients = req.body.recipients;
+		order.isAnonymous = req.body.isAnonymous;
+
+		if (order.action == SendActions.SendEmail) {
+			if (!order.sender || order.recipients.length == 0) {
+				sendError(res, 400, 'Bad request');
+			}
+		}
 
 		const fileInfos = req.body.fileInfos;
 		fileInfos.humanSize = filesize(fileInfos.size, { fixed: 1 }).human('si');
@@ -67,8 +74,10 @@ export class OrderController {
 		order.link = `${BaseUrlFront}/download/${payload._id}`;
 		payload = await order.save();
 
-		await this.sendEmailToRecipients(order);
-		await this.sendEmailToSender(order);
+		if (order.action == SendActions.SendEmail) {
+			await this.sendEmailToRecipients(order);
+			await this.sendEmailToSender(order);
+		}
 
 		sendOk(res, payload);
 	})
@@ -112,7 +121,9 @@ export class OrderController {
 		if (order != null) {
 			order.totalDownloads++;
 			await order.save();
-			await this.sendEmailToSenderOnceDownloaded(order);
+			if (order.action == SendActions.SendEmail) {
+				await this.sendEmailToSenderOnceDownloaded(order);
+			}
 			res.send(true);
 		}
 	})
@@ -120,7 +131,6 @@ export class OrderController {
 
 	delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const payload = await Order.deleteOne({ _id: req.params.order_id });
-		console.log('oder', req.params.order_id)
 		sendOk(res, payload, 'Order deleted');
 	})
 
@@ -143,7 +153,6 @@ export class OrderController {
 		const data = new MailOrderData(order);
 		const subject = `${data.sender} sent you some files via CruTransfer`;
 		const payload = await emailService.sendEmailToRecipients(subject, data);
-		console.log('sendEmailToRecipients', payload);
 	}
 
 	private sendEmailToSender = async (order: IOrder) => {
@@ -151,7 +160,6 @@ export class OrderController {
 		const data = new MailOrderData(order);
 		const subject = `Your files were sent successfully`;
 		const payload = await emailService.sendEmailToSender(subject, data);
-		console.log('sendEmailToSender', payload);
 	}
 
 	private sendEmailToSenderOnceDownloaded = async (order: IOrder) => {
@@ -159,7 +167,6 @@ export class OrderController {
 		const data = new MailOrderData(order);
 		const subject = `Your files were sent successfully`;
 		const payload = await emailService.sendEmailToSenderOnceDownloaded(subject, data);
-		console.log('sendEmailToSenderOnceDownloaded', payload);
 	}
 
 

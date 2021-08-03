@@ -13,9 +13,8 @@ export class ApplicationMenuComponent {
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event): void {
-    if (this.isOpen) {
-      this.toggle();
-    }
+    this.toggle();
+
   }
 
   toggle(): void {
