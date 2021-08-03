@@ -93,7 +93,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onFileSelected(event) {
     if (event[0] != null) {
-      console.log('event[0]', event[0]);
       this.form.patchValue({
         fileSrc: event[0]
       })
@@ -117,8 +116,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.submitted = true;
 
     const data = this.form.getRawValue();
-
-    console.log('openmodal data', data);
 
     this.modalRef = this.modalService.show(ModalUploadFileComponent, <ModalOptions<any>>
       {

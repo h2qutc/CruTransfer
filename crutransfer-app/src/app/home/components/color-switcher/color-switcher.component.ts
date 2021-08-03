@@ -24,7 +24,6 @@ export class ColorSwitcherComponent implements OnInit {
   }
   ngOnInit(): void {
     this.homeViewService.orders$.subscribe((data) => {
-      console.log('menu', this.data)
       this.data = data;
       this.cd.detectChanges();
     })

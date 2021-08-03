@@ -131,7 +131,6 @@ export class OrderController {
 
 	delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const payload = await Order.deleteOne({ _id: req.params.order_id });
-		console.log('oder', req.params.order_id)
 		sendOk(res, payload, 'Order deleted');
 	})
 
@@ -154,7 +153,6 @@ export class OrderController {
 		const data = new MailOrderData(order);
 		const subject = `${data.sender} sent you some files via CruTransfer`;
 		const payload = await emailService.sendEmailToRecipients(subject, data);
-		console.log('sendEmailToRecipients', payload);
 	}
 
 	private sendEmailToSender = async (order: IOrder) => {
@@ -162,7 +160,6 @@ export class OrderController {
 		const data = new MailOrderData(order);
 		const subject = `Your files were sent successfully`;
 		const payload = await emailService.sendEmailToSender(subject, data);
-		console.log('sendEmailToSender', payload);
 	}
 
 	private sendEmailToSenderOnceDownloaded = async (order: IOrder) => {
@@ -170,7 +167,6 @@ export class OrderController {
 		const data = new MailOrderData(order);
 		const subject = `Your files were sent successfully`;
 		const payload = await emailService.sendEmailToSenderOnceDownloaded(subject, data);
-		console.log('sendEmailToSenderOnceDownloaded', payload);
 	}
 
 

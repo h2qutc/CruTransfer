@@ -4,7 +4,6 @@ const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const validateEmail = (email: string) => {
     if (email){
-        console.log('validateEmail', email);
         return regEmail.test(email);
     }
     else

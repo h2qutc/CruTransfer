@@ -23,7 +23,6 @@ export class DetailOrderComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.api.getOrder(id).subscribe(data => {
-      console.log('data', data);
       this.order = data;
     })
   }

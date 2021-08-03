@@ -37,7 +37,6 @@ export class TopnavComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.user = this.authService.user;
     this.authService.user$.subscribe((data) => {
-      console.log('user', data);
       this.user = data;
       this.cd.detectChanges();
     })

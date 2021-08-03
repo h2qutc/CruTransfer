@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ApiService, IOrder, IpfsService, IResponse, SendActions } from '@cru-transfer/core';
+import { NotificationsService } from 'angular2-notifications';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
@@ -34,6 +35,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   constructor(private ipfsService: IpfsService, public modalRef: BsModalRef,
     private _clipboardService: ClipboardService,
     private homeViewService: HomeViewService,
+    private notifications: NotificationsService,
     private cd: ChangeDetectorRef, private apiService: ApiService) {
 
   }
@@ -87,7 +89,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
       this.homeViewService.addOrder(resp.payload);
       this.cd.detectChanges();
     }, err => {
-      console.error('error', err);
+      this.notifications.error('An error has occurred');
     })
   }
 
