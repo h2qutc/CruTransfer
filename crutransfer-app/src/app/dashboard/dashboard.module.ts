@@ -5,11 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@cru-transfer/shared';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { CardOrderComponent, DetailOrderComponent } from './components';
+import { DetailOrderComponent } from './components';
 import { DashboardComponent } from './dashboard.component';
 
 const components = [
-  CardOrderComponent,
   DetailOrderComponent
 ]
 

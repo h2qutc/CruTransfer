@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiService, AuthService, IFileInfo, IUser, SendActions } from '@cru-transfer/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiService, AuthService, IFileInfo, IOrder, IUser, SendActions } from '@cru-transfer/core';
 import { Subject } from '@polkadot/x-rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TagInputComponent } from 'ngx-chips';
-import { DropzoneComponent, DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+import { DropzoneComponent } from 'ngx-dropzone-wrapper';
 import { takeUntil } from 'rxjs/operators';
 import { ModalUploadFileComponent } from './components';
 
@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   currentUser: IUser;
 
+  savedData: IOrder[] = [];
 
   get fileList(): FileList {
     return this.dropzoneCmp.directiveRef.dropzone().files;
@@ -71,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         value: this.currentUser?.email || null,
         disabled: this.currentUser != null
       }, listValidatorsEmail],
-      isAnonymous:[isAnonymous],
+      isAnonymous: [isAnonymous],
       recipients: [[defaultEmail], [Validators.required]],
       message: ['Feel free to check it out'],
       action: [SendActions.SendEmail, Validators.required],
@@ -80,7 +81,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.form.controls.action.valueChanges.pipe(takeUntil(this._destroyed)).subscribe(action => {
       this.onActionChanged(action);
-    })
+    });
 
   }
 

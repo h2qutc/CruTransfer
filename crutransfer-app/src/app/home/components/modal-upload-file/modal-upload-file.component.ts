@@ -4,6 +4,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { HomeViewService } from '../../home-view.service';
 
 @Component({
   selector: 'app-modal-upload-file',
@@ -28,8 +29,11 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   isCopied = false;
 
+  savedData: IOrder;
+
   constructor(private ipfsService: IpfsService, public modalRef: BsModalRef,
     private _clipboardService: ClipboardService,
+    private homeViewService: HomeViewService,
     private cd: ChangeDetectorRef, private apiService: ApiService) {
 
   }
@@ -79,7 +83,8 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   saveOrder(order: IOrder) {
     this.apiService.addOrder(order).subscribe((resp: IResponse) => {
       this.link = resp.payload.link;
-      console.log('payload', resp.payload);
+      this.savedData = resp.payload;
+      this.homeViewService.addOrder(resp.payload);
       this.cd.detectChanges();
     }, err => {
       console.error('error', err);

@@ -1,19 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TopnavComponent } from './topnav/topnav.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
-import { ColorSwitcherComponent } from './color-switcher/color-switcher.component';
-import { FooterComponent } from './footer/footer.component';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { FooterComponent } from './footer/footer.component';
+import { TopnavComponent } from './topnav/topnav.component';
 
 @NgModule({
   declarations: [
     TopnavComponent,
-    ColorSwitcherComponent,
     FooterComponent
   ],
   imports: [
@@ -27,7 +25,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   ],
   exports: [
     TopnavComponent,
-    ColorSwitcherComponent,
     FooterComponent
   ]
 })
