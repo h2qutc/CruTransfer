@@ -15,6 +15,7 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   maxFiles: 1,
   url: 'https://httpbin.org/post',
   thumbnailWidth: 160,
+  maxFilesize: 2000, // 2Go
   previewTemplate: `<div class="dz-preview dz-file-preview mb-3">
   <div class="d-flex flex-row "><div class="p-0 w-30 position-relative">
   <div class="dz-error-mark"><span><i></i></span></div><div class="dz-success-mark">

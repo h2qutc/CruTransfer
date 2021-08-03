@@ -45,6 +45,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   savedData: IOrder[] = [];
 
+  fileErrorMessage: string;
+
   get fileList(): FileList {
     return this.dropzoneCmp.directiveRef.dropzone().files;
   }
@@ -86,13 +88,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onRemovedfile(event: any) {
+    this.fileErrorMessage = '';
     if (this.fileList.length == 0) {
       this.form.controls.fileSrc.setValue(null);
     }
   }
 
-  onFileSelected(event) {
-    if (event[0] != null) {
+  onFileSelected(event: FileList) {
+    if (event[0] != null && (<any>event[0]).status != 'error') {
+      this.fileErrorMessage = '';
       this.form.patchValue({
         fileSrc: event[0]
       })
@@ -112,7 +116,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   openModal(): void {
-
+    this.fileErrorMessage = '';
     this.submitted = true;
 
     const data = this.form.getRawValue();
@@ -149,6 +153,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     this.form.controls.recipients.updateValueAndValidity({ onlySelf: false });
     this.form.controls.sender.updateValueAndValidity({ onlySelf: false });
+  }
+
+  onFileError(event: any) {
+    this.fileErrorMessage = event[1];
   }
 
   ngOnDestroy(): void {
