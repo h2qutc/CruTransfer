@@ -43,12 +43,9 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.ipfsService.progress$.pipe(takeUntil(this._destroyed)).subscribe((info) => {
-      console.log('progress', info);
-      this.progressMessage = info.message;
       this.progress += 25;
       if (info.isFinalized || this.progress > 100) {
         this.progress = 100;
-        this.isFinalized = true;
       }
       this.cd.detectChanges();
     });
@@ -66,19 +63,22 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
     this.cleanDataBeforeSending();
 
-    console.log('send data', this.data);
+    try {
+      const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.fileSrc);
 
-    const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.fileSrc);
+      fileInfos.name = this.data.fileSrc.name;
+      fileInfos.type = this.data.fileSrc.type;
 
-    fileInfos.name = this.data.fileSrc.name;
-    fileInfos.type = this.data.fileSrc.type;
-
-    const order = <IOrder>{
-      ...this.data,
-      fileInfos: fileInfos
-    };
-    delete (<any>order).fileSrc;
-    this.saveOrder(order);
+      const order = <IOrder>{
+        ...this.data,
+        fileInfos: fileInfos
+      };
+      delete (<any>order).fileSrc;
+      this.saveOrder(order);
+    } catch (err) {
+      this.isFinalized = true;
+      this.notifications.error('Error', 'An error has occurred');
+    }
   }
 
 
@@ -86,10 +86,12 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
     this.apiService.addOrder(order).subscribe((resp: IResponse) => {
       this.link = resp.payload.link;
       this.savedData = resp.payload;
+      this.isFinalized = true;
       this.homeViewService.addOrder(resp.payload);
       this.cd.detectChanges();
     }, err => {
-      this.notifications.error('An error has occurred');
+      this.isFinalized = true;
+      this.notifications.error('Error', 'An error has occurred');
     })
   }
 
