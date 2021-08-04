@@ -4,7 +4,7 @@
     (onFocus)="focused = true;" (onBlur)="focused = false" [ripple]="false" [modelAsStrings]="true"
     secondaryPlaceholder ="Add a new recipient" placeholder="+ Recipient" [maxItems]="maxItems">
   </tag-input>
-  <span>Email to</span>
-  <small>Max {{maxItems}} recipients</small>
+  <span>{{'main.email-to' | translate}}</span>
+  <small>Max {{maxItems}} {{'main.recipient' | translate}}</small>
   <div *ngIf="control.touched && control.errors?.required" class="invalid-tooltip">Recipient is required!</div>
 </label>
