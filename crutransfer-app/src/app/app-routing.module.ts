@@ -29,6 +29,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'account',
+    loadChildren: () => import('../app/account').then(m => m.AccountModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'download/:id',
     loadChildren: () => import('../app/download').then(m => m.DownloadModule),
   },

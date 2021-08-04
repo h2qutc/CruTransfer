@@ -21,6 +21,7 @@ export class LoginController {
 		this.router.route('/signin').post(this.signin);
 		this.router.route('/forgotPassword').post(this.forgotPassword);
 		this.router.route('/resetPassword').post(this.resetPassword);
+		this.router.route('/changePassword').post(this.changePassword);
 	}
 
 	public signup = (req: express.Request, res: express.Response) => {
@@ -109,6 +110,28 @@ export class LoginController {
 			sendError(res, 404, 'Code is invalid');
 		} else {
 			user.password = bcrypt.hashSync(req.body.password, 8);
+			await user.save();
+			sendOk(res, true, 'Password is updated');
+		}
+	});
+
+	public changePassword = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+
+		const newPassword = req.body.newPassword;
+		const confirmPassword = req.body.confirmPassword;
+
+		if (newPassword != confirmPassword) {
+			sendError(res, 404, 'The passwords must match.');
+		}
+
+		const user = await User.findOne({
+			email: req.body.email,
+		});
+
+		if (user == null) {
+			sendError(res, 404, 'User not found');
+		} else {
+			user.password = bcrypt.hashSync(req.body.newPassword, 8);
 			await user.save();
 			sendOk(res, true, 'Password is updated');
 		}

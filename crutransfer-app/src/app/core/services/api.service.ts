@@ -93,6 +93,15 @@ export class ApiService {
     }).pipe(map(resp => resp));
   }
 
+  changePassword(email: string, newPassword: string, confirmPassword: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/changePassword`;
+    return this.http.post<IResponse>(url, {
+      email: email,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword
+    }).pipe(map(resp => resp));
+  }
+
   signUp(username: string, email: string, password: string): Observable<IResponse> {
     const url = `${this.baseUrl}/signup`;
     return this.http.post<IResponse>(url, {
