@@ -1,7 +1,7 @@
 <nav class="navbar fixed-top">
   <div class="d-flex align-items-center navbar-left">
 
-    <div class="btn-group ml-5" dropdown *ngIf="!isSingleLang">
+    <div class="btn-group ml-5" dropdown>
       <button dropdownToggle type="button" class="language-button dropdown-toggle btn btn-light btn-sm">
         {{currentLanguage | uppercase}} <span class="caret"></span>
       </button>
@@ -33,9 +33,9 @@
 
         <div class="dropdown-menu dropdown-menu-right mt-3" *dropdownMenu role="menu">
           <a class="dropdown-item c-pointer" [routerLink]="['/account']">{{'main.account' | translate}}</a>
-          <a class="dropdown-item c-pointer" [routerLink]="['/dashboard']">Dashboard</a>
+          <a class="dropdown-item c-pointer" [routerLink]="['/dashboard']">{{'main.dashboard' | translate}}</a>
           <li class="divider dropdown-divider"></li>
-          <a class="dropdown-item c-pointer" (click)="onSignOut()">Sign out</a>
+          <a class="dropdown-item c-pointer" (click)="onSignOut()">{{'main.signout' | translate}}</a>
         </div>
       </div>
     </ng-container>

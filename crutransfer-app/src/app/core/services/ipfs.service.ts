@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { typesBundleForPolkadot } from '@crustio/type-definitions';
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
+import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { Observable, Subject } from 'rxjs';
 import { IFileInfo, IMessageInfo } from '../models';
 import { delay, loadKeyringPair } from './utils';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
 
 const importedIPFS = require('ipfs-core');
 
@@ -37,7 +37,9 @@ export class IpfsService {
   constructor() { }
 
   async init() {
-    // Connect to chain
+    if (this.api) {
+      return;
+    }
     this.api = await ApiPromise.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot });
     this.ipfs = await importedIPFS.create();
   }
@@ -45,16 +47,14 @@ export class IpfsService {
   async addFileToIpfsAndSendTx(fileContent: File): Promise<IFileInfo> {
 
     /***************************Base instance****************************/
-    // Read file
-    // const fileContent = await fs.readFileSync(filePath);
-
-    // api = await api.isReady;
+    if (!this.api) {
+      await this.init();
+    }
 
     // Load on-chain identity
     const krp = loadKeyringPair(seeds);
 
     const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent)
-    console.info("File info: " + JSON.stringify(fileInfo));
 
     // Waiting for chain synchronization
     while (await this.isSyncing(this.api)) {
@@ -116,7 +116,7 @@ export class IpfsService {
     const cid = await ipfs.add(
       fileContent,
       {
-        progress: (prog) => console.log(`Add received: ${prog}`)
+        progress: (prog) => {}
       }
     );
 

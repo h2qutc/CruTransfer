@@ -10,9 +10,6 @@ import { ModalUploadFileComponent } from './components';
 
 const listValidatorsEmail = [Validators.required, Validators.email];
 
-const defaultEmail = 'hqho@gmail.com';
-
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -75,8 +72,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         disabled: this.currentUser != null
       }, listValidatorsEmail],
       isAnonymous: [isAnonymous],
-      recipients: [[defaultEmail], [Validators.required]],
-      message: ['Feel free to check it out'],
+      recipients: [[], [Validators.required]],
+      message: [null],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
     });

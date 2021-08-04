@@ -36,9 +36,11 @@
     "total-downloads": "Total downloads",
     "size": "Size",
     "sent": "Sent",
-    "account": "Account",
+    "account": "My account",
     "dashboard": "Dashboard",
-    "signout": "Sign out"
+    "signout": "Sign out",
+    "copy-link":"Copy link",
+    "type-enter":"Type and enter..."
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."
