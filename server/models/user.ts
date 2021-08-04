@@ -1,9 +1,10 @@
-import { model, Schema, Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 
-interface IUser extends Document {
+export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
+    code: string;
     created: Date;
 }
 
@@ -23,6 +24,10 @@ const schema = new Schema<IUser>({
     created: {
         type: Date,
         default: Date.now
+    },
+    code: {
+        type: String,
+        required: false
     }
 });
 

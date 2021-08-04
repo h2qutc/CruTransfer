@@ -16,8 +16,21 @@ const routes: Routes = [
     loadChildren: () => import('../app/register').then(m => m.RegisterModule),
   },
   {
+    path: 'forgot-password',
+    loadChildren: () => import('../app/forgot-password').then(m => m.ForgotPasswordModule),
+  },
+  {
+    path: 'reset-password',
+    loadChildren: () => import('../app/reset-password').then(m => m.ResetPasswordModule),
+  },
+  {
     path: 'dashboard',
     loadChildren: () => import('../app/dashboard').then(m => m.DashboardModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'account',
+    loadChildren: () => import('../app/account').then(m => m.AccountModule),
     canActivate: [AuthGuard]
   },
   {

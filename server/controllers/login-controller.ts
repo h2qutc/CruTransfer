@@ -1,7 +1,9 @@
 import express from "express";
 import { AuthConfig } from "../config";
+import { runAsyncWrapper, sendError, sendOk } from "../helpers";
 import { checkDuplicateUsernameOrEmail } from "../middlewares";
-import { User } from "../models";
+import { IUser, User } from "../models";
+import { EmailService } from "../services";
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -17,6 +19,9 @@ export class LoginController {
 	private initRoutes() {
 		this.router.route('/signup').post([checkDuplicateUsernameOrEmail], this.signup);
 		this.router.route('/signin').post(this.signin);
+		this.router.route('/forgotPassword').post(this.forgotPassword);
+		this.router.route('/resetPassword').post(this.resetPassword);
+		this.router.route('/changePassword').post(this.changePassword);
 	}
 
 	public signup = (req: express.Request, res: express.Response) => {
@@ -78,4 +83,67 @@ export class LoginController {
 				});
 			});
 	};
+
+	public forgotPassword = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const user = await User.findOne({
+			email: req.body.email
+		});
+
+		if (user == null) {
+			sendError(res, 404, 'Email not found');
+		} else {
+			user.code = "1102";
+			await user.save();
+			await this.sendEmailForgotPassword(user);
+			sendOk(res, true, 'Code was sent');
+		}
+	});
+
+	public resetPassword = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+
+		const user = await User.findOne({
+			email: req.body.email,
+			code: req.body.code
+		});
+
+		if (user == null) {
+			sendError(res, 404, 'Code is invalid');
+		} else {
+			user.password = bcrypt.hashSync(req.body.password, 8);
+			await user.save();
+			sendOk(res, true, 'Password is updated');
+		}
+	});
+
+	public changePassword = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+
+		const newPassword = req.body.newPassword;
+		const confirmPassword = req.body.confirmPassword;
+
+		if (newPassword != confirmPassword) {
+			sendError(res, 404, 'The passwords must match.');
+		}
+
+		const user = await User.findOne({
+			email: req.body.email,
+		});
+
+		if (user == null) {
+			sendError(res, 404, 'User not found');
+		} else {
+			user.password = bcrypt.hashSync(req.body.newPassword, 8);
+			await user.save();
+			sendOk(res, true, 'Password is updated');
+		}
+	});
+
+	private sendEmailForgotPassword = async (user: IUser) => {
+		const emailService = EmailService.getInstance();
+		const data = {
+			code: user.code,
+			recipients: [user.email]
+		};
+		const subject = `CruTransfer - Your code is ${user.code}`;
+		await emailService.sendEmailToRecipients(subject, data);
+	}
 }

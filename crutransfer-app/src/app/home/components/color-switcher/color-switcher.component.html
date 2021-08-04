@@ -1,6 +1,6 @@
 <div class="wrapper {{toggleClass}}" (clickOutside)="onClickOutside()">
   <div>
-    <h2 class="text-muted mb-2">Your transfers</h2>
+    <h2 class="text-muted mb-2">{{'main.your-transfer' | translate}}</h2>
   </div>
   <div class="cards">
     <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}">
@@ -11,9 +11,9 @@
               {{order.fileInfos.name}}
             </a>
             <div class="text-muted text-small">
-              {{order.fileInfos.humanSize}} - Expired in {{order.expiredDate | date: 'M/d/yyyy'}}
+              {{order.fileInfos.humanSize}} - {{'main.expires-in' | translate}} {{order.expiredDate | date: 'M/d/yyyy'}}
             </div>
-            <button (click)="copyLink(order)" type="button" class="btn btn-primary btn-xs mb-1">Copy link</button>
+            <button (click)="copyLink(order)" type="button" class="btn btn-primary btn-xs mb-1">{{'main.copy-link' | translate}}</button>
           </div>
         </div>
       </ng-container>

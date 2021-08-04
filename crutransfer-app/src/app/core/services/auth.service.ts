@@ -32,6 +32,8 @@ export class AuthService {
   user$: Observable<IUser>;
   accessToken$: Observable<string>;
 
+  emailToResetPassword: string;
+
   constructor() {
     this.user$ = this._userSubject.asObservable();
     this.accessToken$ = this._accessTokenSubject.asObservable();
