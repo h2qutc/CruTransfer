@@ -24,6 +24,8 @@ export class DetailOrderComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.api.getOrder(id).subscribe(data => {
       this.order = data;
+    }, err => {
+      this.router.navigate(['/dashboard']);
     })
   }
 

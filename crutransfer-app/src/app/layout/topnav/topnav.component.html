@@ -27,12 +27,12 @@
         <button class="btn btn-empty p-0" type="button" dropdownToggle>
           <span class="name">{{user?.username}}</span>
           <span>
-            <img alt="Profile Picture" src="/assets/img/profiles/l-1.jpg" />
+            <img alt="Profile Picture" src="/assets/img/profiles/user.png" />
           </span>
         </button>
 
         <div class="dropdown-menu dropdown-menu-right mt-3" *dropdownMenu role="menu">
-          <a class="dropdown-item c-pointer" [routerLink]="['/account']">Account</a>
+          <a class="dropdown-item c-pointer" [routerLink]="['/account']">{{'main.account' | translate}}</a>
           <a class="dropdown-item c-pointer" [routerLink]="['/dashboard']">Dashboard</a>
           <li class="divider dropdown-divider"></li>
           <a class="dropdown-item c-pointer" (click)="onSignOut()">Sign out</a>

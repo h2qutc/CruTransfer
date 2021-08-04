@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@cru-transfer/shared';
+import { TranslateModule } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DetailOrderComponent } from './components';
@@ -31,7 +32,8 @@ const routes: Routes = [
     CollapseModule,
     RouterModule.forChild(routes),
     BsDropdownModule,
-    SharedModule
+    SharedModule,
+    TranslateModule
   ],
   declarations: [
     DashboardComponent,

@@ -2,7 +2,7 @@
 
   <div class="col-12">
     <h1>{{order?.fileInfos.name}}</h1>
-    <h5>1 file - {{order?.fileInfos.humanSize}} - Sent {{order?.createdDate | date:'short'}} -
+    <h5>1 {{'main.file' | translate}} - {{order?.fileInfos.humanSize}} - Sent {{order?.createdDate | date:'short'}} -
       <span class="badge badge-pill" [ngClass]="
         {
           'badge-primary': order?.status == OrderStatusEnum.Info,
@@ -26,7 +26,7 @@
         <a routerLink="./" class="card">
           <div class="card-body text-center">
             <i class="simple-icon-cloud-download"></i>
-            <p class="card-text font-weight-semibold mb-0">Total downloads</p>
+            <p class="card-text font-weight-semibold mb-0">{{'main.total-downloads' | translate}}</p>
             <p class="lead text-center">{{order?.totalDownloads}}</p>
           </div>
         </a>
@@ -36,7 +36,7 @@
         <a routerLink="./" class="card">
           <div class="card-body text-center">
             <i class="iconsminds-letter-sent"></i>
-            <p class="card-text font-weight-semibold mb-0">Recipients</p>
+            <p class="card-text font-weight-semibold mb-0">{{'main.recipient' | translate}}</p>
             <p class="lead text-center">{{order?.recipients.length}}</p>
           </div>
         </a>
@@ -46,7 +46,7 @@
         <a routerLink="./" class="card">
           <div class="card-body text-center">
             <i class="iconsminds-arrow-refresh"></i>
-            <p class="card-text font-weight-semibold mb-0">Size</p>
+            <p class="card-text font-weight-semibold mb-0">{{'main.size' | translate}}</p>
             <p class="lead text-center">{{order?.fileInfos.humanSize}}</p>
           </div>
         </a>
@@ -59,7 +59,7 @@
   <div class="col-12 ml-2">
     <div class="link mr-1 mb-4">{{order?.link}}</div>
     <button (click)="copyLink()" type="button" class="btn btn-dark c-pointer mr-1 mb-1">
-      <i class="iconsminds-file-copy"></i> Copy
+      <i class="iconsminds-file-copy"></i> {{'main.copy' | translate}}
     </button>
   </div>
 </div>
@@ -72,11 +72,11 @@
 
     <ng-container *ngIf="order?.status !== OrderStatusEnum.Expired">
       <button (click)="download()" type="button" class="btn btn-primary c-pointer mr-1 mb-1">
-        <i class="simple-icon-cloud-download"></i> Download
+        <i class="simple-icon-cloud-download"></i> {{'main.download' | translate}}
       </button>
 
       <button (click)="preview()" type="button" class="btn btn-secondary c-pointer  mr-1 mb-1">
-        <i class="iconsminds-preview"></i> Preview
+        <i class="iconsminds-preview"></i> {{'main.preview' | translate}}
       </button>
     </ng-container>
 
@@ -85,7 +85,7 @@
     </button> -->
 
     <button (click)="delete()" type="button" class="btn btn-danger c-pointer  mr-1 mb-1">
-      <i class="simple-icon-trash"></i> Delete
+      <i class="simple-icon-trash"></i> {{'main.delete' | translate}}
     </button>
 
   </div>
