@@ -66,7 +66,7 @@ export class ApiService {
     return this.http.put<IResponse>(url, payload).pipe(map(resp => resp));
   }
 
-  updateTotalDownloadForOrder(orderId: string): Observable<any>{
+  updateTotalDownloadForOrder(orderId: string): Observable<any> {
     const url = `${this.baseUrl}/orders/updateTotalDownloadForOrder/${orderId}`;
     return this.http.put<any>(url, {}).pipe(map(resp => resp));
   }
@@ -75,6 +75,22 @@ export class ApiService {
   deleteOrder(id: string): Observable<IResponse> {
     const url = `${this.baseUrl}/orders/${id}`;
     return this.http.delete<IResponse>(url).pipe(map(resp => resp));
+  }
+
+  forgotPassword(email: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/forgotPassword`;
+    return this.http.post<IResponse>(url, {
+      email: email,
+    }).pipe(map(resp => resp));
+  }
+
+  resetPassword(email: string, code: string, password: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/resetPassword`;
+    return this.http.post<IResponse>(url, {
+      code: code,
+      password: password,
+      email: email
+    }).pipe(map(resp => resp));
   }
 
   signUp(username: string, email: string, password: string): Observable<IResponse> {
@@ -95,7 +111,6 @@ export class ApiService {
   }
 
   signOut(): Observable<any> {
-
     return of({});
   }
 

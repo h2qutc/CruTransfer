@@ -96,7 +96,7 @@ export class OrderController {
 		const order = await Order.findById(req.params.order_id);
 
 		if (order == null) {
-			sendError(res, 400, 'Order not found');
+			sendError(res, 404, 'Order not found');
 		}
 
 		if (order != null) {

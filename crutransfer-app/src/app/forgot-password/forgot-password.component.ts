@@ -5,11 +5,11 @@ import { ApiService, AuthService } from '@cru-transfer/core';
 import { NotificationsService, NotificationType } from 'angular2-notifications';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-forgot-password',
+  templateUrl: './forgot-password.component.html',
+  styleUrls: ['./forgot-password.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class ForgotPasswordComponent implements OnInit {
 
   form: FormGroup = new FormGroup({});
 
@@ -26,30 +26,35 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      username: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
-      password: [null, Validators.required],
     });
   }
-
 
   onSubmit(): void {
     this.submitted = true;
 
     if (this.form.valid) {
 
-      const { username, email, password } = this.form.value;
+      const { email } = this.form.value;
 
       if (!this.buttonDisabled) {
 
         this.buttonDisabled = true;
         this.buttonState = 'show-spinner';
-        this.apiService.signUp(username, email, password).subscribe((resp) => {
-          this.router.navigate(['login']);
-        }, (error) => {
+        this.apiService.forgotPassword(email).subscribe((resp) => {
+          this.notifications.create('Done', 'Password reset email is sent, you will be redirected to Reset Password page!',
+            NotificationType.Bare, { theClass: 'outline primary', timeOut: 6000, showProgressBar: true });
           this.buttonDisabled = false;
           this.buttonState = '';
-          this.notifications.error('Error', error.error.message);
+          setTimeout(() => {
+            this.authService.emailToResetPassword = email;
+            this.router.navigate(['/reset-password']);
+          }, 6000);
+        }, (error) => {
+          this.notifications.create('Error', error.error.message, NotificationType.Error,
+            { theClass: 'outline primary', timeOut: 6000, showProgressBar: false });
+          this.buttonDisabled = false;
+          this.buttonState = '';
         });
       }
     }
