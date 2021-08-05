@@ -26,9 +26,12 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      email: [this.authService.emailToResetPassword],
+      email: [{
+        value: this.authService.emailToResetPassword,
+        disabled: true
+      }],
       code: [null, [Validators.required]],
-      password: [null, Validators.required],
+      password: [null, [Validators.required, Validators.minLength(8)]],
     });
   }
 
@@ -37,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
 
     if (this.form.valid) {
 
-      const { email, code, password } = this.form.value;
+      const { email, code, password } = this.form.getRawValue();
 
       if (!this.buttonDisabled) {
         this.buttonDisabled = true;

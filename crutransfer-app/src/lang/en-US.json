@@ -10,6 +10,7 @@
     "email-must-be-valid": "Email must match and be a valid address",
     "email-not-valid": "Email is not valid!",
     "email-required": "Email is required!",
+    "password-required": "Password is required and must be minimum 8 characters!",
     "recipient": "Recipients",
     "message": "Message",
     "send-email-transfer": "Send email transfer",
@@ -40,7 +41,9 @@
     "dashboard": "Dashboard",
     "signout": "Sign out",
     "copy-link":"Copy link",
-    "type-enter":"Type and enter..."
+    "type-enter":"Type and enter...",
+    "reset-password": "Reset password",
+    "transferring": "Transferring..."
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."

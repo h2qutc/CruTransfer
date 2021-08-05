@@ -40,7 +40,10 @@
     "dashboard": "Tableau de bord",
     "signout": "Se déconnecter",
     "copy-link":"Copier le lien",
-    "type-enter":"Tapez et entrez..."
+    "type-enter":"Tapez et entrez...",
+    "reset-password": "Réinitialiser mot de passe",
+    "password-required": "Mot de passe est requis et doit comporter au moins 8 caractères!",
+    "transferring": "Transfert en cours..."
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."
@@ -61,6 +64,6 @@
     "reset-password-button": "Réinitialiser",
     "buy": "ACHETER",
     "username": "Nom d'utilisateur",
-    "code": "Réinitialiser le code"
+    "code": "Code de réinitialisation"
   }
 }

@@ -29,7 +29,6 @@ export class EmailService {
     if(!EmailService.instance){
       EmailService.instance = new EmailService();
     }
-
     return EmailService.instance;
   }
 

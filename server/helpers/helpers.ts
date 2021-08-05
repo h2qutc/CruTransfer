@@ -24,3 +24,12 @@ export const addDays = (date: Date, days: number): Date => {
     result.setDate(date.getDate() + days);
     return result;
 }
+
+export const generateOTP = (): string => {
+    var digits = '0123456789';
+    let OTP = '';
+    for (let i = 0; i < 4; i++) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+    }
+    return OTP;
+}

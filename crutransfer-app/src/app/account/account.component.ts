@@ -56,7 +56,7 @@ export class AccountComponent implements OnInit {
       username: [{ value: this.user.username, disabled: true }, [Validators.required]],
       email: [{ value: this.user.email, disabled: true }, [Validators.required, Validators.email]],
       password: [{ value: Password_Placeholder, disabled: true }, Validators.required],
-      newPassword: [null, Validators.required],
+      newPassword: [null, [Validators.required, Validators.minLength(8)]],
       confirmPassword: [null, Validators.required]
     }, <AbstractControlOptions>{
       validator: [

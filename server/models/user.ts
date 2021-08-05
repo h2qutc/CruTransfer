@@ -19,6 +19,7 @@ const schema = new Schema<IUser>({
     },
     password: {
         type: String,
+        minLength: [8],
         required: true
     },
     created: {

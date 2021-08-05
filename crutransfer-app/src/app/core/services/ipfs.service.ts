@@ -54,7 +54,8 @@ export class IpfsService {
     // Load on-chain identity
     const krp = loadKeyringPair(seeds);
 
-    const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent)
+    const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent);
+    console.log('Ipfs service add file', fileInfo);
 
     // Waiting for chain synchronization
     while (await this.isSyncing(this.api)) {

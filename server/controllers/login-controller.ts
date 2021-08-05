@@ -1,6 +1,6 @@
 import express from "express";
 import { AuthConfig } from "../config";
-import { runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { generateOTP, runAsyncWrapper, sendError, sendOk } from "../helpers";
 import { checkDuplicateUsernameOrEmail } from "../middlewares";
 import { IUser, User } from "../models";
 import { EmailService } from "../services";
@@ -92,7 +92,7 @@ export class LoginController {
 		if (user == null) {
 			sendError(res, 404, 'Email not found');
 		} else {
-			user.code = "1102";
+			user.code = generateOTP();
 			await user.save();
 			await this.sendEmailForgotPassword(user);
 			sendOk(res, true, 'Code was sent');
@@ -105,6 +105,10 @@ export class LoginController {
 			email: req.body.email,
 			code: req.body.code
 		});
+
+		if(!req.body.email){
+			sendError(res, 404, 'Email is invalid');
+		}
 
 		if (user == null) {
 			sendError(res, 404, 'Code is invalid');
@@ -144,6 +148,6 @@ export class LoginController {
 			recipients: [user.email]
 		};
 		const subject = `CruTransfer - Your code is ${user.code}`;
-		await emailService.sendEmailToRecipients(subject, data);
+		await emailService.sendEmailForgotPassword(subject, data);
 	}
 }
