@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:8080/api',
+  baseUrl: 'http://crutransfer.me/api',
   defaultColor: 'light.blueyale',
   subHiddenBreakpoint: 1440,
   menuHiddenBreakpoint: 768,
