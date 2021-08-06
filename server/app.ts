@@ -1,9 +1,11 @@
 import bodyParser from "body-parser";
 import express from "express";
 import { connect, connection } from 'mongoose';
-import { EmailService } from "./services";
 const cors = require('cors');
 
+const dbConnString = 'mongodb+srv://crutransfer:crutransfer2021@cluster0.0bzye.mongodb.net/CruTransferDb?retryWrites=true&w=majority';
+
+// const dbConnString = 'mongodb://localhost/CruTransferDb';
 
 export class App {
     public app: express.Application;
@@ -43,7 +45,7 @@ export class App {
     }
 
     private connectDb() {
-        connect('mongodb://localhost/CruTransferDb', { useNewUrlParser: true });
+        connect(dbConnString, { useNewUrlParser: true });
         const db = connection;
 
         // Added check for DB connection
