@@ -26,11 +26,8 @@ export class OrderController {
 			.delete(this.delete);
 
 		this.router.route('/orders/getOrdersByUser').post(this.getOrdersByUser);
-
 		this.router.route('/orders/updateTotalDownloadForOrder/:order_id').put(this.updateTotalDownloadForOrder);
 
-		//TOREMOVE
-		this.router.route('/email').get(this.sendEmail);
 	}
 
 
