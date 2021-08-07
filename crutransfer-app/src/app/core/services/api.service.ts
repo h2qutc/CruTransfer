@@ -131,12 +131,6 @@ export class ApiService {
     return of({});
   }
 
-  sendEmail(): Observable<IResponse> {
-    const url = `${this.baseUrl}/email`;
-    return this.http.get<IResponse>(url);
-  }
-
-
   private mapOrder(dto: any): IOrder {
     dto.expiredDate = new Date(dto.expiredDate);
     dto.createdDate = new Date(dto.createdDate);

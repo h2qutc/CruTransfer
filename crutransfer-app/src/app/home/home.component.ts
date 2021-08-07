@@ -161,18 +161,4 @@ export class HomeComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-
-  sendEmail() {
-    // const payload: any = {"sender":"hqho@gmail.com","recipients":["hqho@gmail.com"],"message":"Feel free to check it out","action":1,"password":null,"fileInfos":{"cid":"QmdgH9ySvweQnjMm9JhYFJdKqSGQeCs4ygUADAo5jLVCeE","size":8694,"name":"demo"}}
-
-    // this.api.addOrder(payload).subscribe(data => {
-    //   console.log('send email ok', data);
-    // });
-
-    this.api.sendEmail().subscribe(data => {
-      console.log('send email ok', data);
-    });
-  }
-
-
 }

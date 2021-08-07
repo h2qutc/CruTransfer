@@ -134,20 +134,6 @@ export class OrderController {
 		sendOk(res, payload, 'Order deleted');
 	})
 
-
-	sendEmail = async (req: express.Request, res: express.Response) => {
-
-		const order = <any>{ "_id": { "$oid": "6101ccf619763a4c60b08689" }, "recipients": ["h2qbkhn@gmail.com"], "createdDate": { "$date": "2021-08-04T21:32:38.960Z" }, "expiredDate": { "$date": "2021-07-28T21:32:02.450Z" }, "sender": "hqho@gmail.com", "password": null, "action": 1, "message": "Feel free to check it out", "fileInfos": { "cid": "QmPD42ToJwAh9Yc69qz5YUvkv73DmR6gi5dzkkpc9EfyhY", "size": 29400, "name": "DemoPDF.pdf", "type": "application/pdf", "humanSize": "29.4 kB" }, "__v": 0, "link": "http://localhost:4205/6101ccf619763a4c60b08689" };
-
-		const payload = await this.sendEmailToRecipients(order);
-
-		res.json({
-			message: 'Email sent',
-			payload: payload
-		})
-	}
-
-
 	private sendEmailToRecipients = async (order: IOrder) => {
 		const emailService = EmailService.getInstance();
 		const data = new MailOrderData(order);

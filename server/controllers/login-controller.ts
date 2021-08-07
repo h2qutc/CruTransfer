@@ -45,12 +45,13 @@ export class LoginController {
 
 	public signin = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const user = await User.findOne({
-			email: req.body.email
+			email: req.body.email,
+			isActive: true
 		})
 
 
 		if (!user) {
-			return res.status(404).send({ error: true, message: "User Not found." });
+			return res.status(404).send({ error: true, message: "User not found!" });
 		}
 
 		const passwordIsValid = bcrypt.compareSync(
