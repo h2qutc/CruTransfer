@@ -12,6 +12,8 @@ export class EmailService {
   private _templateHtmlSender: any;
   private _templateHtmlSenderOnceDownloaded: any;
   private _templateHtmlForgotPassword: any;
+  private _templateHtmlActivateAccount: any;
+  private _templateHtmlVerifySender: any;
 
   private static instance: EmailService;
 
@@ -21,6 +23,8 @@ export class EmailService {
     this._templateHtmlSender = fs.readFileSync("services/template/templateEmailSender.html");
     this._templateHtmlSenderOnceDownloaded = fs.readFileSync("services/template/templateEmailSenderOnceDownloaded.html");
     this._templateHtmlForgotPassword = fs.readFileSync("services/template/templateEmailForgotPassword.html");
+    this._templateHtmlActivateAccount = fs.readFileSync("services/template/templateEmailActivateAccount.html");
+    this._templateHtmlVerifySender = fs.readFileSync("services/template/templateEmailActivateAccount.html");
 
     this._transporter = nodemailer.createTransport(SMTP_CONFIG);
   }
@@ -34,6 +38,14 @@ export class EmailService {
 
   public sendEmailToRecipients(subject: string, data: any): Promise<any>{
     return this.sendMail(subject, data, this._templateHtmlRecipients);
+  }
+
+  public sendEmailActivateAccount(subject: string, data: any): Promise<any>{
+    return this.sendMail(subject, data, this._templateHtmlActivateAccount);
+  }
+
+  public sendEmailVerifySender(subject: string, data: any): Promise<any>{
+    return this.sendMail(subject, data, this._templateHtmlVerifySender);
   }
 
   public sendEmailForgotPassword(subject: string, data: any): Promise<any>{

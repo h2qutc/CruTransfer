@@ -16,7 +16,7 @@
     </a>
     <h6 class="mb-4">Register</h6>
 
-    <form [formGroup]="form" novalidate>
+    <form [formGroup]="form" novalidate *ngIf="!success; else successTmp">
 
       <label class="form-group has-float-label">
         <input class="form-control" formControlName="username" />
@@ -47,4 +47,9 @@
 
   </div>
 </div>
+
+<ng-template #successTmp>
+  OK
+</ng-template>
+
 <simple-notifications></simple-notifications>

@@ -6,6 +6,9 @@ export interface IUser extends Document {
     password: string;
     code: string;
     created: Date;
+    codeActivation: string;
+    isActive: boolean;
+    codeExpiresIn: Date;
 }
 
 const schema = new Schema<IUser>({
@@ -29,7 +32,20 @@ const schema = new Schema<IUser>({
     code: {
         type: String,
         required: false
+    },
+    codeActivation: {
+        type: String,
+        required: false
+    },
+    isActive: {
+        type: Boolean,
+        required: false
+    },
+    codeExpiresIn: {
+        type: Date,
+        required: false
     }
+
 });
 
 export const User = model<IUser>('User', schema);

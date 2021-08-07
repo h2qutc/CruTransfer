@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
   buttonState = '';
 
   submitted = false;
+  success = false;
 
   constructor(private apiService: ApiService,
     private router: Router,
@@ -45,7 +46,8 @@ export class RegisterComponent implements OnInit {
         this.buttonDisabled = true;
         this.buttonState = 'show-spinner';
         this.apiService.signUp(username, email, password).subscribe((resp) => {
-          this.router.navigate(['login']);
+          this.success = true;
+          // this.router.navigate(['login']);
         }, (error) => {
           this.buttonDisabled = false;
           this.buttonState = '';

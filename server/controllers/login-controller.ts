@@ -1,5 +1,5 @@
 import express from "express";
-import { AuthConfig } from "../config";
+import { AuthConfig, BaseUrlFront } from "../config";
 import { generateOTP, runAsyncWrapper, sendError, sendOk } from "../helpers";
 import { checkDuplicateUsernameOrEmail } from "../middlewares";
 import { IUser, User } from "../models";
@@ -24,65 +24,60 @@ export class LoginController {
 		this.router.route('/changePassword').post(this.changePassword);
 	}
 
-	public signup = (req: express.Request, res: express.Response) => {
+	public signup = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const user = new User({
 			username: req.body.username,
 			email: req.body.email,
-			password: bcrypt.hashSync(req.body.password, 8)
+			password: bcrypt.hashSync(req.body.password, 8),
+			isActif: false,
+			codeActivation: generateOTP(6)
 		});
 
-		user.save((err: any, user: any) => {
-			if (err) {
-				res.status(500).send({ error: true, message: err });
-				return;
-			}
+		console.log('sign up', user);
 
-			res.send({ message: "User was registered successfully!" });
+		await user.save();
 
-		});
-	};
+		await this.sendEmailActivateAccount(user);
 
-	public signin = (req: express.Request, res: express.Response) => {
-		User.findOne({
+		res.send({ message: "User was registered successfully!" });
+	});
+
+	public signin = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+		const user = await User.findOne({
 			email: req.body.email
 		})
-			.exec((err: any, user: any) => {
-				if (err) {
-					res.status(500).send({ error: true, message: err });
-					return;
-				}
 
-				if (!user) {
-					return res.status(404).send({ error: true, message: "User Not found." });
-				}
 
-				const passwordIsValid = bcrypt.compareSync(
-					req.body.password,
-					user.password
-				);
+		if (!user) {
+			return res.status(404).send({ error: true, message: "User Not found." });
+		}
 
-				if (!passwordIsValid) {
-					return res.status(401).send({
-						error: true,
-						accessToken: null,
-						message: "Invalid Password!"
-					});
-				}
+		const passwordIsValid = bcrypt.compareSync(
+			req.body.password,
+			user.password
+		);
 
-				const token = jwt.sign({ id: user.id }, AuthConfig.secret, {
-					expiresIn: 86400 // 24 hours
-				});
-
-				res.status(200).json({
-					payload: {
-						id: user._id,
-						username: user.username,
-						email: user.email,
-						accessToken: token
-					}
-				});
+		if (!passwordIsValid) {
+			return res.status(401).send({
+				error: true,
+				accessToken: null,
+				message: "Invalid Password!"
 			});
-	};
+		}
+
+		const token = jwt.sign({ id: user.id }, AuthConfig.secret, {
+			expiresIn: 86400 // 24 hours
+		});
+
+		res.status(200).json({
+			payload: {
+				id: user._id,
+				username: user.username,
+				email: user.email,
+				accessToken: token
+			}
+		});
+	});
 
 	public forgotPassword = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
 		const user = await User.findOne({
@@ -106,7 +101,7 @@ export class LoginController {
 			code: req.body.code
 		});
 
-		if(!req.body.email){
+		if (!req.body.email) {
 			sendError(res, 404, 'Email is invalid');
 		}
 
@@ -149,5 +144,17 @@ export class LoginController {
 		};
 		const subject = `CruTransfer - Your code is ${user.code}`;
 		await emailService.sendEmailForgotPassword(subject, data);
+	}
+
+	private sendEmailActivateAccount = async (user: IUser) => {
+		const emailService = EmailService.getInstance();
+		const link = `${BaseUrlFront}/account/activate/${user._id}`;
+		console.log('link active', link);
+		const data = {
+			link: link,
+			recipients: [user.email]
+		};
+		const subject = `CruTransfer - Confirm your account`;
+		await emailService.sendEmailActivateAccount(subject, data);
 	}
 }

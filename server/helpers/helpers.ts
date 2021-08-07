@@ -25,10 +25,10 @@ export const addDays = (date: Date, days: number): Date => {
     return result;
 }
 
-export const generateOTP = (): string => {
+export const generateOTP = (nb: number = 4): string => {
     var digits = '0123456789';
     let OTP = '';
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < nb; i++) {
         OTP += digits[Math.floor(Math.random() * 10)];
     }
     return OTP;
