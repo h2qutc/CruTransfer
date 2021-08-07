@@ -14,7 +14,7 @@
     <a class="c-pointer">
       <span class="logo-single"></span>
     </a>
-    <h6 class="mb-4">Register</h6>
+    <h6 class="mb-4" *ngIf="!success">Register</h6>
 
     <form [formGroup]="form" novalidate *ngIf="!success; else successTmp">
 
@@ -51,7 +51,8 @@
 </div>
 
 <ng-template #successTmp>
-  <h6>Activate your account by clicking on the link in the e-mail we have just sent you</h6>
+  <h6 class="mb-4">Check your inbox.</h6>
+  <p>Click the link we sent to {{form.controls.email.value}} to complete your account set-up.</p>
 </ng-template>
 
 <simple-notifications></simple-notifications>
