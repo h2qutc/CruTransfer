@@ -1,0 +1,22 @@
+<div class="card auth-card">
+  <div class="position-relative image-side ">
+    <div class="card-body justify-content-end d-flex flex-column">
+      <p class="text-white h1">CruTransfer</p>
+      <p class="text-white h2">The simplest way to share your files</p>
+      <p class="white mb-0">
+        Please use your e-mail to reset your password.
+        <br>If you are not a member, please
+        <a [routerLink]="['/register']" class="white white-underline-link">register</a>.
+      </p>
+    </div>
+  </div>
+  <div class="form-side">
+    <a class="c-pointer">
+      <span class="logo-single"></span>
+    </a>
+
+    <h6 *ngIf="!hasError">Congratulations, your account is now activated and you're almost ready to transfer your files! </h6>
+    <h6 *ngIf="hasError"> This activation link isn't valid. Perhaps you already used it ?</h6>
+
+  </div>
+</div>

@@ -20,6 +20,10 @@ const routes: Routes = [
     loadChildren: () => import('../app/forgot-password').then(m => m.ForgotPasswordModule),
   },
   {
+    path: 'verify-account/:userId/activate/:code',
+    loadChildren: () => import('../app/verify-account').then(m => m.VerifyAccountModule),
+  },
+  {
     path: 'reset-password',
     loadChildren: () => import('../app/reset-password').then(m => m.ResetPasswordModule),
   },

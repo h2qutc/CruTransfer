@@ -11,12 +11,12 @@ export const checkDuplicateUsernameOrEmail = (req: express.Request, res: express
         }
 
         if (user) {
-            res.status(400).send({ error: true, message: "Failed! Username is already in use!" });
+            res.status(400).send({ error: true, message: "Username is already in use!" });
             return;
         }
 
         User.findOne({
-            email: req.body.email
+            email: req.body.email,
         }).exec((err, user) => {
 
             if (err) {
@@ -31,7 +31,7 @@ export const checkDuplicateUsernameOrEmail = (req: express.Request, res: express
                 res.status(400).send(
                     {
                         error: true,
-                        message: "Failed! Email is already in use!"
+                        message: "Email is already in use!"
                     });
                 return;
             }

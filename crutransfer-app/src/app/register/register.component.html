@@ -8,7 +8,7 @@
         <br>If you are already member, please
         <a [routerLink]="['/login']" class="white white-underline-link">login</a>.
       </p>
-  </div>
+    </div>
   </div>
   <div class="form-side">
     <a class="c-pointer">
@@ -27,13 +27,15 @@
       <label class="form-group has-float-label">
         <input class="form-control" formControlName="email" />
         <span>{{ 'user.email' | translate }}</span>
-        <div *ngIf="submitted && form.controls.email.invalid" class="invalid-tooltip">{{'main.email-required' | translate}}!</div>
+        <div *ngIf="submitted && form.controls.email.invalid" class="invalid-tooltip">{{'main.email-required' |
+          translate}}!</div>
       </label>
 
       <label class="form-group has-float-label">
         <input class="form-control" type="password" formControlName="password" />
         <span>{{ 'user.password' | translate }}</span>
-        <div *ngIf="submitted && form.controls.password.invalid" class="invalid-tooltip">{{'main.password-required' | translate}}!</div>
+        <div *ngIf="submitted && form.controls.password.invalid" class="invalid-tooltip">{{'main.password-required' |
+          translate}}!</div>
       </label>
 
       <div class="d-flex justify-content-between align-items-center">
@@ -49,7 +51,7 @@
 </div>
 
 <ng-template #successTmp>
-  OK
+  <h6>Activate your account by clicking on the link in the e-mail we have just sent you</h6>
 </ng-template>
 
 <simple-notifications></simple-notifications>

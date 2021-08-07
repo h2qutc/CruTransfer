@@ -4,7 +4,7 @@ export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
-    code: string;
+    codeResetPassword: string;
     created: Date;
     codeActivation: string;
     isActive: boolean;
@@ -29,7 +29,7 @@ const schema = new Schema<IUser>({
         type: Date,
         default: Date.now
     },
-    code: {
+    codeResetPassword: {
         type: String,
         required: false
     },

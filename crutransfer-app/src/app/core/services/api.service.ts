@@ -84,6 +84,14 @@ export class ApiService {
     }).pipe(map(resp => resp));
   }
 
+  activateAccount(id: string, code: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/activateAccount`;
+    return this.http.post<IResponse>(url, {
+      id: id,
+      code: code,
+    }).pipe(map(resp => resp));
+  }
+
   resetPassword(email: string, code: string, password: string): Observable<IResponse> {
     const url = `${this.baseUrl}/resetPassword`;
     return this.http.post<IResponse>(url, {
