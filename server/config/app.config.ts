@@ -1,4 +1,4 @@
-export const BaseUrlFront = 'http://localhost:4205';
+export const BaseUrlFront = 'https://crutransfer.me';
 
 export const AuthConfig = {
     secret: "crutransfer-secret-key"

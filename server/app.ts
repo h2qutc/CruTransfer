@@ -3,9 +3,9 @@ import express from "express";
 import { connect, connection } from 'mongoose';
 const cors = require('cors');
 
-// const dbConnString = 'mongodb+srv://crutransfer:crutransfer2021@cluster0.0bzye.mongodb.net/CruTransferDb?authSource=admin&retryWrites=true&w=majority';
+const dbConnString = 'mongodb+srv://crutransfer:crutransfer2021@cluster0.0bzye.mongodb.net/CruTransferDb?authSource=admin&retryWrites=true&w=majority';
 
-const dbConnString = 'mongodb://localhost/CruTransferDb';
+// const dbConnString = 'mongodb://localhost/CruTransferDb';
 
 export class App {
     public app: express.Application;
@@ -42,10 +42,6 @@ export class App {
     private initializeControllers(controllers: any[]) {
         controllers.forEach((controller) => {
             this.app.use('/api', controller.router);
-        });
-
-        this.app.get('/', (req, res) => {
-            res.send('API worked');
         });
 
         this.app.get('/', (req, res) => {
