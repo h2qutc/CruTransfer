@@ -51,7 +51,7 @@ export class TopnavComponent implements OnInit, OnDestroy {
   onSignOut(): void {
     this.authService.signOut();
     this.apiService.signOut().subscribe(() => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
     });
   }
 

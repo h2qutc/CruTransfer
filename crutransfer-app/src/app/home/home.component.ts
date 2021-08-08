@@ -6,7 +6,7 @@ import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TagInputComponent } from 'ngx-chips';
 import { DropzoneComponent } from 'ngx-dropzone-wrapper';
 import { takeUntil } from 'rxjs/operators';
-import { ModalUploadFileComponent } from './components';
+import { ModalUploadFileComponent, ModalVerifySenderComponent } from './components';
 
 const listValidatorsEmail = [Validators.required, Validators.email];
 
@@ -112,7 +112,36 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropzoneCmp.directiveRef.reset();
   }
 
-  openModal(): void {
+  tryTransfer() {
+    const data = this.form.getRawValue();
+    const needVerifySender = data.isAnonymous && data.action == SendActions.SendEmail;
+    if (needVerifySender) {
+      this.openModalVerifySender();
+    }else{
+      this.openModalTransfer();
+    }
+  }
+
+  openModalVerifySender() {
+    const data = this.form.getRawValue();
+    const modalRef = this.modalService.show(ModalVerifySenderComponent, <ModalOptions<any>>
+      {
+        backdrop: true,
+        ignoreBackdropClick: true,
+        class: 'home-modal-verify-sender',
+        initialState: {
+          data: data
+        }
+
+      }
+    );
+
+    modalRef.onHidden.subscribe((res) => {
+      console.log('res');
+    })
+  }
+
+  openModalTransfer(): void {
     this.fileErrorMessage = '';
     this.submitted = true;
 

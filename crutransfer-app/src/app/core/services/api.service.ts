@@ -101,6 +101,21 @@ export class ApiService {
     }).pipe(map(resp => resp));
   }
 
+  sendCodeToSender(email: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/users/sendCodeToSender`;
+    return this.http.post<IResponse>(url, {
+      email: email
+    }).pipe(map(resp => resp));
+  }
+
+  verifySender(email: string, code: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/users/verifySender`;
+    return this.http.post<IResponse>(url, {
+      email: email,
+      code: code
+    }).pipe(map(resp => resp));
+  }
+
   changePassword(email: string, newPassword: string, confirmPassword: string): Observable<IResponse> {
     const url = `${this.baseUrl}/changePassword`;
     return this.http.post<IResponse>(url, {

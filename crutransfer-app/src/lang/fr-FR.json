@@ -43,7 +43,8 @@
     "type-enter":"Tapez et entrez...",
     "reset-password": "Réinitialiser mot de passe",
     "password-required": "Mot de passe est requis et doit comporter au moins 8 caractères!",
-    "transferring": "Transfert en cours..."
+    "transferring": "Transfert en cours...",
+    "verify":"Vérifier"
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."

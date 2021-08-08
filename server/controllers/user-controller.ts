@@ -1,6 +1,7 @@
 import express from "express";
-import { runAsyncWrapper, sendError, sendOk } from "../helpers";
-import { User } from "../models";
+import { generateOTP, runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { ISender, Sender, User } from "../models";
+import { EmailService } from "../services";
 
 export class UserController {
 
@@ -20,6 +21,9 @@ export class UserController {
       .patch(this.update)
       .put(this.update)
       .delete(this.delete);
+
+    this.router.route('/users/sendCodeToSender').post(this.sendCodeToSender);
+    this.router.route('/users/verifySender').post(this.verifySender);
   }
 
   getAll = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
@@ -72,4 +76,58 @@ export class UserController {
     const payload = await User.deleteOne({ id: req.params.user_id });
     sendOk(res, payload, 'User deleted');
   })
+
+  sendCodeToSender = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+    const email = req.body.email;
+    if (!email) {
+      sendError(res, 400, 'Email is invalid');
+    }
+
+    const sender = new Sender();
+
+    sender.email = req.body.email;
+    sender.code = generateOTP(6);
+
+    await sender.save();
+
+    await this.sendEmailWithCodeToSender(sender);
+
+    sendOk(res, 'Code sent');
+
+  });
+
+  verifySender = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+    const email = req.body.email;
+    const code = req.body.code;
+
+    if (!email || !code) {
+      sendError(res, 400, 'Email or code is invalid');
+    }
+
+    const sender = await Sender.findOne({
+      email: email,
+      code: code
+    });
+
+    if (sender == null) {
+      sendError(res, 404, 'Code is invalid or expired');
+    } else {
+
+      await sender.deleteOne();
+
+      sendOk(res, 'Sender was verified');
+    }
+
+
+  })
+
+  private sendEmailWithCodeToSender = async (sender: ISender) => {
+    const emailService = EmailService.getInstance();
+    const data = {
+      code: sender.code,
+      recipients: [sender.email]
+    };
+    const subject = `CruTransfer - Your code is ${data.code}`;
+    await emailService.sendEmailVerifySender(subject, data);
+  }
 }

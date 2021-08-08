@@ -24,7 +24,7 @@ export class EmailService {
     this._templateHtmlSenderOnceDownloaded = fs.readFileSync("services/template/templateEmailSenderOnceDownloaded.html");
     this._templateHtmlForgotPassword = fs.readFileSync("services/template/templateEmailForgotPassword.html");
     this._templateHtmlActivateAccount = fs.readFileSync("services/template/templateEmailActivateAccount.html");
-    this._templateHtmlVerifySender = fs.readFileSync("services/template/templateEmailActivateAccount.html");
+    this._templateHtmlVerifySender = fs.readFileSync("services/template/templateEmailVerifySender.html");
 
     this._transporter = nodemailer.createTransport(SMTP_CONFIG);
   }

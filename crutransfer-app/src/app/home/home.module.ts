@@ -8,7 +8,7 @@ import { RoundprogressModule } from 'angular-svg-round-progressbar';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { TagInputModule } from 'ngx-chips';
 import { DropzoneConfigInterface, DropzoneModule, DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
-import { ColorSwitcherComponent, CruTagInputComponent, ModalUploadFileComponent } from './components';
+import { ColorSwitcherComponent, CruTagInputComponent, ModalUploadFileComponent, ModalVerifySenderComponent } from './components';
 import { HomeComponent } from './home.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -48,7 +48,10 @@ const routes: Routes = [
     TagInputModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent, ModalUploadFileComponent, CruTagInputComponent, ColorSwitcherComponent],
+  declarations: [HomeComponent,
+    ModalUploadFileComponent,
+    ModalVerifySenderComponent,
+    CruTagInputComponent, ColorSwitcherComponent],
   providers: [
     BsModalService,
     {

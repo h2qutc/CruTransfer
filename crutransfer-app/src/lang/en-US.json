@@ -43,7 +43,8 @@
     "copy-link":"Copy link",
     "type-enter":"Type and enter...",
     "reset-password": "Reset password",
-    "transferring": "Transferring..."
+    "transferring": "Transferring...",
+    "verify":"Verify"
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."
