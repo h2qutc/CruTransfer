@@ -37,7 +37,7 @@
             <span>{{!isCopied ? 'Copy' : 'Copied'}}</span>
           </button>
         </div>
-        <small [style.visibility]="isCopied ? 'visible' : 'hidden'">{{'main.link-copied-clipboard' | translate}}</small>
+        <small *ngIf="isCopied">{{'main.link-copied-clipboard' | translate}}</small>
 
 
       </div>

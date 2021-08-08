@@ -41,17 +41,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
-    this.ipfsService.progress$.pipe(takeUntil(this._destroyed)).subscribe((info) => {
-      this.progress += 25;
-      if (info.isFinalized || this.progress > 100) {
-        this.progress = 100;
-      }
-      this.cd.detectChanges();
-    });
-
     this.addFileToIpfsAndSaveOrder();
-
   }
 
   ngOnDestroy(): void {
