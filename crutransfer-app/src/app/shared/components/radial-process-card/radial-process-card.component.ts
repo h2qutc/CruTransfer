@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-radial-process-card',
   templateUrl: './radial-process-card.component.html',
+  styleUrls: ['./radial-process-card.component.scss']
 })
 export class RadialProcessCardComponent{
 

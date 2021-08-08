@@ -1,11 +1,11 @@
 <div [class]="'card ' + class">
-  <div class="card-body d-flex justify-content-between align-items-center" style="flex-direction: column;row-gap: 15px;">
+  <div class="card-body d-flex justify-content-between align-items-center"
+    style="flex-direction: column;row-gap: 15px;">
     <div class="progress-bar-circle position-relative" style="width: 100px;height: 100px;">
-      <div class="progressbar-text">{{ percent }}%</div>
-      <!-- <i class="simple-icon-badge large-icon"></i> -->
-      <round-progress [current]="percent" [max]="100" [responsive]="true" [duration]="800"
-        [animation]="'easeInOutQuart'" [animationDelay]="0" [radius]="100" [rounded]="true" [stroke]="10">
-      </round-progress>
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+      </svg>
     </div>
     <h5 class="card-title mb-0">{{title}}</h5>
   </div>

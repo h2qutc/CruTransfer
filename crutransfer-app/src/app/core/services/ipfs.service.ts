@@ -61,7 +61,7 @@ export class IpfsService {
     while (await this.isSyncing(this.api)) {
       console.info(
         `⛓  Chain is synchronizing, current block number ${(
-          await await this.api.rpc.chain.getHeader()
+          await this.api.rpc.chain.getHeader()
         ).number.toNumber()}`
       );
       await delay(6000);
