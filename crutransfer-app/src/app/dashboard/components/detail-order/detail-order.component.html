@@ -57,6 +57,23 @@
 
 <div class="row" *ngIf="order?.status !== OrderStatusEnum.Expired">
   <div class="col-12 ml-2">
+
+    <p class="font-weight-bold">{{'main.message' | translate}}</p>
+    <p>{{order?.message}}</p>
+    <br>
+
+    <p class="font-weight-bold">{{'main.recipient' | translate}}</p>
+    <ul>
+      <li *ngFor="let rep of order?.recipients">{{rep}}</li>
+
+    </ul>
+    <br>
+    <p class="font-weight-bold">{{'main.download-link' | translate}}</p>
+
+
+  </div>
+
+  <div class="col-12 ml-2">
     <div class="link mr-1 mb-4">{{order?.link}}</div>
     <button (click)="copyLink()" type="button" class="btn btn-dark c-pointer mr-1 mb-1">
       <i class="iconsminds-file-copy"></i> {{'main.copy' | translate}}

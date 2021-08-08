@@ -68,7 +68,7 @@ export class OrderController {
 		order.totalDownloads = 0;
 
 		let payload = await order.save();
-		order.link = `${BaseUrlFront}/download/${payload._id}`;
+		order.link = `${BaseUrlFront}/#/download/${payload._id}`;
 		payload = await order.save();
 
 		sendOk(res, payload);
@@ -141,6 +141,7 @@ export class OrderController {
 	private sendEmailToSender = async (order: IOrder) => {
 		const emailService = EmailService.getInstance();
 		const data = new MailOrderData(order);
+		data.recipients = [order.sender];
 		const subject = `Your files were sent successfully`;
 		await emailService.sendEmailToSender(subject, data);
 	}
@@ -148,6 +149,7 @@ export class OrderController {
 	private sendEmailToSenderOnceDownloaded = async (order: IOrder) => {
 		const emailService = EmailService.getInstance();
 		const data = new MailOrderData(order);
+		data.recipients = [order.sender];
 		const subject = `Your files were downloaded successfully`;
 		await emailService.sendEmailToSenderOnceDownloaded(subject, data);
 	}

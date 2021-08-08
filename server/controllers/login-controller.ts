@@ -165,7 +165,7 @@ export class LoginController {
 
 	private sendEmailActivateAccount = async (user: IUser) => {
 		const emailService = EmailService.getInstance();
-		const link = `${BaseUrlFront}/verify-account/${user._id}/activate/${user.codeActivation}`;
+		const link = `${BaseUrlFront}/#/verify-account/${user._id}/activate/${user.codeActivation}`;
 		const data = {
 			link: link,
 			recipients: [user.email]
