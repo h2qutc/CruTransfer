@@ -9,38 +9,42 @@
                 </div>
             </div>
             <div class="form-side download-info-side">
-                <div class="row">
-                    <!-- <a routerLink="/">
+                <ng-container *ngIf="!loading; else loader">
+
+                    <div class="row">
+                        <!-- <a routerLink="/">
                         <span class="logo-single"></span>
                     </a> -->
-                    <div class="col-12" *ngIf="order; else nodata">
+                        <div class="col-12" *ngIf="order; else nodata">
 
-                        <h3 *ngIf="order.sender" class="sender"><strong>{{order.sender}}</strong> sent you some files
-                        </h3>
-                        <p class="infos">
-                            Ready to get your files ?
-                        </p>
+                            <h3 *ngIf="order.sender" class="sender"><strong>{{order.sender}}</strong> sent you some
+                                files
+                            </h3>
+                            <p class="infos">
+                                Ready to get your files ?
+                            </p>
 
-                        <p class="message">
-                            1 item, {{order.fileInfos.humanSize}} in total - Expires on
-                            {{order.expiredDate.toLocaleDateString()}}
-                        </p>
+                            <p class="message">
+                                1 item, {{order.fileInfos.humanSize}} in total - Expires on
+                                {{order.expiredDate.toLocaleDateString()}}
+                            </p>
 
-                        <h3>Message</h3>
+                            <h3>Message</h3>
 
-                        <div class="link-wrapper" *ngIf="order.message">
-                            <div class="link">{{order.message}}</div>
+                            <div class="link-wrapper" *ngIf="order.message">
+                                <div class="link">{{order.message}}</div>
+                            </div>
+
                         </div>
-
                     </div>
-                </div>
 
-                <div class="row" *ngIf="order">
-                    <div class="col-12">
-                        <button class="btn btn-primary btn-lg btn-shadow" (click)="download()">
-                            Download files</button>
+                    <div class="row" *ngIf="order">
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-lg btn-shadow" (click)="download()">
+                                Download files</button>
+                        </div>
                     </div>
-                </div>
+                </ng-container>
             </div>
         </div>
 
@@ -57,5 +61,13 @@
         <a [routerLink]="'/home'" class="btn btn-primary btn-lg btn-shadow" type="submit">
             GO BACK HOME
         </a>
+    </div>
+</ng-template>
+
+<ng-template #loader>
+    <div class="col-12">
+        <div class="lb-loader">
+            <div class="lb-cancel" style="height: 30px;width: 30px;"></div>
+        </div>
     </div>
 </ng-template>

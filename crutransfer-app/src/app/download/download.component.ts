@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService, FileService, IFileInfo, IOrder, IpfsService } from '@cru-transfer/core';
-import { repeat } from 'rxjs/operators';
 
 
 @Component({
@@ -14,6 +13,7 @@ export class DownloadComponent implements OnInit {
   orderId: string;
 
   order: IOrder;
+  loading = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -27,10 +27,13 @@ export class DownloadComponent implements OnInit {
   }
 
   getOrder(orderId: string) {
+    this.loading = true;
     this.apiService.getOrder(orderId).subscribe(resp => {
       this.order = resp;
+      this.loading = false;
     }, err => {
       this.order = null;
+      this.loading = false;
     })
   }
 
@@ -46,7 +49,7 @@ export class DownloadComponent implements OnInit {
   }
 
 
-  private goHome(){
+  private goHome() {
     this.router.navigate(['home']);
   }
 

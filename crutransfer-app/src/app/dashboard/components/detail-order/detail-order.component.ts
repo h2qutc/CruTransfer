@@ -52,6 +52,10 @@ export class DetailOrderComponent implements OnInit {
     this.goToDashboard();
   }
 
+  back() {
+    this.router.navigate(['/dashboard']);
+  }
+
   private goToDashboard() {
     this.api.deleteOrder(this.order._id).subscribe(data => {
       this.router.navigate(['/dashboard']);
