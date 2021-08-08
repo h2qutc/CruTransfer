@@ -45,7 +45,7 @@
               "src/assets/css/vendor/bootstrap.rtl.only.min.css",
               "./node_modules/@glidejs/glide/dist/css/glide.core.min.css",
               "./node_modules/@ng-select/ng-select/themes/default.theme.css",
-              "src/assets/css/sass/themes/vien.light.redruby.scss"
+              "src/assets/css/sass/themes/vien.light.blueyale.scss"
             ],
             "scripts": []
           },

@@ -117,7 +117,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const needVerifySender = data.isAnonymous && data.action == SendActions.SendEmail;
     if (needVerifySender) {
       this.openModalVerifySender();
-    }else{
+    } else {
       this.openModalTransfer();
     }
   }
@@ -137,7 +137,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     modalRef.onHidden.subscribe((res) => {
-      console.log('res');
+      if (modalRef.content.isOk) {
+        this.openModalTransfer();
+      }
     })
   }
 
