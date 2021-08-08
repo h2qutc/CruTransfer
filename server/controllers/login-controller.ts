@@ -34,8 +34,6 @@ export class LoginController {
 			codeActivation: generateOTP(6)
 		});
 
-		console.log('sign up', user);
-
 		await user.save();
 
 		await this.sendEmailActivateAccount(user);
@@ -168,7 +166,6 @@ export class LoginController {
 	private sendEmailActivateAccount = async (user: IUser) => {
 		const emailService = EmailService.getInstance();
 		const link = `${BaseUrlFront}/verify-account/${user._id}/activate/${user.codeActivation}`;
-		console.log('link active', link);
 		const data = {
 			link: link,
 			recipients: [user.email]

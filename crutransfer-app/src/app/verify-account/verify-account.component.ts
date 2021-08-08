@@ -36,7 +36,7 @@ export class VerifyAccountComponent implements OnInit {
   ngOnInit() {
 
     this.apiService.activateAccount(this.userId, this.code).subscribe((data) => {
-      console.log('activate ok', data);
+      this.hasError = false;
     }, _ => {
       this.hasError = true;
     })

@@ -38,7 +38,6 @@ export class ModalVerifySenderComponent implements OnInit {
   onSubmit() {
     if (this.code) {
       this.apiService.verifySender(this.data.sender, this.code).subscribe((data) => {
-        console.log('verifySender OK', data);
         this.messageError = '';
         this.isOk = true;
         this.close();

@@ -51,12 +51,17 @@ export class IpfsService {
       await this.init();
     }
 
+    const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent);
+    this.syncAndPlaceOrder(fileInfo);
+    return fileInfo;
+
+
+  }
+
+  async syncAndPlaceOrder(fileInfo: IFileInfo) {
+
     // Load on-chain identity
     const krp = loadKeyringPair(seeds);
-
-    const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent);
-    console.log('Ipfs service add file', fileInfo);
-
     // Waiting for chain synchronization
     while (await this.isSyncing(this.api)) {
       console.info(
@@ -117,7 +122,7 @@ export class IpfsService {
     const cid = await ipfs.add(
       fileContent,
       {
-        progress: (prog) => {}
+        progress: (prog) => { }
       }
     );
 
@@ -207,6 +212,9 @@ export class IpfsService {
   }
 
   async loadFile(cid: string): Promise<Uint8Array[]> {
+    if (!this.api) {
+      await this.init();
+    }
     this.ipfs.cat(cid);
     const content: Uint8Array[] = [];
     for await (const chunk of this.ipfs.cat(cid)) {

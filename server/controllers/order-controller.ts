@@ -74,7 +74,6 @@ export class OrderController {
 		sendOk(res, payload);
 
 		if (order.action == SendActions.SendEmail) {
-			console.log('send email to recipients');
 			await this.sendEmailToRecipients(order);
 			await this.sendEmailToSender(order);
 		}
