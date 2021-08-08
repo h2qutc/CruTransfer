@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ApiService, AuthService, IOrder, IUser } from '@cru-transfer/core';
+import { NotificationsService } from 'angular2-notifications';
 import { fromEvent, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -22,10 +23,12 @@ export class DashboardComponent implements OnInit {
   itemOptionsOrders = ['Date', 'Size', 'Name'];
   displayOptionsCollapsed = false;
 
+  loading = false;
+
   private _destroyed: Subject<void> = new Subject<void>();
 
   constructor(private api: ApiService, private authService: AuthService,
-    private route: ActivatedRoute,
+    private notifications: NotificationsService,
     private router: Router) {
     this.currentUser = this.authService.user;
   }
@@ -59,9 +62,14 @@ export class DashboardComponent implements OnInit {
   }
 
   getOrders() {
+    this.loading = true;
     this.api.getOrdersByUser(this.currentUser.email).subscribe(data => {
       this.data = data;
       this.filteredData = data.sort(this.sortBy);
+      this.loading = false;
+    }, error => {
+      this.notifications.error('Error', error.error.message);
+      this.loading = false;
     })
   }
 

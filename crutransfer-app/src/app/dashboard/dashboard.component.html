@@ -27,9 +27,16 @@
     </div>
   </div>
 
-  <div class="col-12 list">
-    <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of filteredData;" ></cru-card-order>
+  <div class="col-12 list" *ngIf="!loading; else loader;">
+    <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of filteredData;"></cru-card-order>
   </div>
-  <div class="col-12">
-  </div>
+
 </div>
+
+<ng-template #loader>
+  <div class="col-12">
+    <div class="lb-loader">
+      <div class="lb-cancel" style="height: 30px;width: 30px;"></div>
+    </div>
+  </div>
+</ng-template>
