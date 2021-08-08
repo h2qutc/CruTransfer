@@ -71,12 +71,13 @@ export class OrderController {
 		order.link = `${BaseUrlFront}/download/${payload._id}`;
 		payload = await order.save();
 
+		sendOk(res, payload);
+
 		if (order.action == SendActions.SendEmail) {
+			console.log('send email to recipients');
 			await this.sendEmailToRecipients(order);
 			await this.sendEmailToSender(order);
 		}
-
-		sendOk(res, payload);
 	})
 
 
@@ -135,21 +136,21 @@ export class OrderController {
 		const emailService = EmailService.getInstance();
 		const data = new MailOrderData(order);
 		const subject = `${data.sender} sent you some files via CruTransfer`;
-		const payload = await emailService.sendEmailToRecipients(subject, data);
+		await emailService.sendEmailToRecipients(subject, data);
 	}
 
 	private sendEmailToSender = async (order: IOrder) => {
 		const emailService = EmailService.getInstance();
 		const data = new MailOrderData(order);
 		const subject = `Your files were sent successfully`;
-		const payload = await emailService.sendEmailToSender(subject, data);
+		await emailService.sendEmailToSender(subject, data);
 	}
 
 	private sendEmailToSenderOnceDownloaded = async (order: IOrder) => {
 		const emailService = EmailService.getInstance();
 		const data = new MailOrderData(order);
-		const subject = `Your files were sent successfully`;
-		const payload = await emailService.sendEmailToSenderOnceDownloaded(subject, data);
+		const subject = `Your files were downloaded successfully`;
+		await emailService.sendEmailToSenderOnceDownloaded(subject, data);
 	}
 
 
