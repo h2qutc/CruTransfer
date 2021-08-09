@@ -44,7 +44,7 @@ export class DetailOrderComponent implements OnInit {
     const cid = fileInfo.cid;
 
     const content = await this.ipfsService.loadFile(cid);
-    this.fileService.createAndDownloadBlobFile(content[0], this.order.fileInfos);
+    this.fileService.createAndDownloadBlobFile(content, this.order.fileInfos);
 
   }
 

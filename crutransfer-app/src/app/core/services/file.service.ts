@@ -7,7 +7,7 @@ export class FileService {
   constructor() { }
 
   createAndDownloadBlobFile(body: any, fileInfos: IFileInfo) {
-    const blob = new Blob([body], {type: fileInfos.type});
+    const blob = new Blob(body, {type: fileInfos.type});
     const fileName = fileInfos.name;
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(blob, fileName);
