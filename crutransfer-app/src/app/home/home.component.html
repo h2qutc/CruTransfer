@@ -1,68 +1,70 @@
-<div class="row">
+<div class="row home-page">
   <div class="col-12 mb-4">
 
     <div class="card auth-card">
       <div class="position-relative image-side d-flex align-items-center">
         <div class="card-body justify-content-end d-flex flex-column">
           <p class="text-white h1">CruTransfer</p>
-          <p class="text-white h2">The simplest way to share your files</p>
+          <p class="text-white h2">{{'main.sologan' | translate}}</p>
         </div>
       </div>
       <div class="form-side">
+
         <!-- <a class="c-pointer">
           <span class="logo-single"></span>
         </a> -->
         <form [formGroup]="form" novalidate>
 
           <label class="form-group has-float-label">
-            <span>Your files(*)</span>
+            <span>{{'main.your-files' | translate}}</span>
             <dropzone #dropzone (addedFiles)="onFileSelected($event)" (removedFile)="onRemovedfile($event)"
-              message="Click or drag images here to upload">
+              (error)="onFileError($event)" message="{{'main.click-drag-to-upload' | translate}}">
             </dropzone>
+            <small>2.0 GB max</small>
+            <div *ngIf="fileErrorMessage" class="invalid-tooltip">
+              {{fileErrorMessage}}</div>
           </label>
 
           <ng-container *ngIf="form.controls.action.value == 1">
             <label class="form-group has-float-label">
               <input class="form-control" formControlName="sender" />
-              <span>Your email(*)</span>
-              <small *ngIf="submitted && form.controls.sender.invalid" class="invalid">Email is required!</small>
+              <span>{{'main.your-email' | translate}}</span>
+              <small>{{'main.email-must-be-valid' | translate}}</small>
+              <div *ngIf="form.controls.sender.touched && form.controls.sender.errors?.email" class="invalid-tooltip">
+                {{'main.email-not-valid' | translate}}</div>
+              <div *ngIf="form.controls.sender.touched && form.controls.sender.errors?.required"
+                class="invalid-tooltip">{{'main.email-required' | translate}}</div>
             </label>
 
-            <label class="form-group has-float-label">
-              <input class="form-control" formControlName="recipient" />
-              <span>Email to(*)</span>
-              <small *ngIf="submitted && form.controls.recipient.invalid" class="invalid">Email is required!</small>
-            </label>
+            <cru-tag-input [control]="form.controls.recipients"></cru-tag-input>
+
           </ng-container>
 
-          <label class="form-group has-float-label">
-            <textarea rows="2" class="form-control" formControlName="message"></textarea>
-            <span>Message</span>
-          </label>
 
-          <!-- <label class="form-group has-float-label">
-          <input class="form-control" type="password" placeholder="" />
-          <span>{{ 'user.password' | translate }}</span>
-        </label> -->
+          <label class="form-group has-float-label">
+            <textarea rows="3" class="form-control" formControlName="message"></textarea>
+            <span>{{'main.message' | translate}}</span>
+          </label>
 
           <label class="form-group">
             <div class="custom-control custom-radio"><input type="radio" [value]="sendActionsEnums.SendEmail"
                 name="action" formControlName="action" id="reactiveRadios1" class="custom-control-input " checked><label
-                for="reactiveRadios1" class="custom-control-label"> Send email transfer </label>
+                for="reactiveRadios1" class="custom-control-label"> {{'main.send-email-transfer' | translate}} </label>
             </div>
             <div class="custom-control custom-radio"><input type="radio" [value]="sendActionsEnums.CopyLink"
                 name="action" formControlName="action" id="reactiveRadios2" class="custom-control-input "><label
-                for="reactiveRadios2" class="custom-control-label"> Get transfer link </label>
+                for="reactiveRadios2" class="custom-control-label"> {{'main.get-transfer-link' | translate}} </label>
             </div>
           </label>
 
 
-
           <div class="d-flex justify-content-end align-items-center">
-            <button type="button" class="btn btn-outline-primary mr-2" (click)="reset()">Reset</button>
+            <button type="button" class="btn btn-outline-primary mr-2" (click)="reset()">{{'main.reset' |
+              translate}}</button>
             <button type="submit" class="btn btn-primary btn-lg btn-shadow" [disabled]="!form.valid"
-              (click)="openModal()">
-              Transfer</button>
+              (click)="tryTransfer()">
+              {{'main.transfer' | translate}}</button>
+
           </div>
 
 
@@ -72,3 +74,5 @@
     </div>
   </div>
 </div>
+
+<app-color-switcher></app-color-switcher>

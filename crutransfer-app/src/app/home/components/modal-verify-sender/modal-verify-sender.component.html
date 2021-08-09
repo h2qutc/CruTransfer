@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">{{'main.your-transfer-details' | translate}} </h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <h6>Check your inbox.</h6>
+  <p>Click the link we sent to {{data.email}} to complete your account set-up.</p>
+
+  <label class="form-group has-float-label">
+    <input class="form-control" [(ngModel)]="code" />
+    <span>Code</span>
+    <div *ngIf="messageError" class="invalid-tooltip">{{messageError}}</div>
+
+  </label>
+
+
+  <div class="d-flex justify-content-end align-items-center">
+    <app-state-button [btnClass]="'btn btn-primary btn-lg btn-shadow'" [currentState]="buttonState"
+      [isDisabled]="buttonDisabled" (click)="onSubmit()">
+      {{ 'main.verify' | translate | uppercase }}
+    </app-state-button>
+  </div>
+
+
+</div>

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { typesBundleForPolkadot } from '@crustio/type-definitions';
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
+import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { Observable, Subject } from 'rxjs';
 import { IFileInfo, IMessageInfo } from '../models';
 import { delay, loadKeyringPair } from './utils';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
 
-const IPFS = require('ipfs-core');
+const importedIPFS = require('ipfs-core');
 
 // WS address of Crust chain
 // const chain_ws_url = "ws://127.0.0.1:9933";
@@ -37,30 +37,36 @@ export class IpfsService {
   constructor() { }
 
   async init() {
-    // Connect to chain
+    if (this.api) {
+      return;
+    }
     this.api = await ApiPromise.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot });
-    this.ipfs = await IPFS.create();
+    this.ipfs = await importedIPFS.create();
   }
 
   async addFileToIpfsAndSendTx(fileContent: File): Promise<IFileInfo> {
 
     /***************************Base instance****************************/
-    // Read file
-    // const fileContent = await fs.readFileSync(filePath);
+    if (!this.api) {
+      await this.init();
+    }
 
-    // api = await api.isReady;
+    const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent);
+    this.syncAndPlaceOrder(fileInfo);
+    return fileInfo;
+
+
+  }
+
+  async syncAndPlaceOrder(fileInfo: IFileInfo) {
 
     // Load on-chain identity
     const krp = loadKeyringPair(seeds);
-
-    const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent)
-    console.info("File info: " + JSON.stringify(fileInfo));
-
     // Waiting for chain synchronization
     while (await this.isSyncing(this.api)) {
       console.info(
         `⛓  Chain is synchronizing, current block number ${(
-          await await this.api.rpc.chain.getHeader()
+          await this.api.rpc.chain.getHeader()
         ).number.toNumber()}`
       );
       await delay(6000);
@@ -116,7 +122,7 @@ export class IpfsService {
     const cid = await ipfs.add(
       fileContent,
       {
-        progress: (prog) => console.log(`Add received: ${prog}`)
+        progress: (prog) => { }
       }
     );
 
@@ -205,8 +211,13 @@ export class IpfsService {
     });
   }
 
-  async loadFile(cid: string) {
-    await this.ipfs.get(cid);
+  async loadFile(cid: string): Promise<Uint8Array[]> {
+    this.ipfs.cat(cid);
+    const content: Uint8Array[] = [];
+    for await (const chunk of this.ipfs.cat(cid)) {
+      content.push(chunk);
+    }
+    return content;
   }
 
   private notify(infos: any) {

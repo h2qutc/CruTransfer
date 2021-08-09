@@ -1,0 +1,10 @@
+<label class="form-group has-float-label recipients" [class.focused]="focused">
+  <tag-input #tagInput class="form-control" [formControl]="control" [validators]="listValidatorsEmail"
+    (onValidationError)="onValidationError($event)" (onAdd)="onAdd($event)" (onRemove)="onRemove($event)"
+    (onFocus)="focused = true;" (onBlur)="focused = false" [ripple]="false" [modelAsStrings]="true"
+    secondaryPlaceholder ="{{'main.type-enter' | translate}}" placeholder="{{'main.type-enter' | translate}}" [maxItems]="maxItems">
+  </tag-input>
+  <span>{{'main.email-to' | translate}}</span>
+  <small>Max {{maxItems}} {{'main.recipient' | translate}}</small>
+  <div *ngIf="control.touched && control.errors?.required" class="invalid-tooltip">Recipient is required!</div>
+</label>

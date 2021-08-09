@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IOrder, IResponse, IUser } from '../models';
+import { IOrder, IResponse, IUser, OrderStatus } from '../models';
+import { calcDiffDate } from './utils';
 
 
 @Injectable()
@@ -42,10 +43,16 @@ export class ApiService {
     return this.http.get<IResponse>(url).pipe(resp => resp);
   }
 
+  getOrdersByUser(email: string): Observable<IOrder[]> {
+    const url = `${this.baseUrl}/orders/getOrdersByUser`;
+    return this.http.post<IOrder[]>(url, {
+      email: email
+    }).pipe(map(resp => resp.map(this.mapOrder)));
+  }
 
-  getOrder(id: string): Observable<IResponse> {
+  getOrder(id: string): Observable<IOrder> {
     const url = `${this.baseUrl}/orders/${id}`;
-    return this.http.get<IResponse>(url).pipe(map(resp => resp));
+    return this.http.get<IOrder>(url).pipe(map(resp => this.mapOrder(resp)));
   }
 
   addOrder(payload: IOrder): Observable<IResponse> {
@@ -54,15 +61,68 @@ export class ApiService {
   }
 
 
-  updateOrder(userId: string, payload: IOrder): Observable<IResponse> {
-    const url = `${this.baseUrl}/orders/${userId}`;
+  updateOrder(id: string, payload: IOrder): Observable<IResponse> {
+    const url = `${this.baseUrl}/orders/${id}`;
     return this.http.put<IResponse>(url, payload).pipe(map(resp => resp));
   }
 
+  updateTotalDownloadForOrder(orderId: string): Observable<any> {
+    const url = `${this.baseUrl}/orders/updateTotalDownloadForOrder/${orderId}`;
+    return this.http.put<any>(url, {}).pipe(map(resp => resp));
+  }
 
-  deleteOrder(userId: string): Observable<IResponse> {
-    const url = `${this.baseUrl}/orders/${userId}`;
+
+  deleteOrder(id: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/orders/${id}`;
     return this.http.delete<IResponse>(url).pipe(map(resp => resp));
+  }
+
+  forgotPassword(email: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/forgotPassword`;
+    return this.http.post<IResponse>(url, {
+      email: email,
+    }).pipe(map(resp => resp));
+  }
+
+  activateAccount(id: string, code: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/activateAccount`;
+    return this.http.post<IResponse>(url, {
+      id: id,
+      code: code,
+    }).pipe(map(resp => resp));
+  }
+
+  resetPassword(email: string, code: string, password: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/resetPassword`;
+    return this.http.post<IResponse>(url, {
+      code: code,
+      password: password,
+      email: email
+    }).pipe(map(resp => resp));
+  }
+
+  sendCodeToSender(email: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/users/sendCodeToSender`;
+    return this.http.post<IResponse>(url, {
+      email: email
+    }).pipe(map(resp => resp));
+  }
+
+  verifySender(email: string, code: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/users/verifySender`;
+    return this.http.post<IResponse>(url, {
+      email: email,
+      code: code
+    }).pipe(map(resp => resp));
+  }
+
+  changePassword(email: string, newPassword: string, confirmPassword: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/changePassword`;
+    return this.http.post<IResponse>(url, {
+      email: email,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword
+    }).pipe(map(resp => resp));
   }
 
   signUp(username: string, email: string, password: string): Observable<IResponse> {
@@ -85,6 +145,16 @@ export class ApiService {
   signOut(): Observable<any> {
     return of({});
   }
+
+  private mapOrder(dto: any): IOrder {
+    dto.expiredDate = new Date(dto.expiredDate);
+    dto.createdDate = new Date(dto.createdDate);
+    const diff = calcDiffDate(new Date(), dto.expiredDate);
+    dto.status = diff != null ? diff.status : OrderStatus.Expired;
+    dto.timeRemainStr = diff ? `Expires in ${diff.toString()}` : 'Expired';
+    return dto;
+  }
+
 
 
 }

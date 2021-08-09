@@ -1,13 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { StateButtonModule } from './components';
+import { ApplicationMenuModule } from './components/application-menu/application-menu.module';
+import { CardOrderModule } from './components/card-order/card-order.module';
 import { GradientWithRadialProgressCardModule } from './components/gradient-with-radial-progress-card/gradient-with-radial-progress-card.module';
 import { RadialProcessCardModule } from './components/radial-process-card/radial-process-card.module';
+import { DirectivesModule } from './directives';
 
 const modules = [
   StateButtonModule,
   GradientWithRadialProgressCardModule,
-  RadialProcessCardModule
+  RadialProcessCardModule,
+  ApplicationMenuModule,
+  PerfectScrollbarModule,
+  CardOrderModule,
+  DirectivesModule
 ]
 
 @NgModule({

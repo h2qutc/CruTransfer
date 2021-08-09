@@ -6,7 +6,6 @@ export const environment = {
   production: false,
   baseUrl: 'http://localhost:8080/api',
   defaultColor: 'light.blueyale',
-  adminRoot: '/app',
   subHiddenBreakpoint: 1440,
   menuHiddenBreakpoint: 768,
   defaultDirection: 'ltr',

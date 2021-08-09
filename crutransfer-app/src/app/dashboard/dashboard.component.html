@@ -1,3 +1,42 @@
-<p>
-  dashboard works!
-</p>
+<div class="row">
+
+  <div class="col-12">
+    <h1>{{'main.your-transfer' | translate}}</h1>
+    <div class="display-options-container">
+      <div id="displayOptions" [collapse]="displayOptionsCollapsed" class="collapse dont-collapse-sm">
+        <div class="d-block d-md-inline-block">
+          <div class="float-md-left mr-1 mb-1" dropdown>
+            <button id="button-basic" dropdownToggle type="button" class="btn btn-outline-dark btn-xs dropdown-toggle"
+              aria-controls="dropdown-basic">
+              {{'main.order-by' | translate}} : {{itemOrder}} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+              <li role="menuitem" *ngFor="let item of itemOptionsOrders"><a
+                  [ngClass]="item === itemOrder ? 'dropdown-item active' : 'dropdown-item'"
+                  (click)="orderBy(item)">{{item}}</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="d-inline-block">
+          <div class="search-sm d-inline-block float-md-left mr-1 mb-1 align-top" style="min-width: 200px;">
+            <input #inputSearch class="form-control" placeholder="{{'main.search-by-filename' | translate}}">
+          </div>
+        </div>
+      </div>
+      <div class="separator mb-4"></div>
+    </div>
+  </div>
+
+  <div class="col-12 list" *ngIf="!loading; else loader;">
+    <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of filteredData;"></cru-card-order>
+  </div>
+
+</div>
+
+<ng-template #loader>
+  <div class="col-12">
+    <div class="lb-loader">
+      <div class="lb-cancel" style="height: 30px;width: 30px;"></div>
+    </div>
+  </div>
+</ng-template>

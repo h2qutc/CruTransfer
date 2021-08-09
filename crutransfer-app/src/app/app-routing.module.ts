@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core';
 
 const routes: Routes = [
@@ -16,8 +16,25 @@ const routes: Routes = [
     loadChildren: () => import('../app/register').then(m => m.RegisterModule),
   },
   {
+    path: 'forgot-password',
+    loadChildren: () => import('../app/forgot-password').then(m => m.ForgotPasswordModule),
+  },
+  {
+    path: 'verify-account/:userId/activate/:code',
+    loadChildren: () => import('../app/verify-account').then(m => m.VerifyAccountModule),
+  },
+  {
+    path: 'reset-password',
+    loadChildren: () => import('../app/reset-password').then(m => m.ResetPasswordModule),
+  },
+  {
     path: 'dashboard',
     loadChildren: () => import('../app/dashboard').then(m => m.DashboardModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'account',
+    loadChildren: () => import('../app/account').then(m => m.AccountModule),
     canActivate: [AuthGuard]
   },
   {
@@ -30,7 +47,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    useHash: true,
+    // preloadingStrategy: PreloadAllModules
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

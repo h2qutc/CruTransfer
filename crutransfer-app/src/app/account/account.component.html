@@ -1,0 +1,64 @@
+<div class="card auth-card">
+  <div class="position-relative image-side d-flex align-items-center">
+    <div class="card-body justify-content-end d-flex flex-column">
+      <p class="text-white h1">CruTransfer</p>
+      <p class="text-white h2">The simplest way to share your files</p>
+    </div>
+  </div>
+  <div class="form-side">
+    <!-- <a class="c-pointer">
+      <span class="logo-single"></span>
+    </a> -->
+    <h2 class="mb-4">Hi, {{user.username}}</h2>
+
+    <form [formGroup]="form" novalidate>
+      <label class="form-group has-float-label">
+        <input class="form-control" formControlName="email" />
+        <span>{{ 'user.email' | translate }}</span>
+        <div *ngIf="submitted && form.controls.email.invalid" class="invalid-tooltip">Email is required!</div>
+      </label>
+
+      <label class="form-group has-float-label" *ngIf="!isEdit">
+        <input class="form-control" type="password" formControlName="password" />
+        <span>{{ 'user.password' | translate }}</span>
+        <div *ngIf="submitted && form.controls.password.invalid" class="invalid-tooltip">{{'main.password-required' | translate}}!</div>
+      </label>
+
+      <ng-container *ngIf="isEdit">
+
+        <label class="form-group has-float-label">
+          <input class="form-control" type="password" formControlName="newPassword" />
+          <span>{{ 'user.new-password' | translate }}</span>
+          <div *ngIf="submitted && form.controls.newPassword.invalid" class="invalid-tooltip">{{'main.password-required' | translate}}!
+          </div>
+        </label>
+
+        <label class="form-group has-float-label">
+          <input class="form-control" type="password" formControlName="confirmPassword" />
+          <span>{{ 'user.password-again' | translate }}</span>
+          <div *ngIf="submitted && form.controls.confirmPassword.invalid" class="invalid-tooltip">Confirm password is
+            required!
+          </div>
+          <div *ngIf="form.hasError('SamePasswordValidation')" class="invalid-tooltip">
+            The passwords must match.
+          </div>
+        </label>
+
+      </ng-container>
+
+      <div class="d-flex justify-content-end">
+        <a *ngIf="!isEdit" class="c-pointer" (click)="isEdit = !isEdit">{{ 'user.change-password' | translate }}</a>
+        <ng-container *ngIf="isEdit">
+          <button type="button" class="btn btn-outline-primary mr-2" (click)="reset()">
+            {{ 'main.cancel' | translate }}
+          </button>
+          <app-state-button [btnClass]="'btn btn-primary btn-lg btn-shadow'" [currentState]="buttonState"
+            [isDisabled]="buttonDisabled" (click)="onSubmit()">
+            {{ 'main.save' | translate }}
+          </app-state-button>
+        </ng-container>
+      </div>
+    </form>
+
+  </div>
+</div>

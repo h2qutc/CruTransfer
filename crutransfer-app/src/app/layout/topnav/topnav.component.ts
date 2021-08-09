@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment';
   templateUrl: './topnav.component.html',
 })
 export class TopnavComponent implements OnInit, OnDestroy {
-  adminRoot = environment.adminRoot;
   subscription: Subscription;
   languages: Language[];
   currentLanguage: string;
@@ -36,6 +35,7 @@ export class TopnavComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.user = this.authService.user;
     this.authService.user$.subscribe((data) => {
       this.user = data;
       this.cd.detectChanges();
@@ -49,8 +49,9 @@ export class TopnavComponent implements OnInit, OnDestroy {
 
 
   onSignOut(): void {
+    this.authService.signOut();
     this.apiService.signOut().subscribe(() => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
     });
   }
 

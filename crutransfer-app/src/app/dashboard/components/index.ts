@@ -1,0 +1,1 @@
+export * from './detail-order/detail-order.component';

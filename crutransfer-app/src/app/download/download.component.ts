@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ApiService, IOrder } from '@cru-transfer/core';
-import { repeat } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService, FileService, IFileInfo, IOrder, IpfsService } from '@cru-transfer/core';
+
 
 @Component({
   selector: 'app-download',
@@ -13,25 +13,44 @@ export class DownloadComponent implements OnInit {
   orderId: string;
 
   order: IOrder;
+  loading = false;
 
   constructor(private route: ActivatedRoute,
+    private router: Router,
+    private ipfsService: IpfsService,
+    private fileService: FileService,
     private apiService: ApiService) { }
 
   ngOnInit() {
     this.orderId = this.route.snapshot.paramMap.get('id');
-    console.log('download id', this.orderId);
     this.getOrder(this.orderId);
   }
 
   getOrder(orderId: string) {
+    this.loading = true;
     this.apiService.getOrder(orderId).subscribe(resp => {
-      console.log('get order', resp);
-      this.order = resp.payload;
+      this.order = resp;
+      this.loading = false;
+    }, err => {
+      this.order = null;
+      this.loading = false;
     })
   }
 
-  download() {
-    console.log('download')
+  async download() {
+    const fileInfo: IFileInfo = this.order.fileInfos;
+    const cid = fileInfo.cid;
+
+    const content = await this.ipfsService.loadFile(cid);
+    this.fileService.createAndDownloadBlobFile(content, this.order.fileInfos);
+    this.apiService.updateTotalDownloadForOrder(this.order._id).subscribe((data) => {
+    })
+
+  }
+
+
+  private goHome() {
+    this.router.navigate(['home']);
   }
 
 }

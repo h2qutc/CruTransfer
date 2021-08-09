@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve --port=4205",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -30,7 +30,10 @@
     "ipfs-core-types": "^0.5.2",
     "long": "^4.0.0",
     "ngx-bootstrap": "^6.2.0",
+    "ngx-chips": "^2.2.2",
+    "ngx-clipboard": "^14.0.1",
     "ngx-dropzone-wrapper": "^10.0.1",
+    "ngx-perfect-scrollbar": "^10.1.1",
     "node-fetch": "^2.6.1",
     "nouislider": "^15.2.0",
     "rxjs": "~6.6.0",

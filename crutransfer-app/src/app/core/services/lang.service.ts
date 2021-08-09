@@ -18,7 +18,7 @@ export class LangService {
   defaultLanguage = getThemeLang();
   supportedLanguages: Language[] = [
     { code: 'en-US', direction: 'ltr', label: 'English', shorthand: 'en' },
-    { code: 'es-ES', direction: 'ltr', label: 'Español', shorthand: 'es' },
+    // { code: 'es-ES', direction: 'ltr', label: 'Español', shorthand: 'es' },
     { code: 'fr-FR', direction: 'ltr', label: 'Français', shorthand: 'fr' },
   ];
 
@@ -34,7 +34,7 @@ export class LangService {
     this.translate.setTranslation('en-US', en);
     this.translate.setTranslation('es-ES', es);
     this.translate.setTranslation('en-EN', en);
-    this.translate.setTranslation('fr-FR', en);
+    this.translate.setTranslation('fr-FR', fr);
     this.translate.setDefaultLang(this.defaultLanguage);
     if (this.isSingleLang) {
       this.translate.use(this.defaultLanguage);

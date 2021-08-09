@@ -27,13 +27,14 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       email: [null, [Validators.required, Validators.email]],
-      password: [null, Validators.required],
+      password: [null, [Validators.required, Validators.minLength(8)]],
     });
   }
 
   onSubmit(): void {
+    this.submitted = true;
+
     if (this.form.valid) {
-      this.submitted = true;
 
       const { email, password } = this.form.value;
 
@@ -44,16 +45,11 @@ export class LoginComponent implements OnInit {
         this.apiService.signIn(email, password).subscribe((resp) => {
           this.authService.accessToken = resp.payload.accessToken;
           this.authService.user = resp.payload;
-
           this.router.navigate(['home']);
         }, (error) => {
           this.buttonDisabled = false;
           this.buttonState = '';
-          this.notifications.error('Error', error.error.message, NotificationType.Error, {
-            theClass: 'primary',
-            timeOut: 3000,
-            showProgressBar: false
-          });
+          this.notifications.error('Error', error.error.message);
         });
       }
     }

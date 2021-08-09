@@ -3,12 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoundprogressModule } from 'angular-svg-round-progressbar';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { ClipboardModule } from 'ngx-clipboard';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core';
 import { LayoutContainersModule } from './layout';
-import { SimpleNotificationsModule } from 'angular2-notifications';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 
 @NgModule({
@@ -24,7 +27,13 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     PopoverModule.forRoot(),
     TranslateModule.forRoot(),
     CoreModule.forRoot(),
-    SimpleNotificationsModule.forRoot()
+    SimpleNotificationsModule.forRoot({
+      timeOut: 2000,
+      showProgressBar: false
+    }),
+    ClipboardModule,
+    CollapseModule.forRoot(),
+    BsDropdownModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

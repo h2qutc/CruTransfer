@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService, AuthService } from '@cru-transfer/core';
-import { NotificationsService, NotificationType } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
   buttonState = '';
 
   submitted = false;
+  success = false;
 
   constructor(private apiService: ApiService,
     private router: Router,
@@ -28,14 +29,15 @@ export class RegisterComponent implements OnInit {
     this.form = this.formBuilder.group({
       username: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
-      password: [null, Validators.required],
+      password: [null, [Validators.required, Validators.minLength(8)]],
     });
   }
 
 
   onSubmit(): void {
+    this.submitted = true;
+
     if (this.form.valid) {
-      this.submitted = true;
 
       const { username, email, password } = this.form.value;
 
@@ -44,7 +46,8 @@ export class RegisterComponent implements OnInit {
         this.buttonDisabled = true;
         this.buttonState = 'show-spinner';
         this.apiService.signUp(username, email, password).subscribe((resp) => {
-          this.router.navigate(['login']);
+          this.success = true;
+          // this.router.navigate(['login']);
         }, (error) => {
           this.buttonDisabled = false;
           this.buttonState = '';
