@@ -212,9 +212,6 @@ export class IpfsService {
   }
 
   async loadFile(cid: string): Promise<Uint8Array[]> {
-    if (!this.api) {
-      await this.init();
-    }
     this.ipfs.cat(cid);
     const content: Uint8Array[] = [];
     for await (const chunk of this.ipfs.cat(cid)) {
