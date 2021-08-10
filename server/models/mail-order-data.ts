@@ -1,6 +1,7 @@
 import { IOrder } from "./order";
 
 export class MailOrderData {
+
     sender: string = '';
     recipients: string[] = [];
     recipientsHtml?: string = '';

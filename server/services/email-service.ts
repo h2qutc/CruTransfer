@@ -26,7 +26,7 @@ export class EmailService {
     this._templateHtmlActivateAccount = fs.readFileSync("services/template/templateEmailActivateAccount.html");
     this._templateHtmlVerifySender = fs.readFileSync("services/template/templateEmailVerifySender.html");
 
-    this._transporter = nodemailer.createTransport(SMTP_CONFIG);
+    this._transporter = nodemailer.createTransport(<any>SMTP_CONFIG);
   }
 
   public static getInstance(): EmailService {

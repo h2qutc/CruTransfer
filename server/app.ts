@@ -3,9 +3,7 @@ import express from "express";
 import { connect, connection } from 'mongoose';
 const cors = require('cors');
 
-const dbConnString = 'mongodb+srv://crutransfer:crutransfer2021@cluster0.0bzye.mongodb.net/CruTransferDb?authSource=admin&retryWrites=true&w=majority';
-
-// const dbConnString = 'mongodb://localhost/CruTransferDb';
+const dbConnString = process.env.MONGO_CONN_STRING || 'mongodb://localhost/CruTransferDb';
 
 export class App {
     public app: express.Application;

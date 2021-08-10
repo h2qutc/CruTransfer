@@ -1,7 +1,7 @@
 export const BaseUrlFront = 'https://crutransfer.me';
 
 export const AuthConfig = {
-    secret: "crutransfer-secret-key"
+    secret: process.env.SECRET_KEY || "demo-secret-key"
 }
 
 export const EmailConfig = {
@@ -11,22 +11,13 @@ export const EmailConfig = {
     }
 }
 
-// export const SMTP_CONFIG = {
-//     host: 'smtp.ethereal.email',
-//     port: 587,
-//     auth: {
-//         user: 'cielo.stark99@ethereal.email',
-//         pass: 'ythCxGTyShYRpH8qtQ'
-//     }
-// }
-
 export const SMTP_CONFIG = {
-    host: 'mail.privateemail.com',
-    port: 465,
+    host: process.env.SMTP_HOST || 'smtp.ethereal.email',
+    port:  process.env.SMTP_PORT || 587,
     secure: true,
     auth: {
-        user: 'noreply@crutransfer.me',
-        pass: 'crutransfer2021'
+        user: process.env.SMTP_USER || 'cielo.stark99@ethereal.email',
+        pass: process.env.SMTP_PASSWORD || 'ythCxGTyShYRpH8qtQ'
     }
 }
 

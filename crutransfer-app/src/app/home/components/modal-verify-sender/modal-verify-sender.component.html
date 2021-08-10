@@ -1,13 +1,12 @@
 <div class="modal-header">
-  <h4 class="modal-title pull-left">{{'main.your-transfer-details' | translate}} </h4>
+  <h4 class="modal-title pull-left">Verify your email</h4>
   <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
 
-  <h6>Check your inbox.</h6>
-  <p>Click the link we sent to {{data.email}} to complete your account set-up.</p>
+  <p>Just one check to make sure the sender is really you. We’ve sent a verification code to <strong>{{data.sender}}</strong>. Please use the verification code to continue your transfer.</p>
 
   <label class="form-group has-float-label">
     <input class="form-control" [(ngModel)]="code" />
