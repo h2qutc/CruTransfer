@@ -14,7 +14,7 @@ export const EmailConfig = {
 export const SMTP_CONFIG = {
     host: process.env.SMTP_HOST || 'smtp.ethereal.email',
     port:  process.env.SMTP_PORT || 587,
-    secure: true,
+    secure: process.env.SMTP_HOST ? true : false,
     auth: {
         user: process.env.SMTP_USER || 'cielo.stark99@ethereal.email',
         pass: process.env.SMTP_PASSWORD || 'ythCxGTyShYRpH8qtQ'

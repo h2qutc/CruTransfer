@@ -7,10 +7,11 @@ import { Observable, Subject } from 'rxjs';
 import { IFileInfo, IMessageInfo } from '../models';
 import { delay, loadKeyringPair } from './utils';
 
-const importedIPFS = require('ipfs-core');
+// const importedIPFS = require('ipfs-core');
+const ipfsClient = require('ipfs-http-client')
 
 // WS address of Crust chain
-// const chain_ws_url = "ws://127.0.0.1:9933";
+// const chain_ws_url = "ws://127.0.0.1:8081";
 const chain_ws_url = "wss://api.decloudf.com/";
 const wsProvider = new WsProvider(chain_ws_url);
 
@@ -41,7 +42,12 @@ export class IpfsService {
       return;
     }
     this.api = await ApiPromise.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot });
-    this.ipfs = await importedIPFS.create();
+    // this.ipfs = await importedIPFS.create();
+    this.ipfs = await ipfsClient.create({
+      host: 'localhost',
+      port: 5001,
+      protocol: 'http'
+    });
   }
 
   async addFileToIpfsAndSendTx(fileContent: File): Promise<IFileInfo> {
@@ -52,7 +58,7 @@ export class IpfsService {
     }
 
     const fileInfo: IFileInfo = await this.addFile(this.ipfs, fileContent);
-    this.syncAndPlaceOrder(fileInfo);
+    // this.syncAndPlaceOrder(fileInfo);
     return fileInfo;
 
 
