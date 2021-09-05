@@ -81,6 +81,7 @@ export class BlockService {
       block.nbFiles = dto.nbFiles;
       block.pinnedDate = dto.pinnedDate;
       block.isPinnedToCrust = dto.isPinnedToCrust;
+      block.cid = dto.cid;
 
       const saved = await block.save();
     }

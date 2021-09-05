@@ -69,7 +69,7 @@ export class IpfsService {
     const krp = loadKeyringPair(this.seeds);
     // Waiting for chain synchronization
     while (await this.isSyncing(this.api)) {
-      console.info(
+      logger.info(
         `⛓  Chain is synchronizing, current block number ${(
           await this.api.rpc.chain.getHeader()
         ).number.toNumber()}`

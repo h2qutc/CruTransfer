@@ -7,6 +7,7 @@ export interface IBlock extends Document {
   isPinnedToCrust: boolean;
   createdDate: Date;
   pinnedDate: Date;
+  cid: string;
 }
 
 // Setup schema
@@ -29,6 +30,10 @@ const schema = new Schema<IBlock>({
   isPinnedToCrust: {
     type: Boolean,
     default: false,
+  },
+  cid: {
+    type: String,
+    default: null,
   },
   createdDate: {
     type: Date,

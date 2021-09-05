@@ -212,6 +212,8 @@ export class OrderController {
 
       block.pinnedDate = new Date();
       block.isPinnedToCrust = true;
+      block.cid = infos.cid;
+
       await this.blockService.update(block);
     } else {
       logger.error(`Failed to pin block ${block.publicId} to Crust`);
