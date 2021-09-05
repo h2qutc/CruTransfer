@@ -1,159 +1,222 @@
 import express from "express";
-import { BaseUrlFront, DAYS_BEFORE_EXPIRED } from "../config";
+import { BaseUrlFront, DAYS_BEFORE_EXPIRED, LIMIT_SIZE_BLOCK } from "../config";
 import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
-import { IOrder, MailOrderData, Order, SendActions } from "../models";
-import { EmailService } from "../services";
-
-var filesize = require('file-size');
+import {
+  IBlock,
+  IFileInfo,
+  IOrder,
+  MailOrderData,
+  Order,
+  SendActions,
+} from "../models";
+import { BlockService, EmailService, IpfsService } from "../services";
+import logger from "../services/log";
 
 export class OrderController {
+  private blockService = BlockService.getInstance();
+  private ipfsService = IpfsService.getInstance();
 
-	public router = express.Router();
+  public router = express.Router();
 
-	constructor() {
-		this.initRoutes();
-	}
+  constructor() {
+    this.initRoutes();
+  }
 
-	private initRoutes() {
-		this.router.route('/orders')
-			.get(this.getAll)
-			.post(this.create);
+  private initRoutes() {
+    this.router.route("/orders").get(this.getAll).post(this.create);
 
-		this.router.route('/orders/:order_id')
-			.get(this.getById)
-			.patch(this.update)
-			.put(this.update)
-			.delete(this.delete);
+    this.router
+      .route("/orders/:order_id")
+      .get(this.getById)
+      .patch(this.update)
+      .put(this.update)
+      .delete(this.delete);
 
-		this.router.route('/orders/getOrdersByUser').post(this.getOrdersByUser);
-		this.router.route('/orders/updateTotalDownloadForOrder/:order_id').put(this.updateTotalDownloadForOrder);
+    this.router.route("/orders/getOrdersByUser").post(this.getOrdersByUser);
+    this.router
+      .route("/orders/updateTotalDownloadForOrder/:order_id")
+      .put(this.updateTotalDownloadForOrder);
+  }
 
-	}
+  getAll = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+      const payload = await Order.find({});
+      sendOk(res, payload);
+    }
+  );
 
+  getOrdersByUser = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+      const email = req.body.email;
+      const payload = await Order.find({ sender: email });
+      res.status(200).send(payload);
+    }
+  );
 
-	getAll = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-		const payload = await Order.find({});
-		sendOk(res, payload);
-	})
+  create = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+      const body = JSON.parse(req.body.payload);
 
-	getOrdersByUser = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-		const email = req.body.email;
-		const payload = await Order.find({ sender: email });
-		res.status(200).send(payload);
-	})
+      if (body.action == SendActions.SendEmail) {
+        if (!body.sender || body.recipients.length == 0) {
+          sendError(res, 400, "Bad request");
+        }
+      }
 
+      const fileInfos = await this.pinFile((<any>req).files.files);
 
-	create = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
+      if (!fileInfos) {
+        sendError("Unable to pin files");
+      }
 
-		const order = new Order();
-		order.sender = req.body.sender;
-		order.password = req.body.password;
-		order.action = req.body.action;
-		order.message = req.body.message;
-		order.recipients = req.body.recipients;
-		order.isAnonymous = req.body.isAnonymous;
+      const order = new Order();
+      order.fileInfos = fileInfos;
 
-		if (order.action == SendActions.SendEmail) {
-			if (!order.sender || order.recipients.length == 0) {
-				sendError(res, 400, 'Bad request');
-			}
-		}
+      order.sender = body.sender;
+      order.password = body.password;
+      order.action = body.action;
+      order.message = body.message;
+      order.recipients = body.recipients;
+      order.isAnonymous = body.isAnonymous;
 
-		const fileInfos = req.body.fileInfos;
-		fileInfos.humanSize = filesize(fileInfos.size, { fixed: 1 }).human('si');
-		order.fileInfos = fileInfos;
+      order.createdDate = new Date();
+      order.expiredDate = addDays(order.createdDate, DAYS_BEFORE_EXPIRED);
+      order.totalDownloads = 0;
 
-		order.createdDate = new Date();
-		order.expiredDate = addDays(order.createdDate, DAYS_BEFORE_EXPIRED);
-		order.totalDownloads = 0;
+      let payload = await order.save();
+      order.link = `${BaseUrlFront}/#/download/${payload._id}`;
+      payload = await order.save();
 
-		let payload = await order.save();
-		order.link = `${BaseUrlFront}/#/download/${payload._id}`;
-		payload = await order.save();
+      sendOk(res, payload);
 
-		sendOk(res, payload);
+      if (order.action == SendActions.SendEmail) {
+        await this.sendEmailToRecipients(order);
+        await this.sendEmailToSender(order);
+      }
+    }
+  );
 
-		if (order.action == SendActions.SendEmail) {
-			await this.sendEmailToRecipients(order);
-			await this.sendEmailToSender(order);
-		}
-	})
+  getById = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+      const payload = await Order.findById(req.params.order_id);
+      if (!payload) {
+        sendError(res, 404, "Order not found");
+      }
+      res.send(payload);
+    }
+  );
 
+  update = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+      const order = await Order.findById(req.params.order_id);
 
-	getById = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-		const payload = await Order.findById(req.params.order_id);
-		if (!payload) {
-			sendError(res, 404, 'Order not found');
-		}
-		res.send(payload);
-	})
+      if (order == null) {
+        sendError(res, 404, "Order not found");
+      }
 
+      if (order != null) {
+        order.sender = req.body.sender;
+        order.fileInfos = req.body.fileInfos;
+        order.password = req.body.password;
+        order.action = req.body.action;
+        order.message = req.body.message;
+        order.recipients = req.body.recipients;
 
-	update = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-		const order = await Order.findById(req.params.order_id);
+        const saved = await order.save();
+        sendOk(res, saved, "Order updated");
+      }
+    }
+  );
 
-		if (order == null) {
-			sendError(res, 404, 'Order not found');
-		}
+  updateTotalDownloadForOrder = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+      const order = await Order.findById(req.params.order_id);
+      if (order == null) {
+        sendError(res, 400, "Order not found");
+      }
+      if (order != null) {
+        order.totalDownloads++;
+        await order.save();
+        if (order.action == SendActions.SendEmail) {
+          await this.sendEmailToSenderOnceDownloaded(order);
+        }
+        res.send(true);
+      }
+    }
+  );
 
-		if (order != null) {
-			order.sender = req.body.sender;
-			order.fileInfos = req.body.fileInfos;
-			order.password = req.body.password;
-			order.action = req.body.action;
-			order.message = req.body.message;
-			order.recipients = req.body.recipients;
+  delete = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+      const payload = await Order.deleteOne({ _id: req.params.order_id });
+      sendOk(res, payload, "Order deleted");
+    }
+  );
 
-			const saved = await order.save();
-			sendOk(res, saved, 'Order updated');
-		}
+  private sendEmailToRecipients = async (order: IOrder) => {
+    const emailService = EmailService.getInstance();
+    const data = new MailOrderData(order);
+    const subject = `${data.sender} sent you some files via CruTransfer`;
+    await emailService.sendEmailToRecipients(subject, data);
+  };
 
-	})
+  private sendEmailToSender = async (order: IOrder) => {
+    const emailService = EmailService.getInstance();
+    const data = new MailOrderData(order);
+    data.recipients = [order.sender];
+    const subject = `Your files were sent successfully`;
+    await emailService.sendEmailToSender(subject, data);
+  };
 
-	updateTotalDownloadForOrder = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-		const order = await Order.findById(req.params.order_id);
-		if (order == null) {
-			sendError(res, 400, 'Order not found');
-		}
-		if (order != null) {
-			order.totalDownloads++;
-			await order.save();
-			if (order.action == SendActions.SendEmail) {
-				await this.sendEmailToSenderOnceDownloaded(order);
-			}
-			res.send(true);
-		}
-	})
+  private sendEmailToSenderOnceDownloaded = async (order: IOrder) => {
+    const emailService = EmailService.getInstance();
+    const data = new MailOrderData(order);
+    data.recipients = [order.sender];
+    const subject = `Your files were downloaded successfully`;
+    await emailService.sendEmailToSenderOnceDownloaded(subject, data);
+  };
 
+  private pinFile = async (files: any): Promise<IFileInfo> => {
+    const { latest, next, isNew, pathToPin } =
+      await this.blockService.chooseBlockForFile(files, LIMIT_SIZE_BLOCK);
 
-	delete = runAsyncWrapper(async (req: express.Request, res: express.Response) => {
-		const payload = await Order.deleteOne({ _id: req.params.order_id });
-		sendOk(res, payload, 'Order deleted');
-	})
+    // Move files to path before pinning
+    await files.mv(pathToPin);
+    const fileInfos = await this.ipfsService.pinFile(pathToPin);
 
-	private sendEmailToRecipients = async (order: IOrder) => {
-		const emailService = EmailService.getInstance();
-		const data = new MailOrderData(order);
-		const subject = `${data.sender} sent you some files via CruTransfer`;
-		await emailService.sendEmailToRecipients(subject, data);
-	}
+    next.nbFiles++;
+    next.totalSize += files.size;
+    await this.blockService.update(next);
 
-	private sendEmailToSender = async (order: IOrder) => {
-		const emailService = EmailService.getInstance();
-		const data = new MailOrderData(order);
-		data.recipients = [order.sender];
-		const subject = `Your files were sent successfully`;
-		await emailService.sendEmailToSender(subject, data);
-	}
+    if (isNew) {
+      const res = await this.pinBlockToCrust(latest);
+      if (!res) {
+        return null;
+      }
+    }
 
-	private sendEmailToSenderOnceDownloaded = async (order: IOrder) => {
-		const emailService = EmailService.getInstance();
-		const data = new MailOrderData(order);
-		data.recipients = [order.sender];
-		const subject = `Your files were downloaded successfully`;
-		await emailService.sendEmailToSenderOnceDownloaded(subject, data);
-	}
+    return fileInfos;
+  };
 
+  /**
+   * Pin block to Crust
+   * @param block
+   */
+  private pinBlockToCrust = async (block: IBlock): Promise<any> => {
+    const pathBlockToPin = this.blockService.factoryPathToPin(block);
+    const infos = await this.ipfsService.pinFile(pathBlockToPin);
 
+    const res = await this.ipfsService.publish(infos.cid);
+
+    if (res != null) {
+      logger.info(`Pin block ${block.publicId} successfully to Crust`);
+
+      block.pinnedDate = new Date();
+      block.isPinnedToCrust = true;
+      await this.blockService.update(block);
+    } else {
+      logger.error(`Failed to pin block ${block.publicId} to Crust`);
+    }
+
+    return res;
+  };
 }
-

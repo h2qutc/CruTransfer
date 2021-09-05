@@ -1,19 +1,24 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ApiService, IOrder, IpfsService, IResponse, SendActions } from '@cru-transfer/core';
+import {
+  ApiService,
+  IOrder,
+  IpfsService,
+  IResponse,
+  SendActions,
+} from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { HomeViewService } from '../../home-view.service';
 
 @Component({
   selector: 'app-modal-upload-file',
   templateUrl: './modal-upload-file.component.html',
-  styleUrls: ['./modal-upload-file.component.scss']
+  styleUrls: ['./modal-upload-file.component.scss'],
 })
 export class ModalUploadFileComponent implements OnInit, OnDestroy {
-
   maxAvailableDays = 7;
 
   private _destroyed: Subject<any> = new Subject<any>();
@@ -26,19 +31,21 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   data: any;
 
-  link: string = "";
+  link: string = '';
 
   isCopied = false;
 
   savedData: IOrder;
 
-  constructor(private ipfsService: IpfsService, public modalRef: BsModalRef,
+  constructor(
+    private ipfsService: IpfsService,
+    public modalRef: BsModalRef,
     private _clipboardService: ClipboardService,
     private homeViewService: HomeViewService,
     private notifications: NotificationsService,
-    private cd: ChangeDetectorRef, private apiService: ApiService) {
-
-  }
+    private cd: ChangeDetectorRef,
+    private apiService: ApiService
+  ) {}
 
   ngOnInit() {
     this.addFileToIpfsAndSaveOrder();
@@ -50,39 +57,43 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   }
 
   async addFileToIpfsAndSaveOrder() {
-
     this.cleanDataBeforeSending();
 
     try {
-      const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.fileSrc);
+      // const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.files);
 
-      fileInfos.name = this.data.fileSrc.name;
-      fileInfos.type = this.data.fileSrc.type;
+      // fileInfos.name = this.data.files.name;
+      // fileInfos.type = this.data.files.type;
 
       const order = <IOrder>{
         ...this.data,
-        fileInfos: fileInfos
+        // fileInfos: fileInfos
       };
-      delete (<any>order).fileSrc;
+      // delete (<any>order).files;
       this.saveOrder(order);
+
     } catch (err) {
       this.isFinalized = true;
       this.notifications.error('Error', 'An error has occurred');
     }
   }
 
-
   saveOrder(order: IOrder) {
-    this.apiService.addOrder(order).subscribe((resp: IResponse) => {
-      this.link = resp.payload.link;
-      this.savedData = resp.payload;
-      this.isFinalized = true;
-      this.homeViewService.addOrder(resp.payload);
-      this.cd.detectChanges();
-    }, err => {
-      this.isFinalized = true;
-      this.notifications.error('Error', 'An error has occurred');
-    })
+    this.apiService
+      .saveOrder(order)
+      .pipe(finalize(() => (this.isFinalized = true)))
+      .subscribe(
+        (resp: IResponse) => {
+          this.link = resp.payload.link;
+          this.savedData = resp.payload;
+          this.homeViewService.addOrder(resp.payload);
+          this.cd.detectChanges();
+        },
+        (err) => {
+          console.error('ERROR', err);
+          this.notifications.error('Error', 'An error has occurred');
+        }
+      );
   }
 
   copyLink() {
@@ -101,8 +112,4 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
       this.data.recipients = [];
     }
   }
-
-
-
-
 }

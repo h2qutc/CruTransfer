@@ -55,9 +55,15 @@ export class ApiService {
     return this.http.get<IOrder>(url).pipe(map(resp => this.mapOrder(resp)));
   }
 
-  addOrder(payload: IOrder): Observable<IResponse> {
+  saveOrder(payload: IOrder): Observable<IResponse> {
     const url = `${this.baseUrl}/orders`;
-    return this.http.post<IResponse>(url, payload).pipe(map(resp => resp));
+
+    const formData = new FormData();
+    formData.append('files', payload.files);
+    delete payload.files;
+    formData.append('payload', JSON.stringify(payload));
+
+    return this.http.post<IResponse>(url, formData).pipe(map(resp => resp));
   }
 
 

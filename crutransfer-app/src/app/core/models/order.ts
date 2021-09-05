@@ -19,4 +19,6 @@ export interface IOrder {
 
     timeRemainStr: string;
     isAnonymous: boolean;
+
+    files?: any;
 }
