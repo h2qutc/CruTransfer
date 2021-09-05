@@ -2024,8 +2024,7 @@ a.btn-secondary:not([href]):not([tabindex]) {
     }
 
     .name {
-      // color: lighten($primary-color, 30%);
-      color: #145388;
+      color: lighten($primary-color, 30%);
       font-weight: bold;
     }
 
