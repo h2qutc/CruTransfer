@@ -44,7 +44,8 @@
     "reset-password": "Réinitialiser mot de passe",
     "password-required": "Mot de passe est requis et doit comporter au moins 8 caractères!",
     "transferring": "Transfert en cours...",
-    "verify":"Vérifier"
+    "verify":"Vérifier",
+    "connect-wallet": "Connecter à Crust wallet"
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."
