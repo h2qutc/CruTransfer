@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { typesBundleForPolkadot } from '@crustio/type-definitions';
-import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
-import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { from, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IDappAccount, IFileInfo, IMessageInfo } from '../models';
 
 const importedIPFS = require('ipfs-core');
@@ -44,18 +42,42 @@ export class IpfsService {
     return content;
   }
 
-  async placeStorageOrderViaDapp(account: IDappAccount, cid: string, filesize: number) {
+  /**
+   * Add file into local ipfs node
+   * @param ipfs ipfs instance
+   * @param fileContent can be any of the following types: ` Uint8Array | Blob | String | Iterable<Uint8Array> | Iterable<number> | AsyncIterable<Uint8Array> | ReadableStream<Uint8Array>`
+   */
+  async addFile(fileContent: any) {
+
+    if(!this.ipfs){
+      await this.init();
+    }
+    // Add file to ipfs
+    const cid = await this.ipfs.add(fileContent, {
+      progress: (prog: any) => { },
+    });
+
+    // Get file status from ipfs
+    const fileStat = await this.ipfs.files.stat("/ipfs/" + cid.path);
+
+    return <IFileInfo>{
+      cid: cid.path,
+      size: fileStat.cumulativeSize,
+      mimetype: fileContent.type,
+      name: fileContent.name
+    };
+  }
+
+
+  async placeStorageOrderViaDapp(account: IDappAccount, fileInfos: IFileInfo) {
 
     if (!this.api) {
       await this.init();
     }
 
     await this.api.isReadyOrError;
-
-    const transferExtrinsic = this.api.tx.market.placeStorageOrder(cid, filesize, null);
-
+    const transferExtrinsic = this.api.tx.market.placeStorageOrder(fileInfos.cid, fileInfos.size, null);
     const injector = await web3FromSource(account.meta.source);
-
     return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
 
   }

@@ -7,7 +7,7 @@ import { IFileInfo, IMessageInfo } from "../models";
 import logger from "./log";
 import { delay, loadKeyringPair } from "./utils";
 const fs = require("fs");
-var filesize = require("file-size");
+const filesize = require("file-size");
 
 const ipfsClient = require("ipfs-http-client");
 

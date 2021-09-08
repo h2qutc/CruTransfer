@@ -6,3 +6,4 @@ export * from './order';
 export * from './response';
 export * from './status.enum';
 export * from './user';
+export * from './drive';

@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { ListFilesDriveComponent } from './components';
 import { DropzoneConfigInterface, DropzoneModule, DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { CardDriveComponent } from './components/card-drive/card-drive.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   maxFiles: 1,
@@ -47,7 +48,8 @@ const routes: Routes = [
   ],
   declarations: [
     DriveComponent,
-    ListFilesDriveComponent
+    ListFilesDriveComponent,
+    CardDriveComponent
   ],
   providers: [
     BsModalService,

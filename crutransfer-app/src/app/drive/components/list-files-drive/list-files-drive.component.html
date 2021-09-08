@@ -5,6 +5,10 @@
 
 <div *ngIf="fileErrorMessage" class="invalid-tooltip">{{fileErrorMessage}}</div>
 
-<button type="submit" class="btn btn-primary btn-lg btn-shadow mt-3 float-right" [disabled]="!fileToUpload"
-              (click)="tryPin()">
-              {{'main.transfer' | translate}}</button>
+<button type="submit" class="btn btn-primary btn-lg btn-shadow mt-3" [disabled]="!(fileToUpload && account)"
+  (click)="tryPin()">
+  {{'main.transfer' | translate}}</button>
+
+<div class="col-12 list mt-3">
+  <cru-card-drive *ngFor="let item of drives" [drive]="item"></cru-card-drive>
+</div>

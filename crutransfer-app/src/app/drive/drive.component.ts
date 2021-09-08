@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IDappAccount, IpfsService } from '@cru-transfer/core';
+import { IDappAccount } from '@cru-transfer/core';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
-import { NotificationsService } from 'angular2-notifications';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'app-drive',
@@ -16,9 +14,9 @@ export class DriveComponent implements OnInit {
   extensions: any[] = null;
 
   selectedAccountAddress: string;
+  selectedAccount: IDappAccount;
 
-  constructor(private ipfsService: IpfsService,
-    private notifications: NotificationsService) { }
+  constructor() { }
 
   async ngOnInit() {
     await this.connectToWallet();
@@ -34,34 +32,21 @@ export class DriveComponent implements OnInit {
     // console.log('Acc', await (<any>this.extensions[0]).accounts.get());
 
     this.accounts = await web3Accounts() as IDappAccount[];
-    this.selectedAccountAddress = localStorage.getItem('selectedAccount');
+    this.selectedAccountAddress = localStorage.getItem('selectedAccountAddress');
+    this.selectedAccount = this.accounts.find(x => x.address == this.selectedAccountAddress);
+
+    if (!this.selectedAccount) {
+      this.selectAccount(this.accounts[0]?.address);
+    }
 
     return this.accounts;
   }
 
-  selectAccount(acc: any) {
-    localStorage.setItem('selectedAccount', acc);
+  selectAccount(accAdr: any) {
+    if (!accAdr) return;
+    localStorage.setItem('selectedAccountAddress', accAdr);
+    this.selectedAccountAddress = accAdr;
+    this.selectedAccount = this.accounts.find(x => x.address == accAdr);
   }
-
-  async pinToCrust() {
-    const selectedAccount = this.accounts.find(x => x.address == this.selectedAccountAddress);
-    const cid = "QmaMDCgjvdvHMXcXVHVN6GEgxDmekGq5b4whrusoL2NDsu";
-
-    let isSuccess = false;
-    this.ipfsService.placeStorageOrderViaDapp(selectedAccount, cid, 200).then((status: any) => {
-      console.log('status', status);
-      if (status.isInBlock) {
-        console.log(`Completed at block hash #${status.asInBlock.toString()}`);
-        isSuccess = true;
-      } else {
-        console.log(`Current status: ${status.type}`);
-      }
-    }, err => {
-      this.notifications.error('Error', err?.message);
-      console.error('error', err);
-    })
-  }
-
-
 
 }
