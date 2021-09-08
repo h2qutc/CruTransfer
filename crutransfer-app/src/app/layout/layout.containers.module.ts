@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SharedModule } from '@cru-transfer/shared';
 import { TranslateModule } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -12,7 +13,7 @@ import { TopnavComponent } from './topnav/topnav.component';
 @NgModule({
   declarations: [
     TopnavComponent,
-    FooterComponent
+    FooterComponent,
   ],
   imports: [
     CommonModule,
@@ -20,6 +21,7 @@ import { TopnavComponent } from './topnav/topnav.component';
     RouterModule,
     CollapseModule,
     FormsModule,
+    SharedModule,
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
   ],

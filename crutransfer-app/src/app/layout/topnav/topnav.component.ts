@@ -2,19 +2,11 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ApiService,
-  AuthService,
-  IUser,
+  AuthService, IUser,
   LangService,
-  Language,
+  Language
 } from '@cru-transfer/core';
 import { Subscription } from 'rxjs';
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress,
-  web3ListRpcProviders,
-  web3UseRpcProvider,
-} from '@polkadot/extension-dapp';
 
 @Component({
   selector: 'app-topnav',
@@ -27,8 +19,6 @@ export class TopnavComponent implements OnInit, OnDestroy {
   isSingleLang;
 
   user: IUser;
-
-  isWalletConnected = false;
 
   constructor(
     private authService: AuthService,
@@ -47,7 +37,7 @@ export class TopnavComponent implements OnInit, OnDestroy {
     this.currentLanguage = this.langService.languageShorthand;
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.user = this.authService.user;
     this.authService.user$.subscribe((data) => {
       this.user = data;
@@ -66,13 +56,4 @@ export class TopnavComponent implements OnInit, OnDestroy {
     });
   }
 
-  async connectToWallet() {
-    const extensions = await web3Enable('CruTransfer Dapp');
-
-    const allAccounts = await web3Accounts();
-
-    console.log('allAccounts', allAccounts);
-
-    return allAccounts;
-  }
 }

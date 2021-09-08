@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { IDappAccount } from '@cru-transfer/core';
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-drive',
@@ -7,9 +10,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DriveComponent implements OnInit {
 
+  accounts: IDappAccount[] = [];
+
+  extensions: any[] = null;
+
+  selectedAccountAddress: string;
+
   constructor() { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.connectToWallet();
+  }
+
+  async connectToWallet() {
+    this.extensions = await web3Enable('CruTransfer Dapp');
+
+    console.log('extensions', this.extensions);
+    // console.log('Acc', await (<any>this.extensions[0]).accounts.get());
+
+    this.accounts = await web3Accounts() as IDappAccount[];
+
+    this.selectedAccountAddress = localStorage.getItem('selectedAccount');
+
+    return this.accounts;
+  }
+
+  selectAccount(acc: any){
+    console.log('selectAccount', acc)
+    localStorage.setItem('selectedAccount', acc);
   }
 
 }
