@@ -7,6 +7,7 @@ import { CardDappAccountModule } from './components/card-dapp-account/card-dapp-
 import { CardOrderModule } from './components/card-order/card-order.module';
 import { GradientWithRadialProgressCardModule } from './components/gradient-with-radial-progress-card/gradient-with-radial-progress-card.module';
 import { RadialProcessCardModule } from './components/radial-process-card/radial-process-card.module';
+import { CruTagInputModule } from './components/tag-input/tag-input.module';
 import { DirectivesModule } from './directives';
 
 const modules = [
@@ -17,7 +18,8 @@ const modules = [
   PerfectScrollbarModule,
   CardOrderModule,
   DirectivesModule,
-  CardDappAccountModule
+  CardDappAccountModule,
+  CruTagInputModule
 ]
 
 @NgModule({

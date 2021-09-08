@@ -41,7 +41,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TranslateModule,
     SharedModule,
     DropzoneModule,
     FormsModule,
