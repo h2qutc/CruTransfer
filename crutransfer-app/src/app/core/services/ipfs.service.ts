@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
-import { ApiPromise } from '@polkadot/api';
-import { Observable, Subject } from 'rxjs';
-import { IMessageInfo } from '../models';
+import { typesBundleForPolkadot } from '@crustio/type-definitions';
+import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
+import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
+import { web3FromSource } from '@polkadot/extension-dapp';
+import { KeyringPair } from '@polkadot/keyring/types';
+import { from, Observable, Subject } from 'rxjs';
+import { IDappAccount, IFileInfo, IMessageInfo } from '../models';
 
 const importedIPFS = require('ipfs-core');
+
+// WS address of Crust chain
+// const chain_ws_url = "ws://127.0.0.1:8081";
+const chain_ws_url = "wss://api.decloudf.com/";
+const wsProvider = new WsProvider(chain_ws_url);
 
 @Injectable()
 export class IpfsService {
@@ -21,6 +30,7 @@ export class IpfsService {
     if (this.ipfs) {
       return;
     }
+    this.api = await ApiPromise.create({ provider: wsProvider, typesBundle: typesBundleForPolkadot });
     this.ipfs = await importedIPFS.create();
   }
 
@@ -34,5 +44,19 @@ export class IpfsService {
     return content;
   }
 
+  async placeStorageOrderViaDapp(account: IDappAccount, cid: string, filesize: number) {
 
+    if (!this.api) {
+      await this.init();
+    }
+
+    await this.api.isReadyOrError;
+
+    const transferExtrinsic = this.api.tx.market.placeStorageOrder(cid, filesize, null);
+
+    const injector = await web3FromSource(account.meta.source);
+
+    return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
+
+  }
 }

@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@cru-transfer/shared';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { ListFilesDriveComponent } from './components';
 
 const routes: Routes = [
   {
@@ -24,7 +25,8 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [
-    DriveComponent
+    DriveComponent,
+    ListFilesDriveComponent
   ]
 })
 export class DriveModule { }
