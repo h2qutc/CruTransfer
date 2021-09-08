@@ -8,6 +8,7 @@ import {
   MailOrderData,
   Order,
   SendActions,
+  User,
 } from "../models";
 import { BlockService, EmailService, IpfsService } from "../services";
 import logger from "../services/log";
@@ -90,6 +91,15 @@ export class OrderController {
       sendOk(res, payload);
 
       if (order.action == SendActions.SendEmail) {
+
+        if (!order.isAnonymous) {
+          const loggedUser = await User.findOne({ email: order.sender });
+          if (loggedUser) {
+            loggedUser.totalSize += order.fileInfos.size;
+            await loggedUser.save();
+          }
+        }
+
         await this.sendEmailToRecipients(order);
         await this.sendEmailToSender(order);
       }
@@ -182,6 +192,8 @@ export class OrderController {
     // Move files to path before pinning
     await files.mv(pathToPin);
     const fileInfos = await this.ipfsService.pinFile(pathToPin);
+    fileInfos.mimetype = files.mimetype;
+    fileInfos.encoding = files.encoding;
 
     next.nbFiles++;
     next.totalSize += files.size;

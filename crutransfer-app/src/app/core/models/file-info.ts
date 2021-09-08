@@ -1,6 +1,7 @@
 export interface IFileInfo {
-    name:string;
-    type:string;
+    name: string;
+    mimetype: string;
+    encoding: string;
     cid: any;
     size: any;
     humanSize?: string;
