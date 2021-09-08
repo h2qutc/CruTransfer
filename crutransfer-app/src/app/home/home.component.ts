@@ -67,15 +67,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.form = this.formBuilder.group({
       files: [null, [Validators.required]],
-      buffer: [null],
       sender: [{
         value: this.currentUser?.email || null,
         disabled: this.currentUser != null
       }, listValidatorsEmail],
       isAnonymous: [isAnonymous],
-      recipients: [[], [Validators.required]],
+      recipients: [['h2qbkhn@gmail.com'], [Validators.required]],
       message: [null],
-      action: [SendActions.CopyLink, Validators.required],
+      action: [SendActions.SendEmail, Validators.required],
       password: [null],
     });
 
@@ -95,16 +94,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   onFileSelected(event: FileList) {
     if (event[0] != null && (<any>event[0]).status != 'error') {
       this.fileErrorMessage = '';
-      this.form.patchValue({files: event[0]})
-
-      // const reader = new FileReader();
-      // reader.readAsDataURL(event[0]);
-
-      // reader.onload = () => {
-      //   const buffer = reader.result;
-      //   this.form.patchValue({buffer: buffer})
-      // }
-
+      this.form.patchValue({files: event[0]});
     }
   }
 
