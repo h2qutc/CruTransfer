@@ -1,7 +1,9 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ApiService, AuthService, IDappAccount, IDrive, IpfsService, IUser } from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DropzoneComponent } from 'ngx-dropzone-wrapper';
+import { ModalUploadDriveComponent } from '../modal-upload-drive/modal-upload-drive.component';
 
 @Component({
   selector: 'app-list-files-drive',
@@ -30,6 +32,8 @@ export class ListFilesDriveComponent implements OnInit {
   constructor(private ipfsService: IpfsService,
     private authService: AuthService,
     private notifications: NotificationsService,
+    private modalService: BsModalService,
+    private cd: ChangeDetectorRef,
     private api: ApiService) {
     this.user = this.authService.user;
   }
@@ -56,48 +60,26 @@ export class ListFilesDriveComponent implements OnInit {
     this.fileErrorMessage = event[1];
   }
 
-  async tryPin() {
-    if (this.fileToUpload) {
-      const fileInfos = await this.ipfsService.addFile(this.fileToUpload);
+  openModal() {
+    const modalRef = this.modalService.show(ModalUploadDriveComponent, <ModalOptions<any>>
+      {
+        backdrop: true,
+        ignoreBackdropClick: true,
+        class: 'home-modal-verify-sender',
+        initialState: {
+          data: {
+            fileToUpload: this.fileToUpload,
+            account: this.account,
+            user: this.user
+          }
+        }
 
-      const entry = <IDrive>{
-        ownerEmail: this.user.email,
-        ownerId: this.user.id,
-        fileInfos: fileInfos
       }
+    );
 
-      this.loading = true;
-
-      if (fileInfos.cid) {
-        console.log('place storage order viaDapp ', fileInfos.cid)
-        this.ipfsService.placeStorageOrderViaDapp(this.account, fileInfos)
-          .then((status: any) => {
-            console.log('status', status);
-            if (status.isInBlock) {
-              const message = `Completed at block hash #${status.asInBlock.toString()}`;
-              console.log('Success', message);
-
-              this.saveDrive(entry);
-
-            } else {
-              console.log(`Current status: ${status.type}`);
-            }
-          }, err => {
-            this.loading = false;
-            this.notifications.error('Error', err?.message);
-            console.error('error', err);
-          })
-      }
-
-    }
-  }
-
-  private saveDrive(drive: IDrive) {
-    this.api.saveDrive(drive).subscribe((data) => {
-      this.notifications.success('Success', 'Your file was successfully uploaded');
+    modalRef.onHidden.subscribe((res) => {
       this.getDriveByUser();
-    }, err => {
-      this.notifications.error('Error', err);
+      this.cd.detectChanges();
     })
   }
 

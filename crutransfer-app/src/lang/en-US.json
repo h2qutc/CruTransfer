@@ -24,7 +24,9 @@
     "copy": "Copy",
     "file": "File",
     "transfer-another": "Transfer another ?",
+    "upload-another": "Upload another ?",
     "download-email-sent": "The download email has been sent – your transfer is now available for 7 days.",
+    "upload-message": "Your file has been successfully uploaded.",
     "link-copied-clipboard": "This link has been copied to your clipboard!",
     "copy-download-link-or": "Copy your download link or",
     "see-what-inside": "see what's inside",
@@ -49,6 +51,7 @@
     "no-data-found":"No data found",
     "yes": "Yes",
     "no": "No",
+    "ok": "OK",
     "are-you-sure":"Are you sure ?",
     "upload":"Upload"
   },

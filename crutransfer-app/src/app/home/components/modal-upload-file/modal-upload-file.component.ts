@@ -40,7 +40,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   constructor(
     private ipfsService: IpfsService,
     public modalRef: BsModalRef,
-    private _clipboardService: ClipboardService,
+    private clipboardService: ClipboardService,
     private homeViewService: HomeViewService,
     private notifications: NotificationsService,
     private cd: ChangeDetectorRef,
@@ -89,7 +89,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
   }
 
   copyLink() {
-    this._clipboardService.copy(this.link);
+    this.clipboardService.copy(this.link);
     this.isCopied = true;
     this.cd.detectChanges();
   }

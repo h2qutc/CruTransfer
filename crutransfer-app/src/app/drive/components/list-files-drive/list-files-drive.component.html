@@ -6,7 +6,7 @@
 <div *ngIf="fileErrorMessage" class="invalid-tooltip">{{fileErrorMessage}}</div>
 
 <button type="submit" class="btn btn-primary btn-lg btn-shadow mt-3" [disabled]="!(fileToUpload && account)"
-  (click)="tryPin()">
+  (click)="openModal()">
   {{'main.transfer' | translate}}</button>
 
 <div class="col-12 list mt-3">

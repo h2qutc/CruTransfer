@@ -34,6 +34,9 @@ export class IpfsService {
 
 
   async loadFile(cid: string): Promise<Uint8Array[]> {
+    if (!this.ipfs) {
+      await this.init();
+    }
     this.ipfs.cat(cid);
     const content: Uint8Array[] = [];
     for await (const chunk of this.ipfs.cat(cid)) {
@@ -49,7 +52,7 @@ export class IpfsService {
    */
   async addFile(fileContent: any) {
 
-    if(!this.ipfs){
+    if (!this.ipfs) {
       await this.init();
     }
     // Add file to ipfs
@@ -71,14 +74,15 @@ export class IpfsService {
 
   async placeStorageOrderViaDapp(account: IDappAccount, fileInfos: IFileInfo) {
 
-    if (!this.api) {
-      await this.init();
-    }
+    // if (!this.api) {
+    //   await this.init();
+    // }
 
-    await this.api.isReadyOrError;
-    const transferExtrinsic = this.api.tx.market.placeStorageOrder(fileInfos.cid, fileInfos.size, null);
-    const injector = await web3FromSource(account.meta.source);
-    return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
+    // await this.api.isReadyOrError;
+    // const transferExtrinsic = this.api.tx.market.placeStorageOrder(fileInfos.cid, fileInfos.size, null);
+    // const injector = await web3FromSource(account.meta.source);
+    // return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
+    return { isInBlock: true, asInBlock: 4 };
 
   }
 }

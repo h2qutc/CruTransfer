@@ -1,4 +1,5 @@
 export interface IDrive {
+    _id: string;
     ownerId: string;
     ownerEmail: string;
     fileInfos: any;

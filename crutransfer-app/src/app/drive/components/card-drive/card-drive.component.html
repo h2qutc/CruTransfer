@@ -9,8 +9,19 @@
       <p class="mb-0 text-muted text-small w-20 w-xs-100">{{drive.createdDate | date: 'short'}}</p>
 
       <div class="w-15 w-xs-100">
-
+        <span (click)="copyText(drive.fileInfos.cid)" class="badge badge-pill badge-dark">
+          <i class="iconsminds-file-copy"></i> Copy CID</span>
       </div>
+      <div class="w-15 w-xs-100">
+        <span (click)="download()" class="badge badge-pill badge-primary">
+          <i class="simple-icon-cloud-download"></i> Download</span>
+      </div>
+
+      <div class="w-15 w-xs-100">
+        <span (click)="openModalShare()" class="badge badge-pill badge-warning">
+          <i class="simple-icon-share"></i> Share</span>
+      </div>
+
     </div>
   </div>
 </div>

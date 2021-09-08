@@ -20,7 +20,9 @@ export class DriveController {
   }
 
   private initRoutes() {
-    this.router.route("/drive").get(this.getAll).post(this.create);
+    this.router.route("/drive").get(this.getAll).post(this.create)
+
+    this.router.route('/drive/share').post(this.share);
 
     this.router
       .route("/drive/:drive_id")
@@ -48,6 +50,28 @@ export class DriveController {
   );
 
   create = runAsyncWrapper(
+    async (req: express.Request, res: express.Response) => {
+
+      const entry = new Drive();
+
+      const fileInfos = req.body.fileInfos;
+      fileInfos.humanSize = filesize(fileInfos.size, { fixed: 1 }).human("si"),
+
+      entry.fileInfos = fileInfos;
+      entry.ownerEmail = req.body.ownerEmail;
+      entry.ownerId = req.body.ownerId;
+      entry.createdDate = new Date();
+
+      let payload = await entry.save();
+      entry.link = `${BaseUrlFront}/#/download/${entry._id}`;
+      payload = await entry.save();
+
+      sendOk(res, payload);
+
+    }
+  );
+
+  share = runAsyncWrapper(
     async (req: express.Request, res: express.Response) => {
 
       const entry = new Drive();

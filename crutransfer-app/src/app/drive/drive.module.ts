@@ -1,15 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DriveComponent } from './drive.component';
+import { NgModule } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@cru-transfer/shared';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
-import { ListFilesDriveComponent } from './components';
-import { DropzoneConfigInterface, DropzoneModule, DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
+import { TranslateModule } from '@ngx-translate/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { DropzoneConfigInterface, DropzoneModule, DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
+import { ListFilesDriveComponent, ModalUploadDriveComponent } from './components';
 import { CardDriveComponent } from './components/card-drive/card-drive.component';
+import { ModalShareDriveComponent } from './components/modal-share-drive/modal-share-drive.component';
+import { DriveComponent } from './drive.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   maxFiles: 1,
@@ -39,17 +40,21 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     TranslateModule,
     SharedModule,
     DropzoneModule,
     FormsModule,
     NgSelectModule,
+    TranslateModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
     DriveComponent,
     ListFilesDriveComponent,
-    CardDriveComponent
+    CardDriveComponent,
+    ModalUploadDriveComponent,
+    ModalShareDriveComponent
   ],
   providers: [
     BsModalService,

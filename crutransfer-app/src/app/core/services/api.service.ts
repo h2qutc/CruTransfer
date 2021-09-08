@@ -172,6 +172,10 @@ export class ApiService {
     return this.http.post<IResponse>(url, payload).pipe(map(resp => resp));
   }
 
+  shareDrive(payload: any): Observable<IResponse> {
+    const url = `${this.baseUrl}/drive/share`;
+    return this.http.post<IResponse>(url, payload).pipe(map(resp => resp));
+  }
 
   updateDrive(id: string, payload: IDrive): Observable<IResponse> {
     const url = `${this.baseUrl}/drive/${id}`;
