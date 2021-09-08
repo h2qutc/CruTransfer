@@ -26,6 +26,10 @@ export class DriveComponent implements OnInit {
     this.extensions = await web3Enable('CruTransfer Dapp');
 
     console.log('extensions', this.extensions);
+    if(this.extensions.length == 0){
+      this.extensions = null; 
+      return;
+    }
     // console.log('Acc', await (<any>this.extensions[0]).accounts.get());
 
     this.accounts = await web3Accounts() as IDappAccount[];

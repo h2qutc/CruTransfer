@@ -1,13 +1,10 @@
 <h1>Crust Wallet</h1>
 
-<button *ngIf="extensions && !extensions.length" class="btn btn-primary btn-lg btn-shadow mb-4"
-  (click)="connectToWallet()">
-  {{'main.connect-wallet' | translate}}</button>
-
 <div class="accounts" *ngIf="extensions && extensions.length > 0">
 
   <h5 class="mb-2">List of available wallets</h5>
-  <ng-select [items]="accounts" [ngModel]="selectedAccountAddress" (ngModelChange)="selectAccount($event)" bindLabel="meta.name" bindValue="address">
+  <ng-select [items]="accounts" [ngModel]="selectedAccountAddress" (ngModelChange)="selectAccount($event)"
+    bindLabel="meta.name" bindValue="address">
     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
       <div class="font-weight-bold">{{item.meta.name}}</div>
       <div class="address">{{item.address}}</div>
@@ -18,8 +15,12 @@
 
 <hr>
 
-<div *ngIf="extensions && !extensions.length">
-  <p>Crust Wallet extension is not yet installed.</p>
+<div *ngIf="!extensions">
+
+  <button class="btn btn-primary btn-lg btn-shadow mb-4" (click)="connectToWallet()">
+    {{'main.connect-wallet' | translate}}</button>
+
+  <p>Crust Wallet extension is not yet installed or you did not accept the authorization.</p>
   <p class="font-weight-bold">Crust Wallet</p>
   <p>Crust Wallet is a plug-in wallet. Users can manage their CRUs via Crust Wallet. It includes following features:</p>
   <ul>
