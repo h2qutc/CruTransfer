@@ -46,7 +46,10 @@
     "transferring": "Transferring...",
     "verify":"Verify",
     "connect-wallet": "Connect to Crust wallet",
-    "no-data-found":"No data found"
+    "no-data-found":"No data found",
+    "yes": "Yes",
+    "no": "No",
+    "are-you-sure":"Are you sure ?"
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."

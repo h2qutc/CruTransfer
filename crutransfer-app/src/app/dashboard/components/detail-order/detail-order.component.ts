@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService, FileService, IFileInfo, IOrder, IpfsService, OrderStatus } from '@cru-transfer/core';
 import { NotificationsService, NotificationType } from 'angular2-notifications';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
@@ -11,12 +12,16 @@ import { ClipboardService } from 'ngx-clipboard';
 })
 export class DetailOrderComponent implements OnInit {
 
+  @ViewChild('templateConfirm') tmpConfirm: TemplateRef<any>;
+
+  modalRef: BsModalRef;
   order: IOrder;
   isCopied = false;
   public OrderStatusEnum = OrderStatus;
 
   constructor(private route: ActivatedRoute, private api: ApiService,
     private cd: ChangeDetectorRef, private ipfsService: IpfsService,
+    private modalService: BsModalService,
     private fileService: FileService, private notifications: NotificationsService,
     private router: Router, private _clipboardService: ClipboardService) { }
 
@@ -49,6 +54,7 @@ export class DetailOrderComponent implements OnInit {
   }
 
   delete() {
+    const modalRef = this.modalService.show(this.tmpConfirm, { class: 'modal-sm' });
     this.goToDashboard();
   }
 
@@ -60,6 +66,19 @@ export class DetailOrderComponent implements OnInit {
     this.api.deleteOrder(this.order._id).subscribe(data => {
       this.router.navigate(['/dashboard']);
     })
+  }
+
+  openModalConfirmation(template: TemplateRef<any>): void {
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+  }
+
+  confirm(): void {
+    this.delete();
+    this.modalRef.hide();
+  }
+
+  decline(): void {
+    this.modalRef.hide();
   }
 
 }

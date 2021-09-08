@@ -6,6 +6,7 @@ import { SharedModule } from '@cru-transfer/shared';
 import { TranslateModule } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { DetailOrderComponent } from './components';
 import { DashboardComponent } from './dashboard.component';
 
@@ -37,6 +38,9 @@ const routes: Routes = [
   ],
   declarations: [
     DashboardComponent,
-    ...components]
+    ...components],
+  providers: [
+    BsModalService
+  ]
 })
 export class DashboardModule { }

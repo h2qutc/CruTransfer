@@ -33,6 +33,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'drive',
+    loadChildren: () => import('../app/drive').then(m => m.DriveModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'account',
     loadChildren: () => import('../app/account').then(m => m.AccountModule),
     canActivate: [AuthGuard]

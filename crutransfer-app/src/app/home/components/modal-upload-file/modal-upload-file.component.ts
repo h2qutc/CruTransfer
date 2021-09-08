@@ -4,13 +4,13 @@ import {
   IOrder,
   IpfsService,
   IResponse,
-  SendActions,
+  SendActions
 } from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { HomeViewService } from '../../home-view.service';
 
 @Component({
@@ -45,7 +45,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
     private notifications: NotificationsService,
     private cd: ChangeDetectorRef,
     private apiService: ApiService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.addFileToIpfsAndSaveOrder();
@@ -60,11 +60,6 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
     this.cleanDataBeforeSending();
 
     try {
-      // const fileInfos = await this.ipfsService.addFileToIpfsAndSendTx(this.data.files);
-
-      // fileInfos.name = this.data.files.name;
-      // fileInfos.type = this.data.files.type;
-
       const order = <IOrder>{
         ...this.data,
       };
