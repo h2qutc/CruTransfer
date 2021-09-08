@@ -67,11 +67,8 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
       const order = <IOrder>{
         ...this.data,
-        // fileInfos: fileInfos
       };
-      // delete (<any>order).files;
       this.saveOrder(order);
-
     } catch (err) {
       this.isFinalized = true;
       this.notifications.error('Error', 'An error has occurred');

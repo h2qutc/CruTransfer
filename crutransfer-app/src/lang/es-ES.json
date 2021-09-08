@@ -45,7 +45,8 @@
     "type-enter":"Type and enter...",
     "reset-password": "Reset password",
     "transferring": "Transferring...",
-    "connect-wallet": "Connect to Crust wallet"
+    "connect-wallet": "Connect to Crust wallet",
+    "no-data-found":"No data found"
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."

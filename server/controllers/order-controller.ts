@@ -194,6 +194,7 @@ export class OrderController {
     const fileInfos = await this.ipfsService.pinFile(pathToPin);
     fileInfos.mimetype = files.mimetype;
     fileInfos.encoding = files.encoding;
+    fileInfos.name = files.name;
 
     next.nbFiles++;
     next.totalSize += files.size;
