@@ -1,3 +1,10 @@
-<p>
-  list-files-drive works!
-</p>
+<h5 class="mb-2">Select file to upload</h5>
+<dropzone #dropzone (addedFiles)="onFileSelected($event)" (removedFile)="onRemovedfile($event)"
+  (error)="onFileError($event)" message="{{'main.click-drag-to-upload' | translate}}">
+</dropzone>
+
+<div *ngIf="fileErrorMessage" class="invalid-tooltip">{{fileErrorMessage}}</div>
+
+<button type="submit" class="btn btn-primary btn-lg btn-shadow mt-3 float-right" [disabled]="!fileToUpload"
+              (click)="tryPin()">
+              {{'main.transfer' | translate}}</button>

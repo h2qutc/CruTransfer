@@ -49,7 +49,8 @@
     "no-data-found":"Aucune donnée trouvée",
     "yes": "Oui",
     "no": "Non",
-    "are-you-sure":"Etes-vous sûr ?"
+    "are-you-sure":"Etes-vous sûr ?",
+    "upload":"Uploader"
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."
