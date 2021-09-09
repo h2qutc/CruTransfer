@@ -115,6 +115,8 @@ export class ModalUploadDriveComponent implements OnInit, OnDestroy {
   private saveDrive(drive: IDrive) {
     this.api.saveDrive(drive).subscribe((data) => {
       this.notifications.success('Success', 'Your file was successfully uploaded');
+      this.savedData = data.payload;
+      this.link = data.payload.link;
       this.close(true);
     }, err => {
       this.notifications.error('Error', err);
