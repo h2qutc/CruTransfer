@@ -27,6 +27,7 @@ export interface IOrder extends Document {
     link: string;
     totalDownloads: number;
     isAnonymous: boolean;
+    isVip: boolean;
 }
 
 // Setup schema
@@ -74,6 +75,10 @@ const schema = new Schema<IOrder>({
         default: 0
     },
     isAnonymous: {
+        type: Boolean,
+        default: false
+    },
+    isVip: {
         type: Boolean,
         default: false
     }

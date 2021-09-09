@@ -6,10 +6,10 @@ import { SharedModule } from '@cru-transfer/shared';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule } from '@ngx-translate/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { TagInputModule } from 'ngx-chips';
 import { DropzoneConfigInterface, DropzoneModule, DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
-import { ListFilesDriveComponent, ModalUploadDriveComponent } from './components';
+import { ListFilesDriveComponent, ModalShareDriveComponent, ModalUploadDriveComponent } from './components';
 import { CardDriveComponent } from './components/card-drive/card-drive.component';
-import { ModalShareDriveComponent } from './components/modal-share-drive/modal-share-drive.component';
 import { DriveComponent } from './drive.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -44,6 +44,7 @@ const routes: Routes = [
     SharedModule,
     DropzoneModule,
     FormsModule,
+    TagInputModule,
     NgSelectModule,
     TranslateModule,
     RouterModule.forChild(routes)

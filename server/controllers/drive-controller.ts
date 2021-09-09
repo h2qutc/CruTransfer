@@ -1,11 +1,16 @@
 import express from "express";
-import { BaseUrlFront, LIMIT_SIZE_BLOCK } from "../config";
-import { runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { BaseUrlFront, DAYS_BEFORE_EXPIRED, LIMIT_SIZE_BLOCK } from "../config";
+import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
 import {
   Drive, IBlock,
-  IFileInfo
+  IFileInfo,
+  IOrder,
+  MailOrderData,
+  Order,
+  SendActions,
+  User
 } from "../models";
-import { BlockService, IpfsService } from "../services";
+import { BlockService, EmailService, IpfsService } from "../services";
 import logger from "../services/log";
 const filesize = require("file-size");
 
@@ -57,7 +62,7 @@ export class DriveController {
       const fileInfos = req.body.fileInfos;
       fileInfos.humanSize = filesize(fileInfos.size, { fixed: 1 }).human("si"),
 
-      entry.fileInfos = fileInfos;
+        entry.fileInfos = fileInfos;
       entry.ownerEmail = req.body.ownerEmail;
       entry.ownerId = req.body.ownerId;
       entry.createdDate = new Date();
@@ -74,21 +79,37 @@ export class DriveController {
   share = runAsyncWrapper(
     async (req: express.Request, res: express.Response) => {
 
-      const entry = new Drive();
+      const body = req.body;
 
-      const fileInfos = req.body.fileInfos;
-      fileInfos.humanSize = filesize(fileInfos.size, { fixed: 1 }).human("si"),
+      if (!body.sender || body.recipients.length == 0) {
+        sendError(res, 400, "Bad request");
+      }
 
-      entry.fileInfos = fileInfos;
-      entry.ownerEmail = req.body.ownerEmail;
-      entry.ownerId = req.body.ownerId;
-      entry.createdDate = new Date();
+      const order = new Order();
+      order.fileInfos = body.drive.fileInfos;
 
-      let payload = await entry.save();
-      entry.link = `${BaseUrlFront}/#/download/${entry._id}`;
-      payload = await entry.save();
+      order.sender = body.sender;
+      order.password = body.password;
+      order.action = body.action;
+      order.message = body.message;
+      order.recipients = body.recipients;
+      order.isAnonymous = body.isAnonymous;
+      order.isVip = true;
+
+      order.createdDate = new Date();
+      order.expiredDate = addDays(order.createdDate, DAYS_BEFORE_EXPIRED);
+      order.totalDownloads = 0;
+
+      let payload = await order.save();
+      order.link = `${BaseUrlFront}/#/download/${payload._id}`;
+      payload = await order.save();
 
       sendOk(res, payload);
+
+      if (order.action == SendActions.SendEmail) {
+        await this.sendEmailToRecipients(order);
+        await this.sendEmailToSender(order);
+      }
 
     }
   );
@@ -125,53 +146,19 @@ export class DriveController {
     }
   );
 
-  private pinFile = async (files: any): Promise<IFileInfo> => {
-    const { latest, next, isNew, pathToPin } =
-      await this.blockService.chooseBlockForFile(files, LIMIT_SIZE_BLOCK);
-
-    // Move files to path before pinning
-    await files.mv(pathToPin);
-    const fileInfos = await this.ipfsService.pinFile(pathToPin);
-    fileInfos.mimetype = files.mimetype;
-    fileInfos.encoding = files.encoding;
-    fileInfos.name = files.name;
-
-    next.nbFiles++;
-    next.totalSize += files.size;
-    await this.blockService.update(next);
-
-    if (isNew) {
-      const res = await this.pinBlockToCrust(latest);
-      if (!res) {
-        return null;
-      }
-    }
-
-    return fileInfos;
+  private sendEmailToRecipients = async (order: IOrder) => {
+    const emailService = EmailService.getInstance();
+    const data = new MailOrderData(order);
+    const subject = `${data.sender} sent you some files via CruTransfer`;
+    await emailService.sendEmailToRecipients(subject, data);
   };
 
-  /**
-   * Pin block to Crust
-   * @param block
-   */
-  private pinBlockToCrust = async (block: IBlock): Promise<any> => {
-    const pathBlockToPin = this.blockService.factoryPathToPin(block);
-    const infos = await this.ipfsService.pinFile(pathBlockToPin);
-
-    const res = await this.ipfsService.publish(infos.cid);
-
-    if (res != null) {
-      logger.info(`Pin block ${block.publicId} successfully to Crust`);
-
-      block.pinnedDate = new Date();
-      block.isPinnedToCrust = true;
-      block.cid = infos.cid;
-
-      await this.blockService.update(block);
-    } else {
-      logger.error(`Failed to pin block ${block.publicId} to Crust`);
-    }
-
-    return res;
+  private sendEmailToSender = async (order: IOrder) => {
+    const emailService = EmailService.getInstance();
+    const data = new MailOrderData(order);
+    data.recipients = [order.sender];
+    const subject = `Your files were sent successfully`;
+    await emailService.sendEmailToSender(subject, data);
   };
+
 }

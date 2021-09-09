@@ -15,7 +15,7 @@
       <p class="mb-0 text-muted text-small w-15 w-xs-100">{{order.fileInfos.humanSize}}</p>
       <p class="mb-0 text-muted text-small w-20 w-xs-100">Sent {{order.createdDate | date: 'short'}}</p>
       <div class="w-15 w-xs-100">
-        <span class="badge badge-pill" [ngClass]="
+        <span *ngIf="!order.isVip" class="badge badge-pill" [ngClass]="
         {
           'badge-primary': order.status == OrderStatusEnum.Info,
           'badge-warning': order.status == OrderStatusEnum.Warning,

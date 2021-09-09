@@ -7,6 +7,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { TagInputModule } from 'ngx-chips';
 import { ClipboardModule } from 'ngx-clipboard';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { LayoutContainersModule } from './layout';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    TagInputModule,
     LayoutContainersModule,
     RoundprogressModule,
     PopoverModule.forRoot(),

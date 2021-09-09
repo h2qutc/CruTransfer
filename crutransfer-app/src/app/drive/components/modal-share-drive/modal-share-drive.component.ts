@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
   ApiService,
   AuthService, IDrive, IOrder,
@@ -7,9 +7,10 @@ import {
   SendActions
 } from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-modal-share-drive',
@@ -50,8 +51,6 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
     public modalRef: BsModalRef,
     private clipboardService: ClipboardService,
     private notifications: NotificationsService,
-    private formBuilder: FormBuilder,
-    private modalService: BsModalService,
     private cd: ChangeDetectorRef,
     private api: ApiService,
     private authService: AuthService
@@ -63,17 +62,10 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
     this.user = this.authService.user;
     this.drive = this.data.drive;
 
+
     // this.tryPin();
 
-    this.form = this.formBuilder.group({
-      drive: [this.drive],
-      sender: [{
-        value: this.user.email,
-      }],
-      isAnonymous: [false],
-      recipients: [['h2qbkhn@gmail.com'], [Validators.required]],
-      message: [null],
-    });
+    this.form = this.data.form;
   }
 
   ngOnDestroy(): void {
@@ -81,16 +73,22 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  private shareDrive(drive: IDrive) {
+  shareDrive() {
     const data = this.form.getRawValue();
+    data.sender = data.sender.value;
     console.log('share data', data);
-    this.api.shareDrive(data).subscribe((data) => {
+    this.step = 2;
+    this.api.shareDrive(data).pipe(finalize(() => this.isFinalized = true)).subscribe((resp) => {
       this.notifications.success('Success', 'Your file was successfully uploaded');
-      this.close(true);
+      this.link = resp.payload.link;
+      this.savedData = resp.payload;
     }, err => {
       this.notifications.error('Error', err);
-      this.close(false);
     })
+  }
+
+  cancel() {
+    this.close();
   }
 
   copyLink() {
@@ -99,7 +97,7 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  close(isOk: boolean) {
+  close(isOk?: boolean) {
     this.isOk = isOk;
     this.isFinalized = isOk;
     this.modalRef.hide();

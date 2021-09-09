@@ -41,6 +41,7 @@
     "sent": "Sent",
     "account": "My account",
     "dashboard": "Dashboard",
+    "drive": "My Drive",
     "signout": "Sign out",
     "copy-link":"Copy link",
     "type-enter":"Type and enter...",
@@ -52,6 +53,7 @@
     "yes": "Yes",
     "no": "No",
     "ok": "OK",
+    "share": "Share",
     "are-you-sure":"Are you sure ?",
     "upload":"Upload"
   },
