@@ -8,7 +8,8 @@ import { IDappAccount, IFileInfo, IMessageInfo } from '../models';
 const importedIPFS = require('ipfs-core');
 
 // WS address of Crust chain
-// const chain_ws_url = "ws://127.0.0.1:8081";
+//const chain_ws_url = "ws://127.0.0.1:8081";
+// const chain_ws_url = "wss://rpc-rocky.crust.network";
 const chain_ws_url = "wss://api.decloudf.com/";
 const wsProvider = new WsProvider(chain_ws_url);
 
@@ -74,15 +75,14 @@ export class IpfsService {
 
   async placeStorageOrderViaDapp(account: IDappAccount, fileInfos: IFileInfo) {
 
-    // if (!this.api) {
-    //   await this.init();
-    // }
+    if (!this.api) {
+      await this.init();
+    }
 
-    // await this.api.isReadyOrError;
-    // const transferExtrinsic = this.api.tx.market.placeStorageOrder(fileInfos.cid, fileInfos.size, null);
-    // const injector = await web3FromSource(account.meta.source);
-    // return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
-    return { isInBlock: true, asInBlock: 4 };
+    await this.api.isReadyOrError;
+    const transferExtrinsic = this.api.tx.market.placeStorageOrder(fileInfos.cid, fileInfos.size, null);
+    const injector = await web3FromSource(account.meta.source);
+    return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
 
   }
 }

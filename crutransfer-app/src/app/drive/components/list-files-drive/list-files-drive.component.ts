@@ -3,6 +3,7 @@ import { ApiService, AuthService, IDappAccount, IDrive, IpfsService, IUser } fro
 import { NotificationsService } from 'angular2-notifications';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DropzoneComponent } from 'ngx-dropzone-wrapper';
+import { finalize } from 'rxjs/operators';
 import { ModalUploadDriveComponent } from '../modal-upload-drive/modal-upload-drive.component';
 
 @Component({
@@ -79,7 +80,10 @@ export class ListFilesDriveComponent implements OnInit {
 
     modalRef.onHidden.subscribe((res) => {
       this.getDriveByUser();
+      this.reset()
       this.cd.detectChanges();
+    }, err => {
+      this.reset();
     })
   }
 
@@ -87,6 +91,11 @@ export class ListFilesDriveComponent implements OnInit {
     this.api.getDriveByUser(this.user.email).subscribe(data => {
       this.drives = data;
     });
+  }
+
+  private reset() {
+    this.dropzoneCmp.directiveRef.reset();
+    this.fileToUpload = null;
   }
 
 }

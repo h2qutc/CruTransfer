@@ -46,6 +46,9 @@ export class ModalUploadDriveComponent implements OnInit, OnDestroy {
   loading = false;
   isOk = false;
 
+  statusMessage: string;
+  hasError = false;
+
   constructor(
     private ipfsService: IpfsService,
     public modalRef: BsModalRef,
@@ -73,6 +76,8 @@ export class ModalUploadDriveComponent implements OnInit, OnDestroy {
     if (this.fileToUpload) {
 
       try {
+
+        this.statusMessage = `Uploading ${this.fileToUpload.name}...`
         const fileInfos = await this.ipfsService.addFile(this.fileToUpload);
 
         const entry = <IDrive>{
@@ -82,12 +87,15 @@ export class ModalUploadDriveComponent implements OnInit, OnDestroy {
         }
 
         this.loading = true;
+        this.hasError = false;
 
         if (fileInfos.cid) {
-          console.log('place storage order viaDapp ', fileInfos.cid)
+          console.log('place storage order viaDapp ', fileInfos.cid);
+          this.statusMessage = `Placing storage order...`;
+
           this.ipfsService.placeStorageOrderViaDapp(this.account, fileInfos)
             .then((status: any) => {
-              console.log('status', status);
+              this.statusMessage  = status;
               if (status.isInBlock) {
                 const message = `Completed at block hash #${status.asInBlock.toString()}`;
                 console.log('Success', message);
@@ -96,12 +104,15 @@ export class ModalUploadDriveComponent implements OnInit, OnDestroy {
 
               } else {
                 console.log(`Current status: ${status.type}`);
+                console.log('status', status);
               }
             }, err => {
               this.loading = false;
               this.isFinalized = true;
+              this.statusMessage = `${err.message}`;
               this.notifications.error('Error', err?.message);
               console.error('error', err);
+              this.hasError = true;
             })
         }
 
