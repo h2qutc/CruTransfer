@@ -5,8 +5,11 @@ import logger from "./services/log";
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 
+require('dotenv').config();
 
 const dbConnString = process.env.MONGO_CONN_STRING || 'mongodb://localhost/CruTransferDb';
+
+console.log('dbConnString', dbConnString);
 
 export class App {
     public app: express.Application;
@@ -29,7 +32,7 @@ export class App {
 
         this.app.use(cors({ origin: '*' }));
 
-        this.app.use(express.static(process.cwd()+"/crutransfer-app/"));
+        this.app.use(express.static(process.cwd() + "/crutransfer-app/"));
 
         this.app.use((req: any, res: any, next: any) => {
             res.header(
@@ -52,7 +55,7 @@ export class App {
         });
 
         this.app.get('/', (req, res) => {
-            res.sendFile(process.cwd()+"/crutransfer-app/index.html")
+            res.sendFile(process.cwd() + "/crutransfer-app/index.html")
         });
     }
 
