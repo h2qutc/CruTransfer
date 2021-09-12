@@ -20,6 +20,8 @@
     "transfer": "Transfer",
     "sologan": "The simplest way to share your files",
     "your-transfer-details": "Your transfer details",
+    "your-upload-details": "Your upload details",
+    "your-share-details": "Your sharing details",
     "you-are-done": "You're done",
     "download-link": "Download link",
     "copy": "Copy",
@@ -40,11 +42,18 @@
     "sent": "Sent",
     "account": "Account",
     "dashboard": "Dashboard",
+    "drive": "My Drive",
     "signout": "Sign out",
     "copy-link":"Copy link",
     "type-enter":"Type and enter...",
     "reset-password": "Reset password",
-    "transferring": "Transferring..."
+    "transferring": "Transferring...",
+    "connect-wallet": "Connect to Crust wallet",
+    "no-data-found":"No data found",
+    "yes": "Yes",
+    "no": "No",
+    "are-you-sure":"Are you sure ?",
+    "upload":"Upload"
   },
   "general": {
     "copyright": "CruTransfer © 2021 All Rights Reserved."

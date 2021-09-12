@@ -66,13 +66,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     const isAnonymous = this.currentUser == null;
 
     this.form = this.formBuilder.group({
-      fileSrc: [null, [Validators.required]],
+      files: [null, [Validators.required]],
       sender: [{
         value: this.currentUser?.email || null,
         disabled: this.currentUser != null
       }, listValidatorsEmail],
       isAnonymous: [isAnonymous],
-      recipients: [[], [Validators.required]],
+      recipients: [['h2qbkhn@gmail.com'], [Validators.required]],
       message: [null],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
@@ -87,16 +87,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   onRemovedfile(event: any) {
     this.fileErrorMessage = '';
     if (this.fileList.length == 0) {
-      this.form.controls.fileSrc.setValue(null);
+      this.form.controls.files.setValue(null);
     }
   }
 
   onFileSelected(event: FileList) {
     if (event[0] != null && (<any>event[0]).status != 'error') {
       this.fileErrorMessage = '';
-      this.form.patchValue({
-        fileSrc: event[0]
-      })
+      this.form.patchValue({files: event[0]});
     }
   }
 

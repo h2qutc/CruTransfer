@@ -1,16 +1,15 @@
 <nav class="navbar fixed-top">
   <div class="d-flex align-items-center navbar-left">
-
     <div class="btn-group ml-5" dropdown>
       <button dropdownToggle type="button" class="language-button dropdown-toggle btn btn-light btn-sm">
-        {{currentLanguage | uppercase}} <span class="caret"></span>
+        {{ currentLanguage | uppercase }} <span class="caret"></span>
       </button>
       <ul *dropdownMenu class="dropdown-menu" role="menu">
-        <li role="menuitem" *ngFor="let item of languages" (click)="onLanguageChange(item)"><a class="dropdown-item"
-            href="javascript:;">{{item.label}}</a></li>
+        <li role="menuitem" *ngFor="let item of languages" (click)="onLanguageChange(item)">
+          <a class="dropdown-item" href="javascript:;">{{ item.label }}</a>
+        </li>
       </ul>
     </div>
-
   </div>
 
   <a class="navbar-logo" [routerLink]="['/']">
@@ -25,28 +24,34 @@
     <ng-container *ngIf="user; else loginButton">
       <div class="user d-inline-block" dropdown>
         <button class="btn btn-empty p-0" type="button" dropdownToggle>
-          <span class="name">{{user?.username}}</span>
+          <span class="name">{{ user?.username }}</span>
           <span>
             <img alt="Profile Picture" src="/assets/img/profiles/l-6.jpg" />
           </span>
         </button>
 
         <div class="dropdown-menu dropdown-menu-right mt-3" *dropdownMenu role="menu">
-          <a class="dropdown-item c-pointer" [routerLink]="['/account']">{{'main.account' | translate}}</a>
-          <a class="dropdown-item c-pointer" [routerLink]="['/dashboard']">{{'main.dashboard' | translate}}</a>
+          <a class="dropdown-item c-pointer" [routerLink]="['/account']">{{
+            "main.account" | translate
+            }}</a>
+          <a class="dropdown-item c-pointer" [routerLink]="['/dashboard']">{{
+            "main.dashboard" | translate
+            }}</a>
+          <a class="dropdown-item c-pointer" [routerLink]="['/drive']">{{
+            "main.drive" | translate
+            }}</a>
           <li class="divider dropdown-divider"></li>
-          <a class="dropdown-item c-pointer" (click)="onSignOut()">{{'main.signout' | translate}}</a>
+          <a class="dropdown-item c-pointer" (click)="onSignOut()">{{
+            "main.signout" | translate
+            }}</a>
         </div>
       </div>
     </ng-container>
-
 
     <ng-template #loginButton>
       <div class="user d-inline-block c-pointer">
         <a [routerLink]="['/login']" class="menu-button d-none d-md-block">Login</a>
       </div>
     </ng-template>
-
-
   </div>
 </nav>

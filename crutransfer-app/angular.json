@@ -33,7 +33,8 @@
               "js-sha3",
               "scryptsy",
               "hash.js",
-              "blakejs"
+              "blakejs",
+              "ed2curve"
             ],
             "assets": [
               "src/favicon.ico",

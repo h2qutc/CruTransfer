@@ -1,0 +1,16 @@
+<h5 class="mb-2">Select file to upload</h5>
+<dropzone #dropzone (addedFiles)="onFileSelected($event)" (removedFile)="onRemovedfile($event)"
+  (error)="onFileError($event)" message="{{'main.click-drag-to-upload' | translate}}">
+</dropzone>
+
+<div *ngIf="fileErrorMessage" class="invalid-tooltip">{{fileErrorMessage}}</div>
+
+<button type="submit" class="btn btn-primary btn-lg btn-shadow mt-3" [disabled]="!(fileToUpload && account)"
+  (click)="openModal()">
+  {{'main.transfer' | translate}}</button>
+
+<hr>
+
+<div class="col-12 list mt-3">
+  <cru-card-drive *ngFor="let item of drives" [drive]="item"></cru-card-drive>
+</div>

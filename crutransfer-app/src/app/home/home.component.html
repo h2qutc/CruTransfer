@@ -20,6 +20,7 @@
             <dropzone #dropzone (addedFiles)="onFileSelected($event)" (removedFile)="onRemovedfile($event)"
               (error)="onFileError($event)" message="{{'main.click-drag-to-upload' | translate}}">
             </dropzone>
+
             <small>2.0 GB max</small>
             <div *ngIf="fileErrorMessage" class="invalid-tooltip">
               {{fileErrorMessage}}</div>
