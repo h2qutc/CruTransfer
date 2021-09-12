@@ -6,12 +6,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "nodemon --exec node --inspect=0.0.0.0:9229 --require ts-node/register server.ts",
     "start": "nodemon server.ts",
-    "build":"npx tsc && cd .. && cd crutransfer-app && npm run build && cd .. && cd server"
+    "build": "npx tsc && cd .. && cd crutransfer-app && npm run build && cd .. && cd server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@crustio/type-definitions": "^1.2.0",
+    "@polkadot/api": "^5.7.1",
     "@types/nodemailer": "^6.4.4",
     "@types/nodemailer-direct-transport": "^1.0.32",
     "@types/nodemailer-smtp-transport": "^2.7.5",
@@ -19,14 +22,20 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
     "file-size": "^1.0.0",
     "fs": "^0.0.1-security",
     "hogan.js": "^3.0.2",
     "inline-css": "^3.0.0",
+    "ipfs-core": "^0.10.5",
+    "ipfs-core-types": "^0.7.1",
+    "ipfs-http-client": "^52.0.3",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.9",
     "mongoose": "^5.13.1",
-    "nodemailer": "^6.6.3"
+    "multer": "^1.4.3",
+    "nodemailer": "^6.6.3",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

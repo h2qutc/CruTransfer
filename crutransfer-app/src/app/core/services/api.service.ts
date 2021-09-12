@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IOrder, IResponse, IUser, OrderStatus } from '../models';
+import { IDrive, IOrder, IResponse, IUser, OrderStatus } from '../models';
 import { calcDiffDate } from './utils';
 
 
@@ -55,9 +55,15 @@ export class ApiService {
     return this.http.get<IOrder>(url).pipe(map(resp => this.mapOrder(resp)));
   }
 
-  addOrder(payload: IOrder): Observable<IResponse> {
+  saveOrder(payload: IOrder): Observable<IResponse> {
     const url = `${this.baseUrl}/orders`;
-    return this.http.post<IResponse>(url, payload).pipe(map(resp => resp));
+
+    const formData = new FormData();
+    formData.append('files', payload.files);
+    delete payload.files;
+    formData.append('payload', JSON.stringify(payload));
+
+    return this.http.post<IResponse>(url, formData).pipe(map(resp => resp));
   }
 
 
@@ -144,6 +150,42 @@ export class ApiService {
 
   signOut(): Observable<any> {
     return of({});
+  }
+
+
+  /* DRIVE */
+
+  getDriveByUser(email: string): Observable<IDrive[]> {
+    const url = `${this.baseUrl}/drive/getDriveByUser`;
+    return this.http.post<IDrive[]>(url, {
+      email: email
+    }).pipe(map(resp => resp));
+  }
+
+  getDrive(id: string): Observable<IDrive> {
+    const url = `${this.baseUrl}/drive/${id}`;
+    return this.http.get<IDrive>(url).pipe(map(resp => resp));
+  }
+
+  saveDrive(payload: IDrive): Observable<IResponse> {
+    const url = `${this.baseUrl}/drive`;
+    return this.http.post<IResponse>(url, payload).pipe(map(resp => resp));
+  }
+
+  shareDrive(payload: any): Observable<any> {
+    const url = `${this.baseUrl}/drive/share`;
+    return this.http.post<any>(url, payload).pipe(map(resp => resp));
+  }
+
+  updateDrive(id: string, payload: IDrive): Observable<IResponse> {
+    const url = `${this.baseUrl}/drive/${id}`;
+    return this.http.put<IResponse>(url, payload).pipe(map(resp => resp));
+  }
+
+
+  deleteDrive(id: string): Observable<IResponse> {
+    const url = `${this.baseUrl}/drive/${id}`;
+    return this.http.delete<IResponse>(url).pipe(map(resp => resp));
   }
 
   private mapOrder(dto: any): IOrder {

@@ -1,0 +1,64 @@
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+}
+
+h3 {
+  color: #303030;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+p.infos {
+  color: #8f8f8f;
+  font-size: 14px;
+  padding-bottom: 20px;
+  line-height: 1.4;
+}
+
+.link-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10px;
+  .link {
+    flex: 1;
+    background-color: #f1f1f1;
+    padding: 8px 15px;
+    border-radius: 50px;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 1.4;
+    font-family: Courier New, Courier, monospace;
+    margin-top: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+
+    > span {
+      padding: 2px;
+      border-radius: 1px;
+      &.copied {
+        background: #008ecc;
+        color: white;
+      }
+    }
+  }
+}
+
+.row {
+  &.action {
+    margin-top: 30px;
+  }
+}
+
+.lb-loader {
+  .lb-cancel {
+    height: 100px;
+    width: 100px;
+    border-width: 5px !important;
+  }
+}

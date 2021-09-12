@@ -24,6 +24,7 @@
     "@ng-select/ng-select": "^6.1.0",
     "@ngx-translate/core": "^13.0.0",
     "@polkadot/api": "^4.16.2",
+    "@polkadot/extension-dapp": "^0.39.3",
     "angular-svg-round-progressbar": "^7.0.0",
     "angular2-notifications": "^9.0.0",
     "ipfs-core": "^0.8.0",

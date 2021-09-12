@@ -1,0 +1,91 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">{{'main.your-share-details' | translate}} </h4>
+  <button [disabled]="!isFinalized" type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <ng-container *ngIf="step == 1;else step2Tmp">
+    <form [formGroup]="form" novalidate>
+
+      <cru-tag-input [control]="form.controls.recipients"></cru-tag-input>
+
+      <label class="form-group has-float-label">
+        <textarea rows="3" class="form-control" formControlName="message"></textarea>
+        <span>{{'main.message' | translate}}</span>
+      </label>
+
+      <div class="d-flex justify-content-end align-items-center">
+        <button type="button" class="btn btn-outline-primary mr-2" (click)="cancel()">{{'main.cancel' |
+          translate}}</button>
+        <button type="submit" class="btn btn-primary btn-lg btn-shadow" [disabled]="!form.valid"
+          (click)="shareDrive()">
+          {{'main.share' | translate}}</button>
+
+      </div>
+
+    </form>
+  </ng-container>
+
+
+</div>
+
+<ng-template #step2Tmp>
+  <ng-container *ngIf="isFinalized; else progressbar">
+
+    <div class="row">
+      <div class="col-12">
+        <app-radial-process-card title="1 file {{savedData?.fileInfos.humanSize}}" [percent]="100">
+        </app-radial-process-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <h1>{{'main.you-are-done' | translate}}</h1>
+        <p class="infos">
+          The download email has been successfully sent.
+        </p>
+
+
+        <h3>{{'main.download-link' | translate}}</h3>
+
+        <div class="link-wrapper position-relative">
+
+          <div class="link">
+            <span [class.copied]="isCopied">{{link}}</span>
+          </div>
+          <button class="btn btn-outline-primary  " (click)="copyLink()">
+            <span>{{!isCopied ? 'Copy' : 'Copied'}}</span>
+          </button>
+        </div>
+        <small *ngIf="isCopied">{{'main.link-copied-clipboard' | translate}}</small>
+
+
+      </div>
+    </div>
+
+    <div class="row action">
+      <div class="col-12">
+        <button class="btn btn-primary btn-lg btn-shadow" (click)="close()">
+          {{'main.ok' | translate}}</button>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #progressbar>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="lb-loader">
+            <div class="lb-cancel"></div>
+          </div>
+          <h5 class="card-title mb-0 mt-4 text-center">{{progressMessage}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

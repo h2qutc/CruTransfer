@@ -8,6 +8,7 @@ export interface IUser extends Document {
     created: Date;
     codeActivation: string;
     isActive: boolean;
+    totalSize: number;
     codeExpiresIn: Date;
 }
 
@@ -44,6 +45,10 @@ const schema = new Schema<IUser>({
     codeExpiresIn: {
         type: Date,
         required: false
+    },
+    totalSize:{
+        type: Number,
+        default: 0
     }
 
 });

@@ -1,0 +1,63 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">{{'main.your-upload-details' | translate}} </h4>
+  <button [disabled]="!isFinalized" type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <ng-container *ngIf="isFinalized; else progressbar">
+
+    <div class="row">
+      <div class="col-12" *ngIf="!hasError; else iconError">
+        <app-radial-process-card title="1 file {{savedData?.fileInfos.humanSize}}" [percent]="100">
+        </app-radial-process-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12" *ngIf="!hasError">
+        <h1>{{'main.you-are-done' | translate}}</h1>
+
+        <p class="infos">
+          Your file has been successfully uploaded.
+        </p>
+      </div>
+
+      <div class="col-12" *ngIf="hasError">
+        <!-- <h5>Ooops... looks like an error occurred !</h5> -->
+        <p class="infos text-danger">Error: {{statusMessage}}</p>
+      </div>
+    </div>
+
+    <div class="row action">
+      <div class="col-12">
+        <button class="btn btn-primary btn-lg btn-shadow float-right" (click)="close()">
+          {{'main.ok' | translate}}</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #progressbar>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="lb-loader">
+              <div class="lb-cancel"></div>
+            </div>
+            <h5 class="card-title mb-0 mt-4 text-center">{{statusMessage}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #iconError>
+    <div class="icon-error-wrapper">
+      <div class="icon text-danger"><i class="simple-icon-exclamation"></i></div>
+    </div>
+  </ng-template>
+
+
+</div>

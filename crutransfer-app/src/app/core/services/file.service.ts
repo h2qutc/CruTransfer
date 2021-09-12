@@ -7,10 +7,10 @@ export class FileService {
   constructor() { }
 
   createAndDownloadBlobFile(body: any, fileInfos: IFileInfo) {
-    const blob = new Blob(body, {type: fileInfos.type});
+    const blob = new Blob(body, { type: fileInfos.mimetype });
     const fileName = fileInfos.name;
-    if (navigator.msSaveBlob) {
-      navigator.msSaveBlob(blob, fileName);
+    if ((<any>navigator).msSaveBlob) {
+      (<any>navigator).msSaveBlob(blob, fileName);
     } else {
       const link = document.createElement('a');
       if (link.download !== undefined) {

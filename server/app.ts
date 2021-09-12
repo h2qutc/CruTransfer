@@ -1,7 +1,10 @@
 import bodyParser from "body-parser";
 import express from "express";
 import { connect, connection } from 'mongoose';
+import logger from "./services/log";
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+
 
 const dbConnString = process.env.MONGO_CONN_STRING || 'mongodb://localhost/CruTransferDb';
 
@@ -35,6 +38,12 @@ export class App {
             );
             next();
         });
+
+        this.app.use(
+            fileUpload({
+                createParentPath: true,
+            })
+        );
     }
 
     private initializeControllers(controllers: any[]) {
@@ -53,14 +62,14 @@ export class App {
 
         // Added check for DB connection
         if (!db)
-            console.log("Error connecting db")
+            logger.info("Error connecting db")
         else
-            console.log("Db connected successfully")
+            logger.info("Db connected successfully")
     }
 
     public listen() {
         this.app.listen(this.port, () => {
-            console.log(`App listening on the port ${this.port}`);
+            logger.info(`App listening on the port ${this.port}`);
         });
     }
 }

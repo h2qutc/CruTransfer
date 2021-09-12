@@ -28,7 +28,9 @@
   </div>
 
   <div class="col-12 list" *ngIf="!loading; else loader;">
-    <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of filteredData;"></cru-card-order>
+    <ng-container *ngIf="filteredData.length; else nodata">
+      <cru-card-order [order]="item" (select)="goToDetail($event)" *ngFor="let item of filteredData;"></cru-card-order>
+    </ng-container>
   </div>
 
 </div>
@@ -38,5 +40,11 @@
     <div class="lb-loader">
       <div class="lb-cancel" style="height: 30px;width: 30px;"></div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #nodata>
+  <div class="col-12">
+    <p>{{'main.no-data-found' | translate}}</p>
   </div>
 </ng-template>

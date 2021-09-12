@@ -1,8 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService, AuthService, IUser, LangService, Language } from '@cru-transfer/core';
+import {
+  ApiService,
+  AuthService, IUser,
+  LangService,
+  Language
+} from '@cru-transfer/core';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-topnav',
@@ -28,25 +32,22 @@ export class TopnavComponent implements OnInit, OnDestroy {
     this.isSingleLang = this.langService.isSingleLang;
   }
 
-
   onLanguageChange(lang): void {
     this.langService.language = lang.code;
     this.currentLanguage = this.langService.languageShorthand;
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.user = this.authService.user;
     this.authService.user$.subscribe((data) => {
       this.user = data;
       this.cd.detectChanges();
-    })
+    });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-
-
 
   onSignOut(): void {
     this.authService.signOut();
@@ -54,7 +55,5 @@ export class TopnavComponent implements OnInit, OnDestroy {
       this.router.navigate(['/login']);
     });
   }
-
-
 
 }
