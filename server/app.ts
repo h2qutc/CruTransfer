@@ -14,7 +14,7 @@ console.log('dbConnString', dbConnString);
 export class App {
     public app: express.Application;
 
-    public port: number = 8080;
+    public port: number = 3000;
 
     constructor(controllers: any[], port: number) {
         this.app = express();

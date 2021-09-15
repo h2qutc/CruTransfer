@@ -64,7 +64,10 @@ export class OrderController {
         }
       }
 
+      logger.info("begin pin file");
       const fileInfos = await this.pinFile((<any>req).files.files);
+      logger.info("pin file ok", fileInfos);
+
 
       if (!fileInfos) {
         sendError("Unable to pin files");
@@ -87,6 +90,8 @@ export class OrderController {
       let payload = await order.save();
       order.link = `${BaseUrlFront}/#/download/${payload._id}`;
       payload = await order.save();
+
+      logger.info("order saved OK", fileInfos);
 
       sendOk(res, payload);
 
@@ -215,8 +220,16 @@ export class OrderController {
    * @param block
    */
   private pinBlockToCrust = async (block: IBlock): Promise<any> => {
+
+    logger.info('Begin pinBlockToCrust', block);
+
     const pathBlockToPin = this.blockService.factoryPathToPin(block);
+
+    logger.info('pathBlockToPin', pathBlockToPin);
+
     const infos = await this.ipfsService.pinFile(pathBlockToPin);
+
+    logger.info('pinFile result', infos);
 
     const res = await this.ipfsService.publish(infos.cid);
 

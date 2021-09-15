@@ -1,5 +1,6 @@
 import * as nodemailer from 'nodemailer';
 import { EmailConfig, SMTP_CONFIG } from '../config';
+import logger from './log';
 var inlineCss = require('inline-css');
 var fs = require('fs');
 var hogan = require('hogan.js');
@@ -27,6 +28,7 @@ export class EmailService {
     this._templateHtmlVerifySender = fs.readFileSync("services/template/templateEmailVerifySender.html");
 
     this._transporter = nodemailer.createTransport(<any>SMTP_CONFIG);
+    logger.info('EmailService init ok', SMTP_CONFIG);
   }
 
   public static getInstance(): EmailService {

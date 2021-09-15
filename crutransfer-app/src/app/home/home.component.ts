@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         disabled: this.currentUser != null
       }, listValidatorsEmail],
       isAnonymous: [isAnonymous],
-      recipients: [['h2qbkhn@gmail.com'], [Validators.required]],
+      recipients: [[], [Validators.required]],
       message: [null],
       action: [SendActions.SendEmail, Validators.required],
       password: [null],
