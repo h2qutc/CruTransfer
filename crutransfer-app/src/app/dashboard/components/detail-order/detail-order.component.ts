@@ -54,7 +54,6 @@ export class DetailOrderComponent implements OnInit {
   }
 
   delete() {
-    const modalRef = this.modalService.show(this.tmpConfirm, { class: 'modal-sm' });
     this.goToDashboard();
   }
 

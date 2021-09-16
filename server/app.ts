@@ -9,8 +9,6 @@ require('dotenv').config();
 
 const dbConnString = process.env.MONGO_CONN_STRING || 'mongodb://localhost/CruTransferDb';
 
-console.log('dbConnString', dbConnString);
-
 export class App {
     public app: express.Application;
 

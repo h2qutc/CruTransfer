@@ -22,6 +22,10 @@
           'badge-danger': order.status == OrderStatusEnum.Danger,
           'badge-light': order.status == OrderStatusEnum.Expired
         }">{{order.timeRemainStr}}</span>
+
+        <span *ngIf="order.isVip" style="float: right;">
+          <i class="iconsminds-folder-cloud"></i>
+        </span>
       </div>
     </div>
   </div>

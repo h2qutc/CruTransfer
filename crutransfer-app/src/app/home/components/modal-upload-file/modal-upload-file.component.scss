@@ -62,3 +62,13 @@ p.infos {
     border-width: 5px !important;
   }
 }
+
+.icon-error-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  .icon {
+    font-size: 3rem;
+  }
+}

@@ -76,7 +76,6 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
   shareDrive() {
     const data = this.form.getRawValue();
     data.sender = data.sender.value;
-    console.log('share data', data);
     this.step = 2;
     this.api.shareDrive(data).pipe(finalize(() => this.isFinalized = true)).subscribe((resp) => {
       this.notifications.success('Success', 'Your file was successfully uploaded');

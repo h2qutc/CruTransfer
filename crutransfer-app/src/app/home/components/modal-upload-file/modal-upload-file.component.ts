@@ -37,6 +37,9 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   savedData: IOrder;
 
+  statusMessage: string;
+  hasError = false;
+
   constructor(
     private ipfsService: IpfsService,
     public modalRef: BsModalRef,
@@ -58,7 +61,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
 
   async addFileToIpfsAndSaveOrder() {
     this.cleanDataBeforeSending();
-
+    this.hasError = false;
     try {
       const order = <IOrder>{
         ...this.data,
@@ -67,6 +70,8 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
     } catch (err) {
       this.isFinalized = true;
       this.notifications.error('Error', 'An error has occurred');
+      this.statusMessage = `${err.message}`;
+      this.hasError = true;
     }
   }
 
@@ -84,6 +89,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
         (err) => {
           console.error('ERROR', err);
           this.notifications.error('Error', 'An error has occurred');
+          this.hasError = true;
         }
       );
   }
