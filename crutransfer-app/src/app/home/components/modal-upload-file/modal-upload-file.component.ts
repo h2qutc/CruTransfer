@@ -88,6 +88,7 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
         },
         (err) => {
           console.error('ERROR', err);
+          this.statusMessage = 'An error has occurred';
           this.notifications.error('Error', 'An error has occurred');
           this.hasError = true;
         }
