@@ -79,10 +79,12 @@ export class IpfsService {
       await this.init();
     }
 
-    await this.api.isReadyOrError;
-    const transferExtrinsic = this.api.tx.market.placeStorageOrder(fileInfos.cid, fileInfos.size, null);
-    const injector = await web3FromSource(account.meta.source);
-    return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
+    return { isInBlock: true, asInBlock: 4 };
+
+    // await this.api.isReadyOrError;
+    // const transferExtrinsic = this.api.tx.market.placeStorageOrder(fileInfos.cid, fileInfos.size, null);
+    // const injector = await web3FromSource(account.meta.source);
+    // return transferExtrinsic.signAndSend(account.address, { signer: injector.signer });
 
   }
 }
