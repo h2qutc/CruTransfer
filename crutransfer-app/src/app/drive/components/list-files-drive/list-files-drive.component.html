@@ -11,8 +11,15 @@
 
 <hr>
 
+<div class="d-inline-block col-12">
+  <div class="search-sm d-inline-block float-md-left mt-3 align-top" style="min-width: 200px;">
+    <input #inputSearch class="form-control" placeholder="{{'main.search-by-filename' | translate}}">
+  </div>
+</div>
+
+
 <div class="col-12 list mt-3">
-  <cru-card-drive *ngFor="let item of drives" [drive]="item"></cru-card-drive>
+  <cru-card-drive *ngFor="let item of filteredData" [drive]="item"></cru-card-drive>
 </div>
 
 <div class="col-12">

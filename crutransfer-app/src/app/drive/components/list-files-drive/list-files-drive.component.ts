@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ApiService, AuthService, IDappAccount, IDrive, IPagedResponse, IpfsService, IUser } from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DropzoneComponent } from 'ngx-dropzone-wrapper';
-import { finalize } from 'rxjs/operators';
+import { fromEvent, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, takeUntil } from 'rxjs/operators';
 import { ModalUploadDriveComponent } from '../modal-upload-drive/modal-upload-drive.component';
 
 @Component({
@@ -11,7 +12,9 @@ import { ModalUploadDriveComponent } from '../modal-upload-drive/modal-upload-dr
   templateUrl: './list-files-drive.component.html',
   styleUrls: ['./list-files-drive.component.scss']
 })
-export class ListFilesDriveComponent implements OnInit {
+export class ListFilesDriveComponent implements OnInit, OnDestroy {
+
+  @ViewChild('inputSearch', { static: true }) inputSearchRef: ElementRef | null = null;
 
   @ViewChild('dropzone') dropzoneCmp: DropzoneComponent;
 
@@ -22,7 +25,8 @@ export class ListFilesDriveComponent implements OnInit {
 
   private user: IUser;
 
-  drives: IDrive[] = [];
+  data: IDrive[] = [];
+  filteredData: IDrive[] = [];
 
   loading = false;
   page = 1;
@@ -38,6 +42,8 @@ export class ListFilesDriveComponent implements OnInit {
     return this.dropzoneCmp.directiveRef.dropzone().files;
   }
 
+  private _destroyed: Subject<void> = new Subject<void>();
+
   constructor(private ipfsService: IpfsService,
     private authService: AuthService,
     private notifications: NotificationsService,
@@ -49,7 +55,41 @@ export class ListFilesDriveComponent implements OnInit {
 
   ngOnInit() {
     this.loadData(this.limit, this.page, this.search, this.orderBy);
+
+    fromEvent(this.inputSearchRef?.nativeElement, 'keyup')
+      .pipe(
+        takeUntil(this._destroyed),
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(_ => {
+        this.checkAndLaunchSearch();
+      });
+
   }
+
+  ngOnDestroy(){
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
+  private checkAndLaunchSearch() {
+    const term = this.inputSearchRef?.nativeElement.value;
+    if (term) {
+      this.filteredData = this.data.filter(x => {
+        if (x.fileInfos.name.toLowerCase().includes(term)) return true;
+        return false;
+      })
+    } else {
+      this.resetFilter();
+    }
+  }
+
+  private resetFilter() {
+    this.inputSearchRef.nativeElement.value = '';
+    this.filteredData = [...this.data];
+  }
+
 
   onRemovedfile(event: any) {
     this.fileErrorMessage = '';
@@ -103,7 +143,8 @@ export class ListFilesDriveComponent implements OnInit {
     this.orderBy = orderBy;
 
     this.api.getDriveByUser(this.user.email, limit, page, search, orderBy).subscribe((resp: IPagedResponse) => {
-      this.drives = resp.docs;
+      this.data = resp.docs;
+      this.resetFilter();
       this.totalDocs = resp.totalDocs;
       this.totalPages = resp.totalPages;
     });

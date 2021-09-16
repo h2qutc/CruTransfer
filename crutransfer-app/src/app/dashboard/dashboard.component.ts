@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService, AuthService, IOrder, IUser } from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
@@ -10,7 +10,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   @ViewChild('inputSearch', { static: true }) inputSearchRef: ElementRef | null = null;
 
@@ -45,6 +45,11 @@ export class DashboardComponent implements OnInit {
       .subscribe(_ => {
         this.checkAndLaunchSearch();
       });
+  }
+
+  ngOnDestroy(){
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   private checkAndLaunchSearch() {
