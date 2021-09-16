@@ -43,11 +43,17 @@ export class ApiService {
     return this.http.get<IResponse>(url).pipe(resp => resp);
   }
 
-  getOrdersByUser(email: string): Observable<IOrder[]> {
+  getOrdersByUser(email: string, limit: number = 10, page: number = 1): Observable<IPagedResponse> {
     const url = `${this.baseUrl}/orders/getOrdersByUser`;
-    return this.http.post<IOrder[]>(url, {
-      email: email
-    }).pipe(map(resp => resp.map(this.mapOrder)));
+    return this.http.post<IPagedResponse>(url, {
+      email: email,
+      limit: limit,
+      page: page
+    }).pipe(map(resp => {
+      const docs = resp.docs.map(this.mapOrder);
+      resp.docs = docs;
+      return resp;
+    }));
   }
 
   getOrder(id: string): Observable<IOrder> {
@@ -156,7 +162,7 @@ export class ApiService {
   /* DRIVE */
 
   getDriveByUser(email: string, limit: number = 10, page: number = 1,
-     search: string = '', orderBy: string = ''): Observable<IPagedResponse> {
+    search: string = '', orderBy: string = ''): Observable<IPagedResponse> {
     const url = `${this.baseUrl}/drive/getDriveByUser`;
     return this.http.post<IPagedResponse>(url, {
       email: email,

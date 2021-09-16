@@ -24,6 +24,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   displayOptionsCollapsed = false;
 
   loading = false;
+  page = 1;
+  limit = 2;
+  search = '';
+  isLoading: boolean;
+  endOfTheList = false;
+  totalDocs = 0;
+  totalPages = 0;
 
   private _destroyed: Subject<void> = new Subject<void>();
 
@@ -34,7 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getOrders();
+    this.getOrders(this.limit, this.page);
 
     fromEvent(this.inputSearchRef?.nativeElement, 'keyup')
       .pipe(
@@ -66,11 +73,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.orderBy(this.itemOrder);
   }
 
-  getOrders() {
+  getOrders(limit: number = 10, page: number = 1) {
     this.loading = true;
-    this.api.getOrdersByUser(this.currentUser.email).subscribe(data => {
-      this.data = data;
-      this.filteredData = data.sort(this.sortBy);
+    this.limit = limit;
+    this.page = page;
+
+    this.api.getOrdersByUser(this.currentUser.email, limit, page).subscribe(resp => {
+      this.data = resp.docs;
+      this.totalDocs = resp.totalDocs;
+      this.totalPages = resp.totalPages;
+      this.filteredData = this.data.sort(this.sortBy);
       this.loading = false;
     }, error => {
       this.notifications.error('Error', error.error.message);
@@ -85,6 +97,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   orderBy(item: string) {
     this.itemOrder = item;
     this.filteredData.sort(this.sortBy);
+  }
+
+  pageChanged(event: any): void {
+    this.inputSearchRef.nativeElement.value = '';
+    this.getOrders(this.limit, event.page);
   }
 
   private resetFilter() {

@@ -52,8 +52,6 @@ export class DriveController {
       const page = req.body.page;
       const limit = req.body.limit;
 
-      const sort = {}
-
       const options = {
         offset: (page - 1) * limit,
         limit: limit,

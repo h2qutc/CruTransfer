@@ -1,4 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -83,5 +84,7 @@ const schema = new Schema<IOrder>({
         default: false
     }
 });
+
+schema.plugin(mongoosePaginate);
 
 export const Order = model<IOrder>('Order', schema);

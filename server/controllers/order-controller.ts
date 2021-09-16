@@ -49,7 +49,18 @@ export class OrderController {
   getOrdersByUser = runAsyncWrapper(
     async (req: express.Request, res: express.Response) => {
       const email = req.body.email;
-      const payload = await Order.find({ sender: email });
+
+      const page = req.body.page;
+      const limit = req.body.limit;
+
+      const options = {
+        offset: (page - 1) * limit,
+        limit: limit,
+        sort: { createdDate: -1 }
+      };
+
+      const payload = await (<any>Order).paginate({ sender: email }, options);
+
       res.status(200).send(payload);
     }
   );
