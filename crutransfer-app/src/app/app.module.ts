@@ -6,6 +6,7 @@ import { RoundprogressModule } from 'angular-svg-round-progressbar';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TagInputModule } from 'ngx-chips';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -28,6 +29,7 @@ import { LayoutContainersModule } from './layout';
     RoundprogressModule,
     PopoverModule.forRoot(),
     TranslateModule.forRoot(),
+    PaginationModule.forRoot(),
     CoreModule.forRoot(),
     SimpleNotificationsModule.forRoot({
       timeOut: 2000,

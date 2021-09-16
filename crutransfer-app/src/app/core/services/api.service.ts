@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IDrive, IOrder, IResponse, IUser, OrderStatus } from '../models';
+import { IDrive, IOrder, IPagedResponse, IResponse, IUser, OrderStatus } from '../models';
 import { calcDiffDate } from './utils';
 
 
@@ -155,10 +155,15 @@ export class ApiService {
 
   /* DRIVE */
 
-  getDriveByUser(email: string): Observable<IDrive[]> {
+  getDriveByUser(email: string, limit: number = 10, page: number = 1,
+     search: string = '', orderBy: string = ''): Observable<IPagedResponse> {
     const url = `${this.baseUrl}/drive/getDriveByUser`;
-    return this.http.post<IDrive[]>(url, {
-      email: email
+    return this.http.post<IPagedResponse>(url, {
+      email: email,
+      limit: limit,
+      page: page,
+      search: search,
+      orderBy: orderBy
     }).pipe(map(resp => resp));
   }
 

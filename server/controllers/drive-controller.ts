@@ -49,7 +49,18 @@ export class DriveController {
   getDriveByUser = runAsyncWrapper(
     async (req: express.Request, res: express.Response) => {
       const email = req.body.email;
-      const payload = await Drive.find({ ownerEmail: email });
+      const page = req.body.page;
+      const limit = req.body.limit;
+
+      const sort = {}
+
+      const options = {
+        offset: (page - 1) * limit,
+        limit: limit,
+        sort: {createdDate: -1}
+      };
+
+      const payload = await (<any>Drive).paginate({ ownerEmail: email }, options);
       res.status(200).send(payload);
     }
   );

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ApiService, AuthService, IDappAccount, IDrive, IpfsService, IUser } from '@cru-transfer/core';
+import { ApiService, AuthService, IDappAccount, IDrive, IPagedResponse, IpfsService, IUser } from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DropzoneComponent } from 'ngx-dropzone-wrapper';
@@ -25,6 +25,14 @@ export class ListFilesDriveComponent implements OnInit {
   drives: IDrive[] = [];
 
   loading = false;
+  page = 1;
+  limit = 10;
+  search = '';
+  orderBy = '';
+  isLoading: boolean;
+  endOfTheList = false;
+  totalDocs = 0;
+  totalPages = 0;
 
   get fileList(): FileList {
     return this.dropzoneCmp.directiveRef.dropzone().files;
@@ -40,7 +48,7 @@ export class ListFilesDriveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getDriveByUser();
+    this.loadData(this.limit, this.page, this.search, this.orderBy);
   }
 
   onRemovedfile(event: any) {
@@ -79,7 +87,7 @@ export class ListFilesDriveComponent implements OnInit {
     );
 
     modalRef.onHidden.subscribe((res) => {
-      this.getDriveByUser();
+      this.loadData();
       this.reset()
       this.cd.detectChanges();
     }, err => {
@@ -87,15 +95,35 @@ export class ListFilesDriveComponent implements OnInit {
     })
   }
 
-  private getDriveByUser() {
-    this.api.getDriveByUser(this.user.email).subscribe(data => {
-      this.drives = data;
+  private loadData(limit: number = 10, page: number = 1, search: string = '', orderBy: string = '') {
+
+    this.limit = limit;
+    this.page = page;
+    this.search = search;
+    this.orderBy = orderBy;
+
+    this.api.getDriveByUser(this.user.email, limit, page, search, orderBy).subscribe((resp: IPagedResponse) => {
+      this.drives = resp.docs;
+      this.totalDocs = resp.totalDocs;
+      this.totalPages = resp.totalPages;
     });
   }
 
   private reset() {
     this.dropzoneCmp.directiveRef.reset();
     this.fileToUpload = null;
+  }
+
+  pageChanged(event: any): void {
+    this.loadData(this.limit, event.page, this.search, this.orderBy);
+  }
+
+  itemsPerPageChange(perPage: number): void {
+    this.loadData(perPage, 1, this.search, this.orderBy);
+  }
+
+  changeOrderBy(item: any): void {
+    this.loadData(this.limit, 1, this.search, item.value);
   }
 
 }
