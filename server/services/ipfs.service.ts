@@ -17,7 +17,7 @@ const chain_ws_url = "wss://api.decloudf.com/";
 const wsProvider = new WsProvider(chain_ws_url);
 
 // Seeds of account
-const Dev_Seeds =
+const Dev_Seeds = 
   "dad argue unknown alpha audit vault thing amount beauty matter breeze tragic";
 
 export class IpfsService {
@@ -38,6 +38,7 @@ export class IpfsService {
 
   constructor() {
     this.seeds = process.env.CRUST_SEEDS || Dev_Seeds;
+    logger.info(`CRUST_SEEDS: ${this.seeds}`);
   }
 
   async init() {
