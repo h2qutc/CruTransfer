@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   loading = false;
   page = 1;
-  limit = 2;
+  limit = 10;
   search = '';
   isLoading: boolean;
   endOfTheList = false;
