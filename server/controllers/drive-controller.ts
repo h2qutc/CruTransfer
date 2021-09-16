@@ -1,17 +1,14 @@
 import express from "express";
-import { BaseUrlFront, DAYS_BEFORE_EXPIRED, LIMIT_SIZE_BLOCK } from "../config";
+import { BaseUrlFront, DAYS_BEFORE_EXPIRED } from "../config";
 import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { verifyToken } from "../middlewares";
 import {
-  Drive, IBlock,
-  IFileInfo,
-  IOrder,
+  Drive, IOrder,
   MailOrderData,
   Order,
-  SendActions,
-  User
+  SendActions
 } from "../models";
 import { BlockService, EmailService, IpfsService } from "../services";
-import logger from "../services/log";
 const filesize = require("file-size");
 
 export class DriveController {
@@ -36,7 +33,7 @@ export class DriveController {
       .put(this.update)
       .delete(this.delete);
 
-    this.router.route("/drive/getDriveByUser").post(this.getDriveByUser);
+    this.router.route("/drive/getDriveByUser").post([verifyToken], this.getDriveByUser);
   }
 
   getAll = runAsyncWrapper(
@@ -55,7 +52,7 @@ export class DriveController {
       const options = {
         offset: (page - 1) * limit,
         limit: limit,
-        sort: {createdDate: -1}
+        sort: { createdDate: -1 }
       };
 
       const payload = await (<any>Drive).paginate({ ownerEmail: email }, options);

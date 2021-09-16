@@ -1,6 +1,7 @@
 import express from "express";
 import { BaseUrlFront, DAYS_BEFORE_EXPIRED, LIMIT_SIZE_BLOCK } from "../config";
 import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { verifyToken } from "../middlewares";
 import {
   IBlock,
   IFileInfo,
@@ -33,7 +34,7 @@ export class OrderController {
       .put(this.update)
       .delete(this.delete);
 
-    this.router.route("/orders/getOrdersByUser").post(this.getOrdersByUser);
+    this.router.route("/orders/getOrdersByUser").post([verifyToken], this.getOrdersByUser);
     this.router
       .route("/orders/updateTotalDownloadForOrder/:order_id")
       .put(this.updateTotalDownloadForOrder);
