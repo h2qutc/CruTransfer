@@ -51,7 +51,7 @@ export class CardDriveComponent implements OnInit {
         value: this.authService.user.email,
       }],
       isAnonymous: [false],
-      recipients: [['h2qbkhn@gmail.com'], [Validators.required]],
+      recipients: [[], [Validators.required]],
       message: [null],
       action: [SendActions.SendEmail, Validators.required]
     });
