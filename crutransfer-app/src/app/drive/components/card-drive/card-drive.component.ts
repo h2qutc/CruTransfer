@@ -49,6 +49,7 @@ export class CardDriveComponent implements OnInit {
       drive: [this.drive],
       sender: [{
         value: this.authService.user.email,
+        disabled: true
       }],
       isAnonymous: [false],
       recipients: [[], [Validators.required]],

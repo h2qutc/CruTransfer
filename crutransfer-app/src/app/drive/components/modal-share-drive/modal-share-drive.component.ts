@@ -61,10 +61,6 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user = this.authService.user;
     this.drive = this.data.drive;
-
-
-    // this.tryPin();
-
     this.form = this.data.form;
   }
 
