@@ -15,8 +15,8 @@ export interface IPagedResponse {
     page: number;
     pagingCounter: number;
     prevPage: number;
-    totalDocs: number;
-    totalPages: number;
+    total: number;
+    pages: number;
 
 }
 

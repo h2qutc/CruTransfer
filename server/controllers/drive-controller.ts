@@ -8,12 +8,10 @@ import {
   Order,
   SendActions
 } from "../models";
-import { BlockService, EmailService, IpfsService } from "../services";
+import { EmailService } from "../services";
 const filesize = require("file-size");
 
 export class DriveController {
-  private blockService = BlockService.getInstance();
-  private ipfsService = IpfsService.getInstance();
 
   public router = express.Router();
 
@@ -50,7 +48,7 @@ export class DriveController {
       const limit = req.body.limit;
 
       const options = {
-        offset: (page - 1) * limit,
+        page: page,
         limit: limit,
         sort: { createdDate: -1 }
       };

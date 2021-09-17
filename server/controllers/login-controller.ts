@@ -99,7 +99,7 @@ export class LoginController {
 
 		const user = await User.findOne({
 			email: req.body.email,
-			code: req.body.code
+			codeResetPassword: req.body.code
 		});
 
 		if (!req.body.email) {

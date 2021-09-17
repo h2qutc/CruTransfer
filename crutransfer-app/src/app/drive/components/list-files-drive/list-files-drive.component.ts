@@ -145,8 +145,8 @@ export class ListFilesDriveComponent implements OnInit, OnDestroy {
     this.api.getDriveByUser(this.user.email, limit, page, search, orderBy).subscribe((resp: IPagedResponse) => {
       this.data = resp.docs;
       this.resetFilter();
-      this.totalDocs = resp.totalDocs;
-      this.totalPages = resp.totalPages;
+      this.totalDocs = resp.total;
+      this.totalPages = resp.pages;
     });
   }
 

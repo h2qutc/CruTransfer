@@ -80,8 +80,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.api.getOrdersByUser(this.currentUser.email, limit, page).subscribe(resp => {
       this.data = resp.docs;
-      this.totalDocs = resp.totalDocs;
-      this.totalPages = resp.totalPages;
+      this.totalDocs = resp.total;
+      this.totalPages = resp.pages;
       this.filteredData = this.data.sort(this.sortBy);
       this.loading = false;
     }, error => {

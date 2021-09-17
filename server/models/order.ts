@@ -1,10 +1,10 @@
 import { Document, model, Schema } from 'mongoose';
-const mongoosePaginate = require('mongoose-paginate-v2');
+var mongoosePaginate = require('mongoose-paginate');
 
 const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const validateEmail = (email: string) => {
-    if (email){
+    if (email) {
         return regEmail.test(email);
     }
     else

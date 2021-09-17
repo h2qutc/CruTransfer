@@ -55,7 +55,7 @@ export class OrderController {
       const limit = req.body.limit;
 
       const options = {
-        offset: (page - 1) * limit,
+        page: page,
         limit: limit,
         sort: { createdDate: -1 }
       };
