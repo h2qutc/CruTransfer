@@ -47,14 +47,16 @@ export class DriveController {
       const page = req.body.page;
       const limit = req.body.limit;
 
-      const options = {
+      const payload = await Drive.find({ ownerEmail: email }).limit(limit)
+        .skip(limit * (page - 1))
+        .sort( { createdDate: -1 });
+      const count = await Drive.find({ ownerEmail: email }).countDocuments();
+      res.status(200).send({
+        docs: payload,
         page: page,
-        limit: limit,
-        sort: { createdDate: -1 }
-      };
-
-      const payload = await (<any>Drive).paginate({ ownerEmail: email }, options);
-      res.status(200).send(payload);
+        pages:  Math.ceil(count / limit),
+        total: count
+      });
     }
   );
 

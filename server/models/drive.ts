@@ -1,5 +1,4 @@
 import { Document, model, Schema } from 'mongoose';
-var mongoosePaginate = require('mongoose-paginate');
 
 const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -44,7 +43,5 @@ const schema = new Schema<IDrive>({
         default: new Date()
     }
 });
-
-schema.plugin(mongoosePaginate);
 
 export const Drive = model<IDrive>('Drive', schema);

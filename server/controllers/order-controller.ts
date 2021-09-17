@@ -50,19 +50,19 @@ export class OrderController {
   getOrdersByUser = runAsyncWrapper(
     async (req: express.Request, res: express.Response) => {
       const email = req.body.email;
-
       const page = req.body.page;
       const limit = req.body.limit;
 
-      const options = {
+      const payload = await Order.find({ sender: email }).limit(limit)
+        .skip(limit * (page - 1))
+        .sort({ createdDate: -1 });
+      const count = await Order.find({ sender: email }).countDocuments();
+      res.status(200).send({
+        docs: payload,
         page: page,
-        limit: limit,
-        sort: { createdDate: -1 }
-      };
-
-      const payload = await (<any>Order).paginate({ sender: email }, options);
-
-      res.status(200).send(payload);
+        pages: Math.ceil(count / limit),
+        total: count
+      });
     }
   );
 
