@@ -38,14 +38,14 @@ export class IpfsService {
 
   constructor() {
     this.seeds = process.env.CRUST_SEEDS || Dev_Seeds;
-    logger.info(`CRUST_SEEDS: ${this.seeds}`);
   }
 
   async init() {
     if (this.ipfs) {
       return;
     }
-    logger.info("init ipfs service");
+
+    logger.info("INIT IPFS service");
 
     this.api = await ApiPromise.create({
       provider: wsProvider,

@@ -42,7 +42,7 @@ export class App {
 
         this.app.use(
             fileUpload({
-                createParentPath: true,
+                createParentPath: true
             })
         );
     }

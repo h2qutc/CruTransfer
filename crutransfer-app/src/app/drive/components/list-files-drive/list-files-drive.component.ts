@@ -151,7 +151,7 @@ export class ListFilesDriveComponent implements OnInit, OnDestroy {
   }
 
   private reset() {
-    this.dropzoneCmp.directiveRef.reset();
+    this.dropzoneCmp.directiveRef.reset(true);
     this.fileToUpload = null;
   }
 

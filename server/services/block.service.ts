@@ -6,7 +6,7 @@ const path = require("path");
 export class BlockService {
   private static instance: BlockService;
 
-  constructor() {}
+  constructor() { }
 
   public static getInstance(): BlockService {
     if (!BlockService.instance) {
@@ -60,6 +60,7 @@ export class BlockService {
     const block = new Block();
     block.publicId = latest != null ? latest.publicId + 1 : 0;
     block.createdDate = new Date();
+    logger.info(`Creating new block ${block.publicId}`);
     return await block.save();
   };
 

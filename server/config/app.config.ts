@@ -23,7 +23,7 @@ export const SMTP_CONFIG = {
 
 export const DAYS_BEFORE_EXPIRED = 8;
 
-// 500 Mo
-export const LIMIT_SIZE_BLOCK = 1024 * 1024 * 500;
+// 2Go
+export const LIMIT_SIZE_BLOCK = 1024 * 1024 * 2000;
 
 export const FOLD_UPLOADS = "Uploads";

@@ -94,7 +94,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   onFileSelected(event: FileList) {
     if (event[0] != null && (<any>event[0]).status != 'error') {
       this.fileErrorMessage = '';
-      this.form.patchValue({files: event[0]});
+      this.form.patchValue({ files: event[0] });
     }
   }
 
@@ -107,7 +107,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       action: SendActions.SendEmail
     });
-    this.dropzoneCmp.directiveRef.reset();
+    this.dropzoneCmp.directiveRef.reset(true);
   }
 
   tryTransfer() {

@@ -1,3 +1,4 @@
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ApiService,
@@ -79,20 +80,39 @@ export class ModalUploadFileComponent implements OnInit, OnDestroy {
     this.apiService
       .saveOrder(order)
       .pipe(finalize(() => (this.isFinalized = true)))
-      .subscribe(
-        (resp: IResponse) => {
-          this.link = resp.payload.link;
-          this.savedData = resp.payload;
-          this.homeViewService.addOrder(resp.payload);
-          this.cd.detectChanges();
-        },
-        (err) => {
-          console.error('ERROR', err);
-          this.statusMessage = 'An error has occurred';
-          this.notifications.error('Error', 'An error has occurred');
-          this.hasError = true;
+      .subscribe((event: HttpEvent<any>) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            this.statusMessage = 'Request has been made!';
+            break;
+          case HttpEventType.ResponseHeader:
+            break;
+          case HttpEventType.UploadProgress:
+            this.progress = Math.round(event.loaded / event.total * 100);
+            this.statusMessage = `File is uploaded ${this.progress}%`;
+            this.cd.detectChanges();
+            if (this.progress == 100) {
+              this.statusMessage = 'Pinning file into block...';
+            }
+            break;
+          case HttpEventType.Response:
+            this.statusMessage = 'File is successfully transferred!'
+            this.link = event.body.payload.link;
+            this.savedData = event.body.payload;
+            this.homeViewService.addOrder(event.body.payload);
+            this.cd.detectChanges();
+            setTimeout(() => {
+              this.progress = 0;
+            }, 1500);
+          default: break;
         }
-      );
+        this.cd.detectChanges();
+      }, err => {
+        console.error('ERROR', err);
+        this.notifications.error('Error', 'An error has occurred');
+        this.statusMessage = 'An error has occurred';
+        this.hasError = true;
+      })
   }
 
   copyLink() {

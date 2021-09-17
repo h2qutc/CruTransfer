@@ -4017,6 +4017,12 @@ input:-webkit-autofill {
     ) + "'/%3E%3C/svg%3E");
 }
 
+.custom-radio{
+  label{
+    cursor: pointer;
+  }
+}
+
 .custom-control-label,
 .custom-control-input {
   outline: initial !important;

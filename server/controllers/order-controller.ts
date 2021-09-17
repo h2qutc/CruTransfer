@@ -76,9 +76,9 @@ export class OrderController {
         }
       }
 
-      logger.info("begin pin file");
+      logger.info("Begin pinning file");
       const fileInfos = await this.pinFile((<any>req).files.files);
-      logger.info("pin file ok", fileInfos);
+      logger.info("Pinning file OK");
 
 
       if (!fileInfos) {
@@ -102,8 +102,6 @@ export class OrderController {
       let payload = await order.save();
       order.link = `${BaseUrlFront}/#/download/${payload._id}`;
       payload = await order.save();
-
-      logger.info("order saved OK", fileInfos);
 
       sendOk(res, payload);
 
@@ -217,7 +215,7 @@ export class OrderController {
     next.totalSize += files.size;
     await this.blockService.update(next);
 
-    if (isNew) {
+    if (isNew && latest != null) {
       const res = await this.pinBlockToCrust(latest);
       if (!res) {
         return null;
@@ -233,15 +231,13 @@ export class OrderController {
    */
   private pinBlockToCrust = async (block: IBlock): Promise<any> => {
 
-    logger.info('Begin pinBlockToCrust', block);
+    logger.info('Begin pinBlockToCrust');
 
     const pathBlockToPin = this.blockService.factoryPathToPin(block);
 
     logger.info('pathBlockToPin', pathBlockToPin);
 
     const infos = await this.ipfsService.pinFile(pathBlockToPin);
-
-    logger.info('pinFile result', infos);
 
     const res = await this.ipfsService.publish(infos.cid);
 
