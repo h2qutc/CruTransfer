@@ -31,13 +31,16 @@
         </button>
 
         <div class="dropdown-menu dropdown-menu-right mt-3" *dropdownMenu role="menu">
-          <a class="dropdown-item c-pointer" [routerLink]="['/account']">{{
+          <a class="dropdown-item c-pointer" [routerLink]="['/account']">
+            <i class="iconsminds-user"></i>&nbsp;{{
             "main.account" | translate
             }}</a>
-          <a class="dropdown-item c-pointer" [routerLink]="['/dashboard']">{{
+          <a class="dropdown-item c-pointer" [routerLink]="['/dashboard']">
+            <i class="iconsminds-dashboard"></i>&nbsp;{{
             "main.dashboard" | translate
             }}</a>
-          <a class="dropdown-item c-pointer" [routerLink]="['/drive']">{{
+          <a class="dropdown-item c-pointer" [routerLink]="['/drive']">
+            <i class="iconsminds-folder-cloud"></i>&nbsp;{{
             "main.drive" | translate
             }}</a>
           <li class="divider dropdown-divider"></li>
@@ -50,7 +53,7 @@
 
     <ng-template #loginButton>
       <div class="user d-inline-block c-pointer">
-        <a [routerLink]="['/login']" class="menu-button d-none d-md-block">Login</a>
+        <a [routerLink]="['/login']" class="menu-button d-md-block">Login</a>
       </div>
     </ng-template>
   </div>

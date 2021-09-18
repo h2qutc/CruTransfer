@@ -3,7 +3,7 @@
   "homepage": "http://crutransfer.me",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "nodemon --exec node --inspect=0.0.0.0:9229 --require ts-node/register server.ts",

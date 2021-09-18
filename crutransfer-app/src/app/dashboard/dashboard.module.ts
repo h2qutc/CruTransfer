@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { DetailOrderComponent } from './components';
 import { DashboardComponent } from './dashboard.component';
 
@@ -30,6 +31,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    PaginationModule,
     CollapseModule,
     RouterModule.forChild(routes),
     BsDropdownModule,

@@ -29,7 +29,6 @@ export class DriveComponent implements OnInit {
       this.extensions = null;
       return;
     }
-    // console.log('Acc', await (<any>this.extensions[0]).accounts.get());
 
     this.accounts = await web3Accounts() as IDappAccount[];
     this.selectedAccountAddress = localStorage.getItem('selectedAccountAddress');

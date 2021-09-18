@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title pull-left">{{'main.your-share-details' | translate}} </h4>
-  <button [disabled]="!isFinalized" type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+  <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -8,6 +8,11 @@
 
   <ng-container *ngIf="step == 1;else step2Tmp">
     <form [formGroup]="form" novalidate>
+
+      <label class="form-group has-float-label">
+        <input class="form-control" formControlName="sender" />
+        <span>{{'main.your-email' | translate}}</span>
+      </label>
 
       <cru-tag-input [control]="form.controls.recipients"></cru-tag-input>
 

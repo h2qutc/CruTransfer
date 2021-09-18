@@ -61,10 +61,6 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user = this.authService.user;
     this.drive = this.data.drive;
-
-
-    // this.tryPin();
-
     this.form = this.data.form;
   }
 
@@ -75,8 +71,6 @@ export class ModalShareDriveComponent implements OnInit, OnDestroy {
 
   shareDrive() {
     const data = this.form.getRawValue();
-    data.sender = data.sender.value;
-    console.log('share data', data);
     this.step = 2;
     this.api.shareDrive(data).pipe(finalize(() => this.isFinalized = true)).subscribe((resp) => {
       this.notifications.success('Success', 'Your file was successfully uploaded');

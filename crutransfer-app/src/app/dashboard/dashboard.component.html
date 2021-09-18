@@ -33,6 +33,20 @@
     </ng-container>
   </div>
 
+  <div class="col-12">
+    <pagination [totalItems]="totalDocs" [itemsPerPage]="limit" [maxSize]="5" [(ngModel)]="page"
+      (pageChanged)="pageChanged($event)" class="justify-content-center" [customNextTemplate]="nextTemplate"
+      [customPreviousTemplate]="prevTemplate">
+    </pagination>
+  </div>
+
+  <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+    <i class='simple-icon-arrow-right'></i>
+  </ng-template>
+  <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+    <i class='simple-icon-arrow-left'></i>
+  </ng-template>
+
 </div>
 
 <ng-template #loader>

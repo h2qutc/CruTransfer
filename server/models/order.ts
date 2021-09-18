@@ -3,7 +3,7 @@ import { Document, model, Schema } from 'mongoose';
 const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const validateEmail = (email: string) => {
-    if (email){
+    if (email) {
         return regEmail.test(email);
     }
     else

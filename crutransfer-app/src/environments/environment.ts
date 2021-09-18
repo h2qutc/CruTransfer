@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:8080/api',
+  baseUrl: 'http://localhost:3000/api',
   defaultColor: 'light.blueyale',
   subHiddenBreakpoint: 1440,
   menuHiddenBreakpoint: 768,

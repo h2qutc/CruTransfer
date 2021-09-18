@@ -8,15 +8,15 @@
 
   <ng-container *ngIf="isFinalized; else progressbar">
 
-    <div class="row">
-      <div class="col-12">
+    <div class="row" >
+      <div class="col-12" *ngIf="!hasError; else iconError">
         <app-radial-process-card title="1 file {{savedData?.fileInfos.humanSize}}" [percent]="100">
         </app-radial-process-card>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-12" *ngIf="!hasError">
         <h1>{{'main.you-are-done' | translate}}</h1>
         <p class="infos" *ngIf="data.action == SendActionsEnum.SendEmail">
           {{'main.download-email-sent' | translate}}
@@ -41,6 +41,9 @@
 
 
       </div>
+      <div class="col-12" *ngIf="hasError">
+        <p class="infos text-danger">Error: {{statusMessage}}</p>
+      </div>
     </div>
 
     <div class="row action">
@@ -52,14 +55,14 @@
   </ng-container>
 
   <ng-template #progressbar>
-   <div class="row">
+    <div class="row">
       <div class="col-12">
         <div class="card">
           <div class="card-body">
             <div class="lb-loader">
               <div class="lb-cancel"></div>
             </div>
-            <h5 class="card-title mb-0 mt-4 text-center">{{'main.transferring' | translate}}</h5>
+            <h5 class="card-title mb-0 mt-4 text-center">{{statusMessage}}</h5>
           </div>
         </div>
       </div>
@@ -68,3 +71,9 @@
 
 
 </div>
+
+<ng-template #iconError>
+  <div class="icon-error-wrapper">
+    <div class="icon text-danger"><i class="simple-icon-exclamation"></i></div>
+  </div>
+</ng-template>

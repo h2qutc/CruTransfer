@@ -1,5 +1,6 @@
 import * as nodemailer from 'nodemailer';
 import { EmailConfig, SMTP_CONFIG } from '../config';
+import logger from './log';
 var inlineCss = require('inline-css');
 var fs = require('fs');
 var hogan = require('hogan.js');

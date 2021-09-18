@@ -6,6 +6,7 @@ import { SharedModule } from '@cru-transfer/shared';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule } from '@ngx-translate/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TagInputModule } from 'ngx-chips';
 import { DropzoneConfigInterface, DropzoneModule, DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { ListFilesDriveComponent, ModalShareDriveComponent, ModalUploadDriveComponent } from './components';
@@ -46,6 +47,7 @@ const routes: Routes = [
     FormsModule,
     TagInputModule,
     NgSelectModule,
+    PaginationModule,
     TranslateModule,
     RouterModule.forChild(routes)
   ],

@@ -1,6 +1,7 @@
 import express from "express";
 import { BaseUrlFront, DAYS_BEFORE_EXPIRED, LIMIT_SIZE_BLOCK } from "../config";
 import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { verifyToken } from "../middlewares";
 import {
   IBlock,
   IFileInfo,
@@ -33,7 +34,7 @@ export class OrderController {
       .put(this.update)
       .delete(this.delete);
 
-    this.router.route("/orders/getOrdersByUser").post(this.getOrdersByUser);
+    this.router.route("/orders/getOrdersByUser").post([verifyToken], this.getOrdersByUser);
     this.router
       .route("/orders/updateTotalDownloadForOrder/:order_id")
       .put(this.updateTotalDownloadForOrder);
@@ -49,8 +50,19 @@ export class OrderController {
   getOrdersByUser = runAsyncWrapper(
     async (req: express.Request, res: express.Response) => {
       const email = req.body.email;
-      const payload = await Order.find({ sender: email });
-      res.status(200).send(payload);
+      const page = req.body.page;
+      const limit = req.body.limit;
+
+      const payload = await Order.find({ sender: email }).limit(limit)
+        .skip(limit * (page - 1))
+        .sort({ createdDate: -1 });
+      const count = await Order.find({ sender: email }).countDocuments();
+      res.status(200).send({
+        docs: payload,
+        page: page,
+        pages: Math.ceil(count / limit),
+        total: count
+      });
     }
   );
 
@@ -64,7 +76,10 @@ export class OrderController {
         }
       }
 
+      logger.info("Begin pinning file");
       const fileInfos = await this.pinFile((<any>req).files.files);
+      logger.info("Pinning file OK");
+
 
       if (!fileInfos) {
         sendError("Unable to pin files");
@@ -200,7 +215,7 @@ export class OrderController {
     next.totalSize += files.size;
     await this.blockService.update(next);
 
-    if (isNew) {
+    if (isNew && latest != null) {
       const res = await this.pinBlockToCrust(latest);
       if (!res) {
         return null;
@@ -215,7 +230,13 @@ export class OrderController {
    * @param block
    */
   private pinBlockToCrust = async (block: IBlock): Promise<any> => {
+
+    logger.info('Begin pinBlockToCrust');
+
     const pathBlockToPin = this.blockService.factoryPathToPin(block);
+
+    logger.info('pathBlockToPin', pathBlockToPin);
+
     const infos = await this.ipfsService.pinFile(pathBlockToPin);
 
     const res = await this.ipfsService.publish(infos.cid);

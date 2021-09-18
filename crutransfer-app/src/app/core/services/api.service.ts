@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IDrive, IOrder, IResponse, IUser, OrderStatus } from '../models';
+import { IDrive, IOrder, IPagedResponse, IResponse, IUser, OrderStatus } from '../models';
 import { calcDiffDate } from './utils';
 
 
@@ -43,11 +43,17 @@ export class ApiService {
     return this.http.get<IResponse>(url).pipe(resp => resp);
   }
 
-  getOrdersByUser(email: string): Observable<IOrder[]> {
+  getOrdersByUser(email: string, limit: number = 10, page: number = 1): Observable<IPagedResponse> {
     const url = `${this.baseUrl}/orders/getOrdersByUser`;
-    return this.http.post<IOrder[]>(url, {
-      email: email
-    }).pipe(map(resp => resp.map(this.mapOrder)));
+    return this.http.post<IPagedResponse>(url, {
+      email: email,
+      limit: limit,
+      page: page
+    }).pipe(map(resp => {
+      const docs = resp.docs.map(this.mapOrder);
+      resp.docs = docs;
+      return resp;
+    }));
   }
 
   getOrder(id: string): Observable<IOrder> {
@@ -55,7 +61,7 @@ export class ApiService {
     return this.http.get<IOrder>(url).pipe(map(resp => this.mapOrder(resp)));
   }
 
-  saveOrder(payload: IOrder): Observable<IResponse> {
+  saveOrder(payload: IOrder): Observable<HttpEvent<IResponse>> {
     const url = `${this.baseUrl}/orders`;
 
     const formData = new FormData();
@@ -63,7 +69,23 @@ export class ApiService {
     delete payload.files;
     formData.append('payload', JSON.stringify(payload));
 
-    return this.http.post<IResponse>(url, formData).pipe(map(resp => resp));
+    return this.http.post<IResponse>(url, formData, {
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(catchError(this.errorMgmt));
+  }
+
+  private errorMgmt(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Get client-side error
+      errorMessage = error.error.message;
+    } else {
+      // Get server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(errorMessage);
   }
 
 
@@ -155,10 +177,15 @@ export class ApiService {
 
   /* DRIVE */
 
-  getDriveByUser(email: string): Observable<IDrive[]> {
+  getDriveByUser(email: string, limit: number = 10, page: number = 1,
+    search: string = '', orderBy: string = ''): Observable<IPagedResponse> {
     const url = `${this.baseUrl}/drive/getDriveByUser`;
-    return this.http.post<IDrive[]>(url, {
-      email: email
+    return this.http.post<IPagedResponse>(url, {
+      email: email,
+      limit: limit,
+      page: page,
+      search: search,
+      orderBy: orderBy
     }).pipe(map(resp => resp));
   }
 

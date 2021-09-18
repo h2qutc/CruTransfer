@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService, AuthService, IOrder, IUser } from '@cru-transfer/core';
 import { NotificationsService } from 'angular2-notifications';
@@ -10,7 +10,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   @ViewChild('inputSearch', { static: true }) inputSearchRef: ElementRef | null = null;
 
@@ -24,6 +24,13 @@ export class DashboardComponent implements OnInit {
   displayOptionsCollapsed = false;
 
   loading = false;
+  page = 1;
+  limit = 10;
+  search = '';
+  isLoading: boolean;
+  endOfTheList = false;
+  totalDocs = 0;
+  totalPages = 0;
 
   private _destroyed: Subject<void> = new Subject<void>();
 
@@ -34,7 +41,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getOrders();
+    this.getOrders(this.limit, this.page);
 
     fromEvent(this.inputSearchRef?.nativeElement, 'keyup')
       .pipe(
@@ -45,6 +52,11 @@ export class DashboardComponent implements OnInit {
       .subscribe(_ => {
         this.checkAndLaunchSearch();
       });
+  }
+
+  ngOnDestroy(){
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   private checkAndLaunchSearch() {
@@ -61,11 +73,16 @@ export class DashboardComponent implements OnInit {
     this.orderBy(this.itemOrder);
   }
 
-  getOrders() {
+  getOrders(limit: number = 10, page: number = 1) {
     this.loading = true;
-    this.api.getOrdersByUser(this.currentUser.email).subscribe(data => {
-      this.data = data;
-      this.filteredData = data.sort(this.sortBy);
+    this.limit = limit;
+    this.page = page;
+
+    this.api.getOrdersByUser(this.currentUser.email, limit, page).subscribe(resp => {
+      this.data = resp.docs;
+      this.totalDocs = resp.total;
+      this.totalPages = resp.pages;
+      this.filteredData = this.data.sort(this.sortBy);
       this.loading = false;
     }, error => {
       this.notifications.error('Error', error.error.message);
@@ -80,6 +97,11 @@ export class DashboardComponent implements OnInit {
   orderBy(item: string) {
     this.itemOrder = item;
     this.filteredData.sort(this.sortBy);
+  }
+
+  pageChanged(event: any): void {
+    this.inputSearchRef.nativeElement.value = '';
+    this.getOrders(this.limit, event.page);
   }
 
   private resetFilter() {

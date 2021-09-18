@@ -1,7 +1,12 @@
+import logger from "../services/log";
+
 export function runAsyncWrapper(callback: Function) {
     return function (req: any, res: any, next: any) {
         callback(req, res, next)
-            .catch(next)
+            .catch((error: any) => {
+                next();
+                logger.error('Error', error);
+            })
     }
 }
 

@@ -4,14 +4,14 @@
 
   <div class="col-12">
     <h1>{{order?.fileInfos.name}}</h1>
-    <h5>1 {{'main.file' | translate}} - {{order?.fileInfos.humanSize}} - Sent {{order?.createdDate | date:'short'}} -
-      <span class="badge badge-pill" [ngClass]="
+    <h5>1 {{'main.file' | translate}} - {{order?.fileInfos.humanSize}} - Sent {{order?.createdDate | date:'short'}}
+      <span class="badge badge-pill" *ngIf="!order?.isVip" [ngClass]="
         {
           'badge-primary': order?.status == OrderStatusEnum.Info,
           'badge-warning': order?.status == OrderStatusEnum.Warning,
           'badge-danger': order?.status == OrderStatusEnum.Danger,
           'badge-light': order?.status == OrderStatusEnum.Expired
-        }">{{order?.timeRemainStr}}</span>
+        }"> - {{order?.timeRemainStr}}</span>
     </h5>
   </div>
 

@@ -17,7 +17,7 @@ const chain_ws_url = "wss://api.decloudf.com/";
 const wsProvider = new WsProvider(chain_ws_url);
 
 // Seeds of account
-const Dev_Seeds =
+const Dev_Seeds = 
   "dad argue unknown alpha audit vault thing amount beauty matter breeze tragic";
 
 export class IpfsService {
@@ -44,7 +44,8 @@ export class IpfsService {
     if (this.ipfs) {
       return;
     }
-    logger.info("init ipfs service");
+
+    logger.info("INIT IPFS service");
 
     this.api = await ApiPromise.create({
       provider: wsProvider,

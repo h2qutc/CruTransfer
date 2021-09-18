@@ -4017,6 +4017,12 @@ input:-webkit-autofill {
     ) + "'/%3E%3C/svg%3E");
 }
 
+.custom-radio{
+  label{
+    cursor: pointer;
+  }
+}
+
 .custom-control-label,
 .custom-control-input {
   outline: initial !important;
@@ -5651,7 +5657,6 @@ aw-wizard-navigation-bar.vertical.small ul.steps-indicator li:not(:last-child):a
   .page-link {
     outline: initial !important;
     box-shadow: initial !important;
-    line-height: 1.7;
     border-radius: 40px !important;
     min-width: 38px;
     text-align: center;

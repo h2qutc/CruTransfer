@@ -4,6 +4,7 @@ import { generateOTP, runAsyncWrapper, sendError, sendOk } from "../helpers";
 import { checkDuplicateUsernameOrEmail } from "../middlewares";
 import { IUser, User } from "../models";
 import { EmailService } from "../services";
+import logger from "../services/log";
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -98,7 +99,7 @@ export class LoginController {
 
 		const user = await User.findOne({
 			email: req.body.email,
-			code: req.body.code
+			codeResetPassword: req.body.code
 		});
 
 		if (!req.body.email) {
@@ -171,6 +172,11 @@ export class LoginController {
 			recipients: [user.email]
 		};
 		const subject = `CruTransfer - Confirm your account`;
-		await emailService.sendEmailActivateAccount(subject, data);
+		try {
+			await emailService.sendEmailActivateAccount(subject, data);
+			logger.info('Send email to activate account OK');
+		} catch (e) {
+			logger.error(e);
+		}
 	}
 }

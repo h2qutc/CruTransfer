@@ -1,22 +1,17 @@
 import express from "express";
-import { BaseUrlFront, DAYS_BEFORE_EXPIRED, LIMIT_SIZE_BLOCK } from "../config";
+import { BaseUrlFront, DAYS_BEFORE_EXPIRED } from "../config";
 import { addDays, runAsyncWrapper, sendError, sendOk } from "../helpers";
+import { verifyToken } from "../middlewares";
 import {
-  Drive, IBlock,
-  IFileInfo,
-  IOrder,
+  Drive, IOrder,
   MailOrderData,
   Order,
-  SendActions,
-  User
+  SendActions
 } from "../models";
-import { BlockService, EmailService, IpfsService } from "../services";
-import logger from "../services/log";
+import { EmailService } from "../services";
 const filesize = require("file-size");
 
 export class DriveController {
-  private blockService = BlockService.getInstance();
-  private ipfsService = IpfsService.getInstance();
 
   public router = express.Router();
 
@@ -36,7 +31,7 @@ export class DriveController {
       .put(this.update)
       .delete(this.delete);
 
-    this.router.route("/drive/getDriveByUser").post(this.getDriveByUser);
+    this.router.route("/drive/getDriveByUser").post([verifyToken], this.getDriveByUser);
   }
 
   getAll = runAsyncWrapper(
@@ -49,8 +44,19 @@ export class DriveController {
   getDriveByUser = runAsyncWrapper(
     async (req: express.Request, res: express.Response) => {
       const email = req.body.email;
-      const payload = await Drive.find({ ownerEmail: email });
-      res.status(200).send(payload);
+      const page = req.body.page;
+      const limit = req.body.limit;
+
+      const payload = await Drive.find({ ownerEmail: email }).limit(limit)
+        .skip(limit * (page - 1))
+        .sort( { createdDate: -1 });
+      const count = await Drive.find({ ownerEmail: email }).countDocuments();
+      res.status(200).send({
+        docs: payload,
+        page: page,
+        pages:  Math.ceil(count / limit),
+        total: count
+      });
     }
   );
 

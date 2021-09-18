@@ -9,12 +9,10 @@ require('dotenv').config();
 
 const dbConnString = process.env.MONGO_CONN_STRING || 'mongodb://localhost/CruTransferDb';
 
-console.log('dbConnString', dbConnString);
-
 export class App {
     public app: express.Application;
 
-    public port: number = 8080;
+    public port: number = 3000;
 
     constructor(controllers: any[], port: number) {
         this.app = express();
@@ -44,7 +42,7 @@ export class App {
 
         this.app.use(
             fileUpload({
-                createParentPath: true,
+                createParentPath: true
             })
         );
     }
